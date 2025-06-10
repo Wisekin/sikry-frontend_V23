@@ -5,7 +5,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 /* HSL-based color variables for Tailwind theming */
-@layer base {  :root {
+@layer base {  
+  :root {
+    /* Brand colors */
+    --brand-primary: 197 37% 24%;
+    --brand-accent: 12 76% 61%;
+    --brand-secondary: 43 74% 66%;
+    --brand-text-primary: 0 0% 13%;
+    --brand-text-secondary: 0 0% 45%;
+    --success: 142.1 70.6% 45.3%;
+    --error: 0 84.2% 60.2%;
+    --warning: 38 92% 50%;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;

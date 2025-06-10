@@ -11,6 +11,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Brand colors
+        brand: {
+          primary: 'var(--brand-primary)',
+          accent: 'var(--brand-accent)',
+          secondary: 'var(--brand-secondary)',
+          text: {
+            primary: 'var(--brand-text-primary)',
+            secondary: 'var(--brand-text-secondary)'
+          }
+        },
+        status: {
+          success: 'var(--success)',
+          error: 'var(--error)',
+          warning: 'var(--warning)'
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -42,13 +57,16 @@ const config: Config = {
           foreground: "hsl(var(--destructive-foreground))",
         },
         sidebar: {
-          DEFAULT: "var(--sidebar)",
-          hover: "var(--sidebar-hover)",
-          selected: "var(--sidebar-selected)",
-          foreground: "var(--sidebar-foreground)",
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          hover: "hsl(var(--sidebar-hover))",
+          selected: "hsl(var(--sidebar-selected))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
           accent: "hsl(var(--sidebar-accent))",
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
         },
         scrollbar: {
           track: "var(--scrollbar-track)",
@@ -64,18 +82,6 @@ const config: Config = {
           "3": "hsl(var(--chart-3))",
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          hover: "hsl(var(--sidebar-hover))",
-          selected: "hsl(var(--sidebar-selected))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
         },
       },
       borderRadius: {

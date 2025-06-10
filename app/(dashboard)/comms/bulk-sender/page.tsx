@@ -1,509 +1,399 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
 import {
-    Upload, FileText, Users, Mail, Send, Calendar, Gauge, Eye, MousePointer, ShieldCheck, ChevronDown, Plus,
-    Save, Clock, Bold, Italic, Underline, Link2, List, Tags, Info, MessageCircle // Added MessageCircle for SMS tab icon
+    Upload, FileText, Users, Mail, Send, Calendar, Eye, MousePointer, ShieldCheck, Plus, Search, Star, TrendingUp, Filter,
+    Save, Clock, Bold, Italic, Underline, Link2, List, Tags, Info, MessageCircle, GitCompareArrows, BrainCircuit, Sparkles, UserCheck, MessageSquareQuote
 } from "lucide-react";
-import { useState } from "react"
+import { useState, useMemo, useCallback } from "react"
+import { Progress } from "@/components/ui/progress"
+
+
+// --- MOCK DATA FOR TEMPLATES ---
+const emailTemplates = [
+    { id: 1, name: "Welcome Series - Day 1", category: "Welcome", openRate: "62.3%", clickRate: "14.8%", content: "Hello {first_name},\n\nWelcome to SIKRY! We're thrilled to have you on board. Here's a quick guide to get you started...\n\nBest,\nThe SIKRY Team" },
+    { id: 2, name: "Product Launch Announcement", category: "Promotion", openRate: "35.1%", clickRate: "8.2%", content: "Hello {first_name},\n\nBig news! We're excited to announce the launch of our new feature. It's designed to help {company} achieve even greater results by...\n\nExplore it now,\nThe SIKRY Team" },
+    { id: 3, name: "Webinar Invitation", category: "Event", openRate: "41.7%", clickRate: "11.5%", content: "Hi {first_name},\n\nJoin our exclusive webinar next week where we'll discuss the future of enterprise AI. Seats are limited, so reserve your spot today!\n\nSee you there,\nThe SIKRY Team" },
+    { id: 4, name: "Re-engagement Campaign", category: "Follow-up", openRate: "28.5%", clickRate: "5.1%", content: "Hi {first_name},\n\nWe haven't seen you in a while. We've made a lot of improvements and wanted to share what's new at SIKRY. We think you'll love...\n\nCome see what's new,\nThe SIKRY Team" },
+    { id: 5, name: "Aggressive Follow-Up", category: "Follow-up", openRate: "55.2%", clickRate: "12.8%", content: "Hi {first_name},\n\nJust following up on my previous message regarding your interest in our solutions. Are you free for a quick 15-minute chat this week?\n\nBest regards,\nThe SIKRY Team" },
+];
+
+
+// Helper function to count personalization tags
+const countTags = (text) => {
+    const regex = /{\w+}/g;
+    const matches = text.match(regex) || [];
+    return new Set(matches).size; // Count unique tags
+};
+
+// Helper function for simple readability
+const calculateReadability = (text) => {
+    if (!text) return { score: 'N/A', feedback: 'Start typing to see analysis.' };
+    const sentences = text.split(/[.!?]+/).filter(Boolean).length;
+    const words = text.split(/\s+/).filter(Boolean).length;
+    if (words < 10) return { score: 'Too Short', feedback: 'Not enough text to analyze.' };
+    const averageWords = words / sentences;
+    if (averageWords > 25) return { score: 'Hard', feedback: 'Sentences are too long. Aim for brevity.' };
+    if (averageWords > 15) return { score: 'Medium', feedback: 'Good, but could be slightly simpler.' };
+    return { score: 'Easy', feedback: 'Great! Your message is clear and concise.' };
+};
+
 
 export default function BulkSenderPage() {
-  const [selectedTab, setSelectedTab] = useState('email');
-  const [recipientsCount, setRecipientsCount] = useState(0);
-  
-  // Simulate file upload
-  const handleFileUpload = () => {
-    setRecipientsCount(247);
-  };
+    const [selectedTab, setSelectedTab] = useState('email');
+    const [recipientsCount, setRecipientsCount] = useState(0);
 
-  return (
-    <div className="container mx-auto py-8 space-y-8">
-      {/* Header with Stats */}
-      <div className="border-b border-[#2A3050]/20 pb-6">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-[#1B1F3B]">Bulk Message Center</h1>
-            <p className="text-[#3C4568] mt-2">Send personalized communications at scale with enterprise-grade delivery</p>
-          </div>
-          <div className="flex space-x-4">
-            <div className="text-right">
-              <div className="text-sm text-[#3C4568]">Monthly Limit</div>
-              <div className="text-xl font-bold text-[#1B1F3B]">10,000 / 50,000</div>
-            </div>
-            <div className="w-24 h-2 bg-[#2A3050]/10 rounded-full mt-3 overflow-hidden">
-              <div className="h-full bg-[#1B1F3B]" style={{width: '20%'}}></div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-4 gap-4 mt-6">
-          <div className="bg-gradient-to-r from-[#1B1F3B] to-[#2D325E] text-white p-4 rounded-lg">
-            <div className="flex items-center">
-              <Mail className="h-5 w-5 mr-2" />
-              <span>Email Campaigns</span>
-            </div>
-            <div className="text-2xl font-bold mt-2">24</div>
-          </div>
-          <div className="bg-white border border-[#2A3050]/10 p-4 rounded-lg shadow-sm">
-            <div className="flex items-center text-[#3C4568]">
-              <Send className="h-5 w-5 mr-2" />
-              <span>Messages Sent</span>
-            </div>
-            <div className="text-2xl font-bold text-[#1B1F3B] mt-2">8,472</div>
-          </div>
-          <div className="bg-white border border-[#2A3050]/10 p-4 rounded-lg shadow-sm">
-            <div className="flex items-center text-[#3C4568]">
-              <Eye className="h-5 w-5 mr-2" />
-              <span>Avg. Open Rate</span>
-            </div>
-            <div className="text-2xl font-bold text-[#1B1F3B] mt-2">42%</div>
-          </div>
-          <div className="bg-white border border-[#2A3050]/10 p-4 rounded-lg shadow-sm">
-            <div className="flex items-center text-[#3C4568]">
-              <MousePointer className="h-5 w-5 mr-2" />
-              <span>Avg. Click Rate</span>
-            </div>
-            <div className="text-2xl font-bold text-[#1B1F3B] mt-2">7.3%</div>
-          </div>
-        </div>
-      </div>
+    // State for message content
+    const [emailSubject, setEmailSubject] = useState("Unlocking new possibilities for your team");
+    const [emailBody, setEmailBody] = useState(`Hello {first_name},\n\nWe noticed your interest in enterprise solutions at {company} and thought you might appreciate our latest whitepaper on AI-driven analytics.\n\nIt covers key strategies for boosting productivity.\n\nBest,\nThe SIKRY Team`);
+    const [linkedinMessage, setLinkedinMessage] = useState(`Hi {firstName}, saw your recent post on industry trends and it really resonated. At {companyName}, we're exploring similar challenges. Would be great to connect and share insights.`);
+    const [smsMessage, setSmsMessage] = useState(`Hi {firstName}! Quick update from SIKRY: Your requested demo is confirmed. Details to follow. Reply STOP to opt out.`);
+    const [isAbTesting, setIsAbTesting] = useState(false);
+    const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
-      {/* Main Content */}
-      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-        <TabsList className="bg-transparent border-b border-[#2A3050]/20 rounded-none p-0 gap-6">
-          <TabsTrigger 
-            value="email" 
-            className="px-0 py-4 data-[state=active]:border-b-2 data-[state=active]:border-[#1B1F3B] data-[state=active]:text-[#1B1F3B] rounded-none flex items-center"
-          >
-            <Mail className="h-4 w-4 mr-2" />
-            Email Campaign
-          </TabsTrigger>
-          <TabsTrigger 
-            value="linkedin" 
-            className="px-0 py-4 data-[state=active]:border-b-2 data-[state=active]:border-[#1B1F3B] data-[state=active]:text-[#1B1F3B] rounded-none flex items-center"
-          >
-            <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-            LinkedIn Outreach
-          </TabsTrigger>
-          <TabsTrigger 
-            value="sms"  // Changed from "phone" to "sms"
-            className="px-0 py-4 data-[state=active]:border-b-2 data-[state=active]:border-[#1B1F3B] data-[state=active]:text-[#1B1F3B] rounded-none flex items-center"
-          >
-            <MessageCircle className="h-4 w-4 mr-2" /> {/* Changed icon to lucide */}
-            SMS Campaign
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="email" className="pt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Message Content Card */}
-              <Card className="border border-[#2A3050]/10 shadow-sm transition-all duration-300 hover:bg-[#2A3050]/5 hover:border-[#2A3050]/30">
-                <CardHeader>
-                  <CardTitle className="text-xl text-[#1B1F3B]">Message Content</CardTitle>
-                  <CardDescription className="text-[#3C4568]">Compose your message or select from templates</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-3">
-                    <Label htmlFor="subject" className="text-[#1B1F3B] font-medium">Subject Line</Label>
-                    <Input 
-                      id="subject" 
-                      placeholder="Enter your email subject" 
-                      className="border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B]"
-                    />
-                  </div>
-                  
-                  <hr className="my-4 border-gray-200" />
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <Label htmlFor="template" className="text-[#1B1F3B] font-medium">Template</Label>
-                      <Button variant="ghost" className="text-[#1B1F3B] flex items-center text-xs hover:bg-gray-100">
-                        <Plus size={14} className="h-4 w-4 mr-1" /> New Template
-                      </Button>
+    // Smarter feature calculations
+    const personalizationCount = useMemo(() => countTags(`${emailBody} ${emailSubject} ${linkedinMessage} ${smsMessage}`), [emailBody, emailSubject, linkedinMessage, smsMessage]);
+    const readability = useMemo(() => calculateReadability(emailBody), [emailBody]);
+
+
+    const handleSmsChange = (e) => {
+        const text = e.target.value;
+        setSmsMessage(text);
+    };
+
+    const smsInfo = useMemo(() => {
+        const charCount = smsMessage.length;
+        const isGSM7 = /^[\w\s@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ!"#¤%&'()*+,\-./:;<=>?¡A-Z_a-z~]*$/.test(smsMessage);
+        const singleLimit = isGSM7 ? 160 : 70;
+        const multipartLimit = isGSM7 ? 153 : 67;
+
+        if (charCount <= singleLimit) {
+            return { count: charCount, limit: singleLimit, segments: 1 };
+        }
+        const segments = Math.ceil(charCount / multipartLimit);
+        return { count: charCount, limit: singleLimit, segments };
+    }, [smsMessage]);
+    
+    const applyTemplate = (template) => {
+        setEmailSubject(template.name); // Often the template name is a good starting point for a subject
+        setEmailBody(template.content);
+        setIsTemplateModalOpen(false); // Close the modal
+    };
+
+
+    const renderSmsSegments = () => {
+        const { count, limit, segments } = smsInfo;
+        const totalChars = segments > 1 ? segments * (limit === 160 ? 153 : 67) : limit;
+        return (
+            <div className="text-sm text-brand-text-secondary flex justify-between items-center pt-1">
+                <span>Characters: <span className="font-medium text-brand-text-primary">{count} / {totalChars}</span></span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-text-primary">
+                    {segments} SMS Segment{segments > 1 ? 's' : ''}
+                </span>
+            </div>
+        );
+    };
+    
+    // Simulate file upload
+    const handleFileUpload = () => {
+        setRecipientsCount(247);
+    };
+
+    return (
+        <div className="container mx-auto py-8 space-y-8 bg-[#f7f9fc]">
+            {/* Header */}
+            <div className="pb-6">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight text-brand-primary">Message Center</h1>
+                        <p className="text-brand-secondary mt-1">Design, analyze, and send your campaigns from one place.</p>
                     </div>
-                    <Select>
-                      <SelectTrigger className="border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B]">
-                        <SelectValue placeholder="Select a template" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">No template</SelectItem>
-                        <SelectItem value="intro">Introduction Sequence</SelectItem>
-                        <SelectItem value="follow-up">Follow-up Series</SelectItem>
-                        <SelectItem value="newsletter">Monthly Newsletter</SelectItem>
-                        <SelectItem value="event">Event Invitation</SelectItem>
-                        <SelectItem value="promo">Product Promotion</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <hr className="my-4 border-gray-200" />
+                    <Button className="bg-brand-primary hover:bg-opacity-90 text-white">
+                        <Send className="h-4 w-4 mr-2" /> New Campaign
+                    </Button>
+                </div>
+            </div>
 
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center mb-1">
-                        <Label htmlFor="message" className="text-[#1B1F3B] font-medium">Message Content</Label>
-                        <Button variant="ghost" size="sm" className="text-xs text-[#1B1F3B] hover:bg-gray-100">
-                            <Save size={14} className="mr-1.5" /> Save as Template
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-8">
+                <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
+                    <TabsList className="grid w-full grid-cols-3 bg-brand-primary/5 p-1 h-auto rounded-lg">
+                        <TabsTrigger value="email" className="data-[state=active]:bg-white data-[state=active]:text-brand-primary data-[state=active]:shadow-md rounded-md py-2.5 flex items-center justify-center gap-2 font-semibold text-brand-secondary">
+                            <Mail className="h-5 w-5" /> Email
+                        </TabsTrigger>
+                        <TabsTrigger value="linkedin" className="data-[state=active]:bg-white data-[state=active]:text-brand-primary data-[state=active]:shadow-md rounded-md py-2.5 flex items-center justify-center gap-2 font-semibold text-brand-secondary">
+                           <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            LinkedIn
+                        </TabsTrigger>
+                        <TabsTrigger value="sms" className="data-[state=active]:bg-white data-[state=active]:text-brand-primary data-[state=active]:shadow-md rounded-md py-2.5 flex items-center justify-center gap-2 font-semibold text-brand-secondary">
+                            <MessageCircle className="h-5 w-5" /> SMS
+                        </TabsTrigger>
+                    </TabsList>
+                    
+                    {/* EMAIL TAB */}
+                    <TabsContent value="email" className="pt-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                           <div className="lg:col-span-3 space-y-8">
+                              <Card className="border-brand-primary/20 shadow-sm bg-white">
+                                <CardHeader>
+                                    <div className="flex justify-between items-center">
+                                       <CardTitle className="text-xl text-brand-primary">Email Composer</CardTitle>
+                                       <Dialog open={isTemplateModalOpen} onOpenChange={setIsTemplateModalOpen}>
+                                            <DialogTrigger asChild>
+                                                <Button variant="outline" className="text-brand-primary border-brand-primary/30 hover:bg-brand-primary/5">
+                                                    <Star className="h-4 w-4 mr-2" /> Choose from Template
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent className="max-w-3xl">
+                                                <DialogHeader>
+                                                    <DialogTitle className="text-2xl text-brand-primary">Smart Template Library</DialogTitle>
+                                                    <DialogDescription>Select a high-performing template to start your campaign.</DialogDescription>
+                                                </DialogHeader>
+                                                <div className="flex items-center space-x-2 py-4">
+                                                    <div className="relative flex-grow">
+                                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-secondary" />
+                                                        <Input placeholder="Search templates..." className="pl-9 border-brand-secondary/50 focus:border-brand-primary" />
+                                                    </div>
+                                                    <Button variant="outline" className="text-brand-secondary border-brand-secondary/30"><Filter className="h-4 w-4 mr-2" /> Category</Button>
+                                                </div>
+                                                <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
+                                                    {emailTemplates.map(template => (
+                                                        <div key={template.id} onClick={() => applyTemplate(template)} className="p-4 rounded-lg border border-brand-secondary/20 hover:border-brand-primary hover:bg-brand-primary/5 cursor-pointer transition-all">
+                                                            <div className="flex justify-between items-start">
+                                                                <div>
+                                                                    <h4 className="font-semibold text-brand-primary">{template.name}</h4>
+                                                                    <p className="text-xs text-brand-secondary bg-slate-100 px-2 py-1 rounded-full inline-block mt-1">{template.category}</p>
+                                                                </div>
+                                                                <div className="flex space-x-4 text-right text-xs">
+                                                                    <div>
+                                                                        <p className="text-brand-secondary">Avg. Open</p>
+                                                                        <p className="font-bold text-brand-primary text-sm flex items-center justify-end gap-1"><TrendingUp className="h-4 w-4 text-success" /> {template.openRate}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-brand-secondary">Avg. Click</p>
+                                                                        <p className="font-bold text-brand-primary text-sm flex items-center justify-end gap-1"><MousePointer className="h-4 w-4 text-success" /> {template.clickRate}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                     <div className="space-y-2">
+                                        <Label htmlFor="subject" className="text-brand-text-primary font-medium flex justify-between items-center">
+                                            <span>Subject Line</span>
+                                            <Button variant="ghost" size="sm" className="text-xs text-brand-primary hover:bg-brand-primary/10" onClick={() => setIsAbTesting(!isAbTesting)}>
+                                                <GitCompareArrows size={14} className="mr-1.5" /> A/B Test Subject
+                                            </Button>
+                                        </Label>
+                                        <Input id="subject" value={emailSubject} onChange={(e) => setEmailSubject(e.target.value)} placeholder="Enter your email subject" className="border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary" />
+                                        {isAbTesting && <Input id="subject-b" placeholder="Variation B: e.g., A new whitepaper for {company}" className="border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary mt-2" />}
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="message" className="text-brand-text-primary font-medium">Message Body</Label>
+                                        <div className="bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3">
+                                            <button title="Bold" className="p-1 hover:bg-slate-200 rounded"><Bold size={16} className="text-gray-600" /></button>
+                                            <button title="Italic" className="p-1 hover:bg-slate-200 rounded"><Italic size={16} className="text-gray-600" /></button>
+                                            <button title="Insert Personalization Tag" className="p-1 hover:bg-slate-200 rounded"><Tags size={16} className="text-gray-600" /></button>
+                                        </div>
+                                        <Textarea id="message" value={emailBody} onChange={(e) => setEmailBody(e.target.value)} placeholder="Compose your message here..." className="min-h-[250px] border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary rounded-b-md rounded-t-none border-t-0" />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                           </div>
+                           <div className="lg:col-span-2 space-y-8">
+                                <Card className="border-brand-primary/20 shadow-sm bg-white">
+                                    <CardHeader>
+                                      <CardTitle className="text-xl text-brand-primary">Delivery Strategy</CardTitle>
+                                      <CardDescription className="text-brand-secondary">Optimize your sending for maximum deliverability.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-6">
+                                      <div className="space-y-3">
+                                          <Label htmlFor="send-time" className="text-brand-text-primary font-medium">Delivery Timing</Label>
+                                          <Select defaultValue="optimal">
+                                            <SelectTrigger className="border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary">
+                                              <SelectValue placeholder="Select send strategy" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="now"><Send className="h-4 w-4 mr-2 inline-block" /> Send Immediately</SelectItem>
+                                              <SelectItem value="schedule"><Calendar className="h-4 w-4 mr-2 inline-block" /> Schedule for Later</SelectItem>
+                                              <SelectItem value="optimal"><Clock className="h-4 w-4 mr-2 inline-block" /> Optimal Time per Recipient</SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                      </div>
+                                       <div className="space-y-4 pt-4 border-t border-brand-secondary/20">
+                                            <div className="flex items-center space-x-3">
+                                                <Checkbox id="track-opens" defaultChecked className="text-brand-primary border-brand-secondary/50" />
+                                                <Label htmlFor="track-opens" className="text-brand-secondary font-normal">Track message opens</Label>
+                                            </div>
+                                            <div className="flex items-center space-x-3">
+                                                <Checkbox id="track-clicks" defaultChecked className="text-brand-primary border-brand-secondary/50" />
+                                                <Label htmlFor="track-clicks" className="text-brand-secondary font-normal">Track link clicks</Label>
+                                            </div>
+                                            <div className="flex items-center space-x-3">
+                                                <Checkbox id="unsubscribe" defaultChecked className="text-brand-primary border-brand-secondary/50" />
+                                                <Label htmlFor="unsubscribe" className="text-brand-secondary font-normal">Include unsubscribe link</Label>
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                           </div>
+                        </div>
+                    </TabsContent>
+
+                    {/* LINKEDIN TAB */}
+                    <TabsContent value="linkedin" className="pt-6">
+                        <Card className="border-brand-primary/20 shadow-sm bg-white">
+                            <CardHeader>
+                                <CardTitle className="text-xl text-brand-primary">LinkedIn Message</CardTitle>
+                                <CardDescription className="text-brand-secondary">Craft your outreach for LinkedIn. Connection request messages are not supported by LinkedIn's API for automation, focus on a great first message post-connection.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                 <div className="space-y-2">
+                                    <Label htmlFor="linkedin-main-message" className="text-brand-text-primary font-medium">Message</Label>
+                                    <Textarea id="linkedin-main-message" value={linkedinMessage} maxLength="2000" onChange={(e) => setLinkedinMessage(e.target.value)} placeholder="e.g., Thanks for connecting, {firstName}! I'd love to discuss..." className="min-h-[200px] border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary"/>
+                                    <div className="text-xs text-brand-secondary text-right font-medium">{linkedinMessage.length} / 2000 characters</div>
+                                </div>
+                                <div className="text-xs text-brand-secondary pt-2 border-t border-brand-secondary/20">
+                                  <p className="font-medium text-brand-text-primary mb-1">Available tags:</p>
+                                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">{`{firstName}`}</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 ml-1">{`{lastName}`}</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 ml-1">{`{companyName}`}</code>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    {/* SMS TAB */}
+                    <TabsContent value="sms" className="pt-6">
+                        <Card className="border-brand-primary/20 shadow-sm bg-white">
+                            <CardHeader>
+                                <CardTitle className="text-xl text-brand-primary">SMS Message</CardTitle>
+                                <CardDescription className="text-brand-secondary">Keep it concise. Standard SMS rates and regulations apply.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="sms-message" className="text-brand-text-primary font-medium">Message</Label>
+                                    <Textarea id="sms-message" value={smsMessage} onChange={handleSmsChange} placeholder="Hi {firstName}, quick update from SIKRY..." className="min-h-[150px] border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary" />
+                                    {renderSmsSegments()}
+                                </div>
+                                <p className="text-xs text-brand-secondary pt-4 border-t border-brand-secondary/20">
+                                    Tip: Include opt-out info like 'Reply STOP to end'. Use a URL shortener for links to save characters.
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
+                
+                {/* Assistant and Preview Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <Card className="bg-gradient-to-br from-sidebar to-brand-primary text-white shadow-lg border-none">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2"><BrainCircuit /> Campaign Assistant</CardTitle>
+                            <CardDescription className="text-brand-accent/80">Real-time tips to improve your outreach.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-5">
+                            <div className="space-y-2">
+                                <Label className="flex items-center gap-1.5 text-brand-accent"><UserCheck size={16}/> Personalization Score</Label>
+                                <Progress value={Math.min(100, personalizationCount * 33.33)} className="h-2 [&>div]:bg-brand-accent" />
+                                <p className="text-xs text-white/90">
+                                    {personalizationCount === 0 && "Add tags like {first_name} to connect better."}
+                                    {personalizationCount === 1 && "Good start! Can you add one more tag?"}
+                                    {personalizationCount === 2 && "Great job on personalization!"}
+                                    {personalizationCount >= 3 && "Excellent! This message feels personal."}
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="flex items-center gap-1.5 text-brand-accent"><Sparkles size={16}/> Readability Analysis (Email)</Label>
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-sm font-bold px-2 py-0.5 rounded-full ${readability.score === 'Easy' ? 'bg-success/20 text-success' : 'bg-warning/20 text-warning'}`}>{readability.score}</span>
+                                    <p className="text-xs text-white/90">{readability.feedback}</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-white shadow-sm border-brand-primary/20">
+                        <CardHeader>
+                            <CardTitle className="text-xl text-brand-primary flex items-center gap-2"><MessageSquareQuote /> Live Preview</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {selectedTab === 'email' && (
+                                <div className="border rounded-lg p-4 bg-slate-50 text-sm font-sans text-slate-800">
+                                    <p className="text-xs text-slate-500">To: contact@example.com</p>
+                                    <p className="text-xs text-slate-500 mb-2 pb-2 border-b">From: you@sikry.com</p>
+                                    <p className="font-bold mb-4">{emailSubject || "[Your Subject Here]"}</p>
+                                    <div className="prose prose-sm" dangerouslySetInnerHTML={{ __html: emailBody.replace(/\n/g, '<br />') || "..." }} />
+                                </div>
+                            )}
+                            {selectedTab === 'linkedin' && (
+                                <div className="border rounded-lg p-4 bg-slate-50">
+                                    <div className="flex gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-slate-300 flex-shrink-0"></div>
+                                        <div className="flex-grow">
+                                            <p className="font-bold text-sm text-slate-800">Your Name <span className="text-xs text-slate-500 font-normal">• 1st</span></p>
+                                            <p className="text-xs text-slate-500">Your Title at SIKRY Intelligence</p>
+                                            <div className="mt-3 bg-white border p-3 rounded-lg text-sm text-slate-700">
+                                                {linkedinMessage || "..."}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {selectedTab === 'sms' && (
+                                <div className="w-full max-w-[280px] mx-auto bg-scrollbar-track rounded-[28px] p-2 shadow-xl">
+                                    <div className="bg-slate-100 h-[450px] rounded-[20px] p-3 overflow-y-auto flex flex-col space-y-3">
+                                        <div className="bg-[#3b82f6] text-white p-2.5 rounded-2xl rounded-br-md max-w-[85%] ml-auto self-end shadow-md break-words">
+                                            {smsMessage || "..."}
+                                        </div>
+                                        <div className="bg-gray-200 text-gray-800 p-2.5 rounded-2xl rounded-bl-md max-w-[85%] mr-auto self-start shadow-md">
+                                            STOP
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+
+            {/* Action Footer */}
+             <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-brand-primary/10 z-50">
+                <div className="container mx-auto py-4 px-6 flex justify-between items-center">
+                    <div>
+                        <Label className="text-brand-secondary">Audience</Label>
+                        <div className="flex items-center gap-2">
+                             <Button variant="outline" size="sm" className="border-brand-primary/30 text-brand-primary hover:bg-brand-primary/5" onClick={handleFileUpload}>
+                                <Upload className="h-4 w-4 mr-2" /> Upload List
+                            </Button>
+                            {recipientsCount > 0 ? (
+                                <span className="font-bold text-brand-primary text-lg">{recipientsCount} Recipients</span>
+                            ) : (
+                               <span className="text-sm text-brand-secondary">No audience selected</span>
+                            )}
+                        </div>
+                    </div>
+                    <div className="space-x-3">
+                        <Button variant="outline" className="text-brand-primary border-brand-primary/30 hover:bg-brand-primary/5">
+                            <Save className="h-4 w-4 mr-2" /> Save Draft
+                        </Button>
+                        <Button className="bg-brand-primary hover:bg-brand-primary/90 text-white font-bold shadow-lg shadow-brand-primary/30">
+                            <Send className="h-4 w-4 mr-2" /> Review & Send
                         </Button>
                     </div>
-                    <div className="bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3">
-                        <button title="Bold" className="p-1 hover:bg-slate-200 rounded"><Bold size={16} className="text-gray-600" /></button>
-                        <button title="Italic" className="p-1 hover:bg-slate-200 rounded"><Italic size={16} className="text-gray-600" /></button>
-                        <button title="Underline" className="p-1 hover:bg-slate-200 rounded"><Underline size={16} className="text-gray-600" /></button>
-                        <div className="h-4 border-l border-gray-300"></div> {/* Divider */}
-                        <button title="Insert Personalization Tag" className="p-1 hover:bg-slate-200 rounded"><Tags size={16} className="text-gray-600" /></button>
-                        <button title="Insert Link" className="p-1 hover:bg-slate-200 rounded"><Link2 size={16} className="text-gray-600" /></button>
-                        <button title="Bulleted List" className="p-1 hover:bg-slate-200 rounded"><List size={16} className="text-gray-600" /></button>
-                    </div>
-                    <Textarea 
-                      id="message" 
-                      placeholder="Compose your message here..." 
-                      className="min-h-[200px] border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B] rounded-b-md rounded-t-none border-t-0"
-                      defaultValue={`Hello {first_name},\n\nWe noticed your interest in enterprise solutions and thought you might appreciate...`}
-                    />
-                    <div className="text-xs text-gray-600 pt-1 flex items-center font-medium">
-                      <Info size={14} className="mr-1.5 text-blue-500" />
-                      Personalization tags detected: <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">{'{first_name}'}</code>, <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">{'{company}'}</code>. Ensure CSV has these columns.
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-3 pt-2">
-                    <Checkbox id="personalize" defaultChecked className="text-[#1B1F3B] border-[#2A3050]/30" />
-                    <Label htmlFor="personalize" className="text-[#3C4568]">Enable recipient personalization</Label>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Delivery Settings Card */}
-              <Card className="border border-[#2A3050]/10 shadow-sm transition-all duration-300 hover:bg-[#2A3050]/5 hover:border-[#2A3050]/30">
-                <CardHeader>
-                  <CardTitle className="text-xl text-[#1B1F3B]">Delivery Strategy</CardTitle>
-                  <CardDescription className="text-[#3C4568]">Optimize your sending strategy for maximum deliverability</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label htmlFor="send-time" className="text-[#1B1F3B] font-medium">Delivery Timing</Label>
-                      <Select>
-                        <SelectTrigger className="border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B]">
-                          <SelectValue placeholder="Select send strategy" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="now" className="flex items-center">
-                            <Send className="h-4 w-4 mr-2" /> Send immediately
-                          </SelectItem>
-                          <SelectItem value="schedule">
-                            <Calendar className="h-4 w-4 mr-2" /> Schedule for later
-                          </SelectItem>
-                          <SelectItem value="optimal">
-                            <Clock className="h-4 w-4 mr-2" /> Optimal time per recipient
-                          </SelectItem>
-                          <SelectItem value="drip">
-                            <ChevronDown className="h-4 w-4 mr-2" /> Drip campaign
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="throttle" className="text-[#1B1F3B] font-medium">Send Rate</Label>
-                      <Select>
-                        <SelectTrigger className="border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B]">
-                          <SelectValue placeholder="Messages per hour" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="10">10 messages/hour</SelectItem>
-                          <SelectItem value="25">25 messages/hour</SelectItem>
-                          <SelectItem value="50">50 messages/hour (recommended)</SelectItem>
-                          <SelectItem value="100">100 messages/hour</SelectItem>
-                          <SelectItem value="250">250 messages/hour</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4 pt-2">
-                    <div className="flex items-center space-x-3">
-                      <Checkbox id="track-opens" defaultChecked className="text-[#1B1F3B] border-[#2A3050]/30" />
-                      <Label htmlFor="track-opens" className="text-[#3C4568]">Track message opens</Label>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Checkbox id="track-clicks" defaultChecked className="text-[#1B1F3B] border-[#2A3050]/30" />
-                      <Label htmlFor="track-clicks" className="text-[#3C4568]">Track link clicks</Label>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Checkbox id="unsubscribe" defaultChecked className="text-[#1B1F3B] border-[#2A3050]/30" />
-                      <Label htmlFor="unsubscribe" className="text-[#3C4568]">Include unsubscribe link</Label>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Checkbox id="retry" className="text-[#1B1F3B] border-[#2A3050]/30" />
-                      <Label htmlFor="retry" className="text-[#3C4568]">Automatically retry failed sends</Label>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
             </div>
-            
-            {/* Right Column */}
-            <div className="space-y-8">
-              {/* Recipients Card */}
-              <Card className="border border-[#2A3050]/10 shadow-sm transition-all duration-300 hover:bg-[#2A3050]/5 hover:border-[#2A3050]/30">
-                <CardHeader>
-                  <CardTitle className="text-xl text-[#1B1F3B]">Audience Selection</CardTitle>
-                  <CardDescription className="text-[#3C4568]">Define who will receive this campaign</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-3">
-                    <Label className="text-[#1B1F3B] font-medium">Import Recipients</Label>
-                    <div className="grid grid-cols-1 gap-3">
-                      <Button 
-                        variant="outline" 
-                        className="border-[#2A3050]/20 text-[#1B1F3B] hover:bg-[#2A3050]/5 justify-start"
-                        onClick={handleFileUpload}
-                      >
-                        <Upload className="mr-3 h-4 w-4" />
-                        Upload CSV/Excel
-                      </Button>
-                      <Button variant="outline" className="border-[#2A3050]/20 text-[#1B1F3B] hover:bg-[#2A3050]/5 justify-start">
-                        <Users className="mr-3 h-4 w-4" />
-                        Select from CRM
-                      </Button>
-                      <Button variant="outline" className="border-[#2A3050]/20 text-[#1B1F3B] hover:bg-[#2A3050]/5 justify-start">
-                        <FileText className="mr-3 h-4 w-4" />
-                        Paste Email List
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-4 border-t border-[#2A3050]/10">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[#1B1F3B] font-medium">Recipients Summary</span>
-                      <span className="text-[#1B1F3B] font-bold">{recipientsCount}</span>
-                    </div>
-                    
-                    {recipientsCount > 0 ? (
-                      <div className="mt-4 space-y-3">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-[#3C4568]">Valid emails</span>
-                          <span className="text-[#1B1F3B]">238 (96.4%)</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-[#3C4568]">Invalid emails</span>
-                          <span className="text-[#1B1F3B]">9 (3.6%)</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-[#3C4568]">Unsubscribed</span>
-                          <span className="text-[#1B1F3B]">14 (5.7%)</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-[#3C4568]">Duplicate entries</span>
-                          <span className="text-[#1B1F3B]">3 (1.2%)</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="mt-4 p-6 bg-[#2A3050]/5 rounded-lg text-center">
-                        <FileText className="h-8 w-8 mx-auto text-[#3C4568]" />
-                        <p className="text-[#3C4568] mt-2">No recipients selected yet</p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* Compliance Card */}
-              <Card className="border border-[#2A3050]/10 shadow-sm transition-all duration-300 hover:bg-[#2A3050]/5 hover:border-[#2A3050]/30">
-                <CardHeader>
-                  <CardTitle className="text-xl text-[#1B1F3B] flex items-center">
-                    <ShieldCheck className="h-5 w-5 mr-2 text-[#1B1F3B]" />
-                    Deliverability Assurance
-                  </CardTitle>
-                  <CardDescription className="text-[#3C4568]">Ensure compliance with regulations</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-[#1B1F3B] font-medium">Spam Risk Score</span>
-                        <span className="text-green-600 font-medium">Low (2.1/10)</span>
-                      </div>
-                      <div className="h-2 bg-[#2A3050]/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-green-500 rounded-full" style={{width: '21%'}}></div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-[#1B1F3B] font-medium">Regulatory Compliance</span>
-                        <span className="text-green-600 font-medium">Passed</span>
-                      </div>
-                      <ul className="text-sm text-[#3C4568] space-y-2">
-                        <li className="flex items-center">
-                          <span className="h-2 w-2 rounded-full bg-green-500 mr-2"></span>
-                          Unsubscribe mechanism detected
-                        </li>
-                        <li className="flex items-center">
-                          <span className="h-2 w-2 rounded-full bg-green-500 mr-2"></span>
-                          Physical address included
-                        </li>
-                        <li className="flex items-center">
-                          <span className="h-2 w-2 rounded-full bg-green-500 mr-2"></span>
-                          CAN-SPAM requirements satisfied
-                        </li>
-                        <li className="flex items-center">
-                          <span className="h-2 w-2 rounded-full bg-green-500 mr-2"></span>
-                          GDPR compliant language detected
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <Label htmlFor="sender-address" className="text-[#1B1F3B] font-medium">Sender Information</Label>
-                    <Input 
-                      id="sender-address" 
-                      defaultValue="SIKRY Intelligence • 123 Business Ave, Zurich, Switzerland" 
-                      className="border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B]"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="linkedin" className="pt-8">
-          <Card className="border border-[#2A3050]/10 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-xl text-[#1B1F3B]">LinkedIn Outreach Message</CardTitle>
-              <CardDescription className="text-[#3C4568]">Craft your connection request and follow-up message for LinkedIn.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="linkedin-connection-request" className="text-[#1B1F3B] font-medium">Connection Request Message (Optional)</Label>
-                <Textarea
-                  id="linkedin-connection-request"
-                  placeholder="e.g., Hi {{firstName}}, I came across your profile and was impressed by your work at {{companyName}}..."
-                  className="min-h-[100px] border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B]"
-                />
-                <div className="text-xs text-gray-500 text-right">0 / 300 characters</div>
-                <p className="text-xs text-gray-500">Keep it short and personalized. Max 300 characters for connection requests.</p>
-              </div>
-
-              <hr className="my-4 border-gray-200" />
-
-              <div className="space-y-2">
-                <Label htmlFor="linkedin-main-message" className="text-[#1B1F3B] font-medium">Main LinkedIn Message</Label>
-                <div className="bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3">
-                    <button title="Bold" className="p-1 hover:bg-slate-200 rounded"><Bold size={16} className="text-gray-600" /></button>
-                    <button title="Italic" className="p-1 hover:bg-slate-200 rounded"><Italic size={16} className="text-gray-600" /></button>
-                    <div className="h-4 border-l border-gray-300"></div>
-                    <button title="Insert Personalization Tag" className="p-1 hover:bg-slate-200 rounded"><Tags size={16} className="text-gray-600" /></button>
-                </div>
-                <Textarea
-                  id="linkedin-main-message"
-                  placeholder="e.g., Thanks for connecting, {{firstName}}! I'd love to discuss how our solutions could help {{companyName}} with..."
-                  className="min-h-[200px] border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B] rounded-t-none border-t-0"
-                />
-                <div className="text-xs text-gray-500 text-right">0 / 2000 characters</div>
-              </div>
-
-              <div className="space-y-1 pt-2">
-                <p className="text-xs text-gray-600 font-medium">Available LinkedIn tags:</p>
-                <p className="text-xs text-gray-500">
-                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">{`{{firstName}}`}</code>,
-                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 ml-1">{`{{lastName}}`}</code>,
-                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 ml-1">{`{{companyName}}`}</code>,
-                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 ml-1">{`{{jobTitle}}`}</code>
-                </p>
-              </div>
-
-              <div className="bg-gray-50 p-4 rounded-md border border-gray-200 mt-4">
-                <h4 className="text-sm font-medium text-center text-gray-500 mb-2">LinkedIn Message Preview Area</h4>
-                <p className="text-center text-sm text-gray-400 italic">Preview will appear here.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="sms" className="pt-8"> {/* Changed from "phone" to "sms" */}
-          <Card className="border border-[#2A3050]/10 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-xl text-[#1B1F3B]">SMS Campaign Content</CardTitle>
-              <CardDescription className="text-[#3C4568]">Compose your SMS message. Keep it concise and engaging.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="sms-message" className="text-[#1B1F3B] font-medium">SMS Message</Label>
-                <div className="bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3">
-                    <button title="Insert Personalization Tag" className="p-1 hover:bg-slate-200 rounded"><Tags size={16} className="text-gray-600" /></button>
-                </div>
-                <Textarea
-                  id="sms-message"
-                  placeholder="Hi {{firstName}}, quick update from SIKRY..."
-                  className="min-h-[120px] border-[#2A3050]/20 focus:border-[#1B1F3B] focus:ring-[#1B1F3B] rounded-t-none border-t-0"
-                />
-                <div className="text-sm text-gray-600 flex justify-between items-center pt-1">
-                  <span>Characters: <span className="font-medium text-[#1B1F3B]">0 / 160</span></span>
-                  <span className="text-xs text-gray-500">(1 SMS segment)</span>
-                </div>
-                 {/* <p className="text-xs text-gray-500">Max 4 segments (612 chars)</p> */}
-              </div>
-
-              <div className="space-y-1 pt-2">
-                <p className="text-xs text-gray-600 font-medium">Available SMS tags:</p>
-                <p className="text-xs text-gray-500">
-                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700">{`{{firstName}}`}</code>,
-                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 ml-1">{`{{link}}`}</code>,
-                  <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-700 ml-1">{`{{promoCode}}`}</code>
-                </p>
-              </div>
-
-              <p className="text-xs text-gray-500 pt-2 border-t border-gray-200">Tip: Include opt-out info like 'Reply STOP to end' if legally required.</p>
-
-              <div>
-                <h4 className="text-sm font-medium text-center text-gray-500 mb-2">SMS Preview</h4>
-                <div className="w-full max-w-[280px] mx-auto bg-slate-700 rounded-[20px] p-1.5 shadow-xl">
-                  <div className="bg-slate-50 h-[400px] rounded-[12px] p-3 overflow-y-auto text-sm flex flex-col space-y-2">
-                    <div className="bg-blue-500 text-white p-2.5 rounded-lg max-w-[80%] ml-auto self-end shadow">
-                      Hi {'{firstName}'}, quick update from SIKRY regarding your recent inquiry. More details at {'{link}'}. Use code {'{promoCode}'} for a discount!
-                    </div>
-                     <div className="bg-gray-200 text-gray-800 p-2.5 rounded-lg max-w-[80%] mr-auto self-start shadow">
-                      STOP
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-      
-      {/* Action Footer */}
-      <div className="fixed bottom-0 left-[16rem] right-0 bg-white border-t border-[#2A3050]/10 py-4 px-6 shadow-lg">
-        <div className="container mx-auto flex justify-between items-center">
-          <div>
-            <span className="text-[#3C4568]">Ready to send to</span>
-            <span className="font-bold text-[#1B1F3B] ml-2">{recipientsCount} recipients</span>
-          </div>
-          <div className="space-x-3">
-            <Button variant="outline" className="border-[#2A3050]/20 text-[#1B1F3B] hover:bg-[#2A3050]/5">
-              <Save className="h-4 w-4 mr-2" /> Save Draft
-            </Button>
-            <Button className="bg-gradient-to-r from-[#1B1F3B] to-[#2A3050] hover:from-[#2A3050] hover:to-[#3C4568]">
-              <Send className="h-4 w-4 mr-2" /> Send Campaign
-            </Button>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    )
 }
