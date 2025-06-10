@@ -52,6 +52,7 @@
     "crypto-js": "latest",
     "date-fns": "latest",
     "embla-carousel-react": "8.5.1",
+    "framer-motion": "^12.16.0",
     "immer": "latest",
     "input-otp": "1.4.1",
     "isomorphic-dompurify": "latest",
