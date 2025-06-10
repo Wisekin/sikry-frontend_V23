@@ -83,12 +83,26 @@ const mockVSLPages: VSLPage[] = [
 export async function GET() {
   // Simulate a network delay of 1 to 1.5 seconds
   const delay = Math.random() * 500 + 1000;
-  // The existing frontend page expects data in a { data: { pages: VSLPage[] } } structure
-  // Let's adapt the mock response to provide a similar structure for compatibility,
-  // or simplify if we are fully overhauling the frontend fetch.
-  // For now, returning the array directly for simplicity as we'll update the frontend.
-  const data = await createMockApiResponse(mockVSLPages, delay);
-  return NextResponse.json(data); // Directly returning the array
+  // Wrap the response in the expected format
+  const responseData = {
+    data: {
+      pages: mockVSLPages.map(page => ({
+        page_id: page.id,
+        title: page.title,
+        template_name: page.templateName,
+        status: page.status,
+        stats: {
+          views: page.views || 0,
+          conversions: Math.round((page.views || 0) * (page.conversionRate || 0) / 100),
+          conversion_rate: page.conversionRate || 0
+        },
+        created_at: page.createdAt,
+        live_url: page.liveUrl
+      }))
+    }
+  };
+  const data = await createMockApiResponse(responseData, delay);
+  return NextResponse.json(data);
 }
 
 // We can remove the POST handler for the mock API as it's not needed for this task.

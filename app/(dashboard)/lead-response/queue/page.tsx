@@ -32,6 +32,28 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton";
 import type { LeadResponseQueueItem } from '@/app/api/lead-response/queue/route.ts'; // Import type from API
 
+// Loading component for the queue page
+const QueueLoading = () => (
+  <div className="min-h-screen space-y-8 bg-gray-50/50 p-6 md:p-10">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+      <div>
+        <LoadingSkeleton width="300px" height="36px" className="mb-2" />
+        <LoadingSkeleton width="350px" height="20px" />
+      </div>
+      <LoadingSkeleton width="120px" height="40px" />
+    </div>
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="space-y-4">
+        <LoadingSkeleton width="200px" height="24px" className="mb-4" />
+        <LoadingSkeleton width="100%" height="40px" />
+        <LoadingSkeleton width="100%" height="40px" />
+        <LoadingSkeleton width="100%" height="40px" />
+        <LoadingSkeleton width="100%" height="40px" />
+      </div>
+    </div>
+  </div>
+);
+
 // Helper function for date formatting
 const formatDate = (dateString?: string, locale: string = 'en') => {
   if (!dateString) return 'N/A';

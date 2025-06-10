@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from '@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   CogIcon, // Using CogIcon for Rules
   QueueListIcon, // Using QueueListIcon for Queue (from heroicons/react/24/solid for more distinct icon)
