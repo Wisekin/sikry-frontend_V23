@@ -11,7 +11,8 @@ export function SecondaryMenuBarWrapper() {
     '/dashboard',
     '/referrals',
     '/reviews',
-    '/reviews/requests'
+    '/reviews/requests',
+    '/reviews/booster'
   ]
 
   // Check if current path should have SecondaryMenuBar
