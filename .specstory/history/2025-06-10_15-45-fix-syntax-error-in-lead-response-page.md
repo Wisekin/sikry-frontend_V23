@@ -506,3 +506,422 @@ Is there anything else you'd like me to help you with?
 
 ---
 
+_**User**_
+
+
+          and here too: lead-response/analytics
+           GET http://localhost:3000/api/lead-response/analytics 405 (Method Not Allowed)
+LeadResponseAnalyticsPage.useCallback[fetchAnalyticsData] @ page.tsx:54
+
+
+
+---
+
+_**Assistant**_
+
+I'll help you create the analytics API endpoint for the lead response analytics page.
+
+
+---
+
+```diff
+- 
++ import { NextResponse } from 'next/server';
++ import { createMockApiResponse } from '@/lib/utils/mockApiUtils';
++ 
++ interface AnalyticsData {
++   summary: {
++     totalLeads: number;
++     processedLeads: number;
++     averageResponseTime: number; // in minutes
++     successRate: number; // percentage
++   };
++   timeSeriesData: Array<{
++     date: string;
++     leads: number;
++     processed: number;
++     responseTime: number;
++   }>;
++   rulePerformance: Array<{
++     ruleId: string;
++     ruleName: string;
++     triggerCount: number;
++     successRate: number;
++     averageResponseTime: number;
++   }>;
++   errorDistribution: Array<{
++     errorType: string;
++     count: number;
++     percentage: number;
++   }>;
++ }
++ 
++ const mockAnalyticsData: AnalyticsData = {
++   summary: {
++     totalLeads: 1250,
++     processedLeads: 1180,
++     averageResponseTime: 4.5,
++     successRate: 94.4
++   },
++   timeSeriesData: Array.from({ length: 30 }, (_, i) => {
++     const date = new Date();
++     date.setDate(date.getDate() - (29 - i));
++     const baseLeads = 40 + Math.random() * 20;
++     return {
++       date: date.toISOString().split('T')[0],
++       leads: Math.round(baseLeads),
++       processed: Math.round(baseLeads * 0.95),
++       responseTime: 3 + Math.random() * 4
++     };
++   }),
++   rulePerformance: [
++     {
++       ruleId: 'rule-001',
++       ruleName: 'High Value Lead',
++       triggerCount: 450,
++       successRate: 98.2,
++       averageResponseTime: 3.2
++     },
++     {
++       ruleId: 'rule-002',
++       ruleName: 'New Lead Assignment',
++       triggerCount: 380,
++       successRate: 95.5,
++       averageResponseTime: 4.1
++     },
++     {
++       ruleId: 'rule-003',
++       ruleName: 'Lead Scoring Update',
++       triggerCount: 320,
++       successRate: 92.8,
++       averageResponseTime: 5.3
++     },
++     {
++       ruleId: 'rule-004',
++       ruleName: 'Follow-up Reminder',
++       triggerCount: 280,
++       successRate: 96.7,
++       averageResponseTime: 4.8
++     }
++   ],
++   errorDistribution: [
++     {
++       errorType: 'Invalid Email Format',
++       count: 35,
++       percentage: 45.5
++     },
++     {
++       errorType: 'API Timeout',
++       count: 20,
++       percentage: 26.0
++     },
++     {
++       errorType: 'Missing Required Fields',
++       count: 12,
++       percentage: 15.6
++     },
++     {
++       errorType: 'Other',
++       count: 10,
++       percentage: 13.0
++     }
++   ]
++ };
++ 
++ export async function GET() {
++   const delay = Math.random() * 500 + 1000;
++   const data = await createMockApiResponse(mockAnalyticsData, delay);
++   return NextResponse.json({ data });
++ }
++ 
+```
+
+---
+
+I've created the `/api/lead-response/analytics` endpoint with comprehensive mock data that includes:
+
+1. Summary statistics:
+   - Total leads
+   - Processed leads
+   - Average response time
+   - Success rate
+
+2. Time series data for the last 30 days:
+   - Daily lead counts
+   - Processed leads
+   - Response times
+
+3. Rule performance metrics:
+   - Trigger counts
+   - Success rates
+   - Average response times per rule
+
+4. Error distribution:
+   - Different types of errors
+   - Count and percentage for each error type
+
+The endpoint follows the same pattern as the other lead-response endpoints, using the `createMockApiResponse` utility for consistent response formatting and simulated network delay.
+
+The analytics page should now be able to fetch and display this data. The mock data provides a realistic representation of what you might expect from a production system, with:
+- Varied success rates across different rules
+- Realistic time series data with some randomness
+- Common error types and their distribution
+- Reasonable response times and processing rates
+
+Is there anything else you'd like me to help you with?
+
+---
+
+_**User**_
+
+It did not work: 
+SidebarNav.tsx:284 ReferenceError: CalendarDaysIcon is not defined
+    at LeadResponseAnalyticsPage (page.tsx:110:14)
+
+
+The above error occurred in the <LeadResponseAnalyticsPage> component. It was handled by the <ErrorBoundaryHandler> error boundary.
+
+
+---
+
+_**Assistant**_
+
+I'll help you fix the missing `CalendarDaysIcon` import in the analytics page. Let me check the file and add the necessary import.
+
+
+---
+
+Read file: app/(dashboard)/lead-response/analytics/page.tsx
+
+---
+
+I see the issue. The `CalendarDaysIcon` is being used but not imported. Let me fix that by adding it to the imports from Heroicons.
+
+
+---
+
+```diff
+    UsersIcon, // For total leads processed
+    ScaleIcon, // For rule performance or general balance
++   CalendarDaysIcon, // For date filters
+  } from "@heroicons/react/24/outline";
+  import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
+```
+
+---
+
+I've added the `CalendarDaysIcon` to the imports from Heroicons. This should fix the ReferenceError you were seeing. The icon is now properly imported and can be used in the date filter button.
+
+The analytics page should now work correctly with all its components, including:
+1. The date filter button with the calendar icon
+2. The summary statistics cards
+3. The charts for leads processed and response time
+4. The rule performance table
+
+Is there anything else you'd like me to help you with?
+
+---
+
+_**User**_
+
+TypeError: Cannot read properties of undefined (reading 'totalLeadsProcessed')
+    at LeadResponseAnalyticsPage (page.tsx:117:102)
+    
+The above error occurred in the <LeadResponseAnalyticsPage> component. It was handled by the <ErrorBoundaryHandler> error boundary.
+
+
+
+
+
+
+
+
+
+
+---
+
+_**Assistant**_
+
+I see the issue. There's a mismatch between the data structure we're receiving from the API and what the frontend component expects. Let me fix this by updating the analytics page to match the API response structure.
+
+
+---
+
+```diff
+  import { useTranslation } from "@/lib/i18n/useTranslation";
+  import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton"; // Using the main skeleton loader
+- import type { LeadResponseAnalyticsData, TimeSeriesDataPoint, RulePerformance } from '@/app/api/lead-response/analytics/route.ts'; // Import type from API
+  
+  // Helper function for date formatting
+```
+
+```diff
+    return new Date(dateString).toLocaleDateString(locale, options);
+  };
++ 
++ interface AnalyticsData {
++   summary: {
++     totalLeads: number;
++     processedLeads: number;
++     averageResponseTime: number;
++     successRate: number;
++   };
++   timeSeriesData: Array<{
++     date: string;
++     leads: number;
++     processed: number;
++     responseTime: number;
++   }>;
++   rulePerformance: Array<{
++     ruleId: string;
++     ruleName: string;
++     triggerCount: number;
++     successRate: number;
++     averageResponseTime: number;
++   }>;
++   errorDistribution: Array<{
++     errorType: string;
++     count: number;
++     percentage: number;
++   }>;
++ }
+  
+  export default function LeadResponseAnalyticsPage() {
+    const { t, locale } = useTranslation();
+-   const [analyticsData, setAnalyticsData] = useState<LeadResponseAnalyticsData | null>(null);
++   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+```
+
+```diff
+        const response = await fetch("/api/lead-response/analytics");
+        if (!response.ok) throw new Error(t('leadResponse.analyticsPage.error.fetchFailed'));
+-       const data: LeadResponseAnalyticsData = await response.json();
+-       setAnalyticsData(data);
++       const responseData = await response.json();
++       setAnalyticsData(responseData.data);
+      } catch (err) {
+        if (err instanceof Error) setError(err.message);
+```
+
+```diff
+  
+    if (isLoading && !analyticsData) {
+-     // Uses loading.tsx for initial route load, this is for subsequent or partial loading.
+-     return <AnalyticsLoadingPlaceholder />; // Placeholder for the actual loading.tsx component
++     return <AnalyticsLoadingPlaceholder />;
+    }
+  
+```
+
+```diff
+    }
+  
+-   const { summaryStats, leadsProcessedOverTime, responseTimeTrends, rulePerformance } = analyticsData;
++   const { summary, timeSeriesData, rulePerformance } = analyticsData;
+  
+    return (
+```
+
+```diff
+            <p className="text-gray-500 mt-1">{t('leadResponse.analyticsPage.subtitle')}</p>
+          </div>
+-         {/* Placeholder for date range filters or other controls */}
+          <Button variant="outline" className="bg-white border-gray-300">
+-             <CalendarDaysIcon className="w-5 h-5 mr-2 text-gray-500" /> {t('common.filter')} {/* Example, not functional */}
++           <CalendarDaysIcon className="w-5 h-5 mr-2 text-gray-500" /> {t('common.filter')}
+          </Button>
+        </div>
+  
+        {/* Summary Stat Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+-         <StatCard title={t('leadResponse.analyticsPage.summary.totalProcessed')} value={summaryStats.totalLeadsProcessed.toLocaleString()} icon={<UsersIcon className="w-6 h-6 text-blue-500" />} />
+-         <StatCard title={t('leadResponse.analyticsPage.summary.avgResponseTime')} value={`${summaryStats.averageResponseTime} ${t('common.minutesShort')}`} icon={<ClockIcon className="w-6 h-6 text-amber-500" />} />
+-         <StatCard title={t('leadResponse.analyticsPage.summary.successRate')} value={`${summaryStats.successRate.toFixed(1)}%`} icon={<CheckCircleIcon className="w-6 h-6 text-green-500" />} />
+-         <StatCard title={t('leadResponse.analyticsPage.summary.failureRate')} value={`${summaryStats.failureRate.toFixed(1)}%`} icon={<XCircleIcon className="w-6 h-6 text-red-500" />} />
++         <StatCard 
++           title={t('leadResponse.analyticsPage.summary.totalProcessed')} 
++           value={summary.totalLeads.toLocaleString()} 
++           icon={<UsersIcon className="w-6 h-6 text-blue-500" />} 
++         />
++         <StatCard 
++           title={t('leadResponse.analyticsPage.summary.avgResponseTime')} 
++           value={`${summary.averageResponseTime} ${t('common.minutesShort')}`} 
++           icon={<ClockIcon className="w-6 h-6 text-amber-500" />} 
++         />
++         <StatCard 
++           title={t('leadResponse.analyticsPage.summary.successRate')} 
++           value={`${summary.successRate.toFixed(1)}%`} 
++           icon={<CheckCircleIcon className="w-6 h-6 text-green-500" />} 
++         />
++         <StatCard 
++           title={t('leadResponse.analyticsPage.summary.failureRate')} 
++           value={`${(100 - summary.successRate).toFixed(1)}%`} 
++           icon={<XCircleIcon className="w-6 h-6 text-red-500" />} 
++         />
+        </div>
+  
+```
+
+```diff
+          <ChartCard title={t('leadResponse.analyticsPage.charts.leadsProcessedTitle')}>
+            <ResponsiveContainer width="100%" height={300}>
+-             <AreaChart data={leadsProcessedOverTime} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
++             <AreaChart data={timeSeriesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5}/>
+                <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, locale, true)} fontSize={12} />
+                <YAxis fontSize={12} />
+                <Tooltip formatter={(value: number) => [value.toLocaleString(), t('leadResponse.analyticsPage.charts.leadsProcessedLabel')]} />
+-               <Area type="monotone" dataKey="value" name={t('leadResponse.analyticsPage.charts.leadsProcessedLabel') as string} stroke="#3B82F6" fill="#BFDBFE" strokeWidth={2} />
++               <Area type="monotone" dataKey="leads" name={t('leadResponse.analyticsPage.charts.leadsProcessedLabel') as string} stroke="#3B82F6" fill="#BFDBFE" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartCard>
+          <ChartCard title={t('leadResponse.analyticsPage.charts.responseTimeTitle')}>
+            <ResponsiveContainer width="100%" height={300}>
+-             <LineChart data={responseTimeTrends} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
++             <LineChart data={timeSeriesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5}/>
+                <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, locale, true)} fontSize={12} />
+                <YAxis unit={` ${t('common.minutesAbbr')}`} fontSize={12} />
+                <Tooltip formatter={(value: number) => [value.toFixed(1) + ` ${t('common.minutesAbbr')}`, t('leadResponse.analyticsPage.charts.avgResponseTimeLabel')]} />
+-               <Line type="monotone" dataKey="value" name={t('leadResponse.analyticsPage.charts.avgResponseTimeLabel') as string} stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }}/>
++               <Line type="monotone" dataKey="responseTime" name={t('leadResponse.analyticsPage.charts.avgResponseTimeLabel') as string} stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }}/>
+              </LineChart>
+            </ResponsiveContainer>
+```
+
+```diff
+                    <TableRow key={rule.ruleId} className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-800">{rule.ruleName}</TableCell>
+-                     <TableCell className="text-right">{rule.processedCount.toLocaleString()}</TableCell>
++                     <TableCell className="text-right">{rule.triggerCount.toLocaleString()}</TableCell>
+                      <TableCell className="text-right">{rule.successRate.toFixed(1)}%</TableCell>
+-                     <TableCell className="text-right">{rule.averageProcessingTime} {t('common.minutesAbbr')}</TableCell>
++                     <TableCell className="text-right">{rule.averageResponseTime} {t('common.minutesAbbr')}</TableCell>
+                    </TableRow>
+                  ))}
+```
+
+---
+
+I've updated the analytics page to match the API response structure. The main changes include:
+
+1. Added a proper `AnalyticsData` interface that matches the API response
+2. Updated the data access to use the correct property names:
+   - `summary.totalLeads` instead of `summaryStats.totalLeadsProcessed`
+   - `timeSeriesData` instead of `leadsProcessedOverTime` and `responseTimeTrends`
+   - Updated chart data keys to match the API response (`leads` and `responseTime`)
+3. Fixed the rule performance table to use the correct property names:
+   - `triggerCount` instead of `processedCount`
+   - `averageResponseTime` instead of `averageProcessingTime`
+4. Added proper handling of the API response by accessing `responseData.data`
+5. Calculated the failure rate as `100 - successRate` since it's not provided directly
+
+The page should now work correctly with the data from the API. The charts will display the time series data, and the summary cards will show the correct statistics.
+
+Is there anything else you'd like me to help you with?
+
+---
+

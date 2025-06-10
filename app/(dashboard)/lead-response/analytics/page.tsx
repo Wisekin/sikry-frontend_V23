@@ -27,11 +27,11 @@ import {
   ClockIcon, // For response time
   UsersIcon, // For total leads processed
   ScaleIcon, // For rule performance or general balance
+  CalendarDaysIcon, // For date filters
 } from "@heroicons/react/24/outline";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton"; // Using the main skeleton loader
-import type { LeadResponseAnalyticsData, TimeSeriesDataPoint, RulePerformance } from '@/app/api/lead-response/analytics/route.ts'; // Import type from API
 
 // Helper function for date formatting
 const formatDate = (dateString: string, locale: string = 'en', short: boolean = false) => {
@@ -41,9 +41,36 @@ const formatDate = (dateString: string, locale: string = 'en', short: boolean = 
   return new Date(dateString).toLocaleDateString(locale, options);
 };
 
+interface AnalyticsData {
+  summary: {
+    totalLeads: number;
+    processedLeads: number;
+    averageResponseTime: number;
+    successRate: number;
+  };
+  timeSeriesData: Array<{
+    date: string;
+    leads: number;
+    processed: number;
+    responseTime: number;
+  }>;
+  rulePerformance: Array<{
+    ruleId: string;
+    ruleName: string;
+    triggerCount: number;
+    successRate: number;
+    averageResponseTime: number;
+  }>;
+  errorDistribution: Array<{
+    errorType: string;
+    count: number;
+    percentage: number;
+  }>;
+}
+
 export default function LeadResponseAnalyticsPage() {
   const { t, locale } = useTranslation();
-  const [analyticsData, setAnalyticsData] = useState<LeadResponseAnalyticsData | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,8 +80,8 @@ export default function LeadResponseAnalyticsPage() {
     try {
       const response = await fetch("/api/lead-response/analytics");
       if (!response.ok) throw new Error(t('leadResponse.analyticsPage.error.fetchFailed'));
-      const data: LeadResponseAnalyticsData = await response.json();
-      setAnalyticsData(data);
+      const responseData = await response.json();
+      setAnalyticsData(responseData.data);
     } catch (err) {
       if (err instanceof Error) setError(err.message);
       else setError(t('leadResponse.analyticsPage.error.unknown'));
@@ -68,8 +95,7 @@ export default function LeadResponseAnalyticsPage() {
   }, [fetchAnalyticsData]);
 
   if (isLoading && !analyticsData) {
-    // Uses loading.tsx for initial route load, this is for subsequent or partial loading.
-    return <AnalyticsLoadingPlaceholder />; // Placeholder for the actual loading.tsx component
+    return <AnalyticsLoadingPlaceholder />;
   }
 
   if (error) {
@@ -86,7 +112,7 @@ export default function LeadResponseAnalyticsPage() {
   }
   
   if (!analyticsData) {
-     return (
+    return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50/50 p-6 text-center">
         <ChartBarIcon className="w-16 h-16 text-gray-400 mb-4" />
         <h2 className="text-xl font-semibold text-gray-700 mb-2">{t('leadResponse.analyticsPage.noData.title')}</h2>
@@ -95,7 +121,7 @@ export default function LeadResponseAnalyticsPage() {
     );
   }
 
-  const { summaryStats, leadsProcessedOverTime, responseTimeTrends, rulePerformance } = analyticsData;
+  const { summary, timeSeriesData, rulePerformance } = analyticsData;
 
   return (
     <div className="min-h-screen space-y-8 bg-gray-50/50 text-[#1B1F3B] p-6 md:p-10">
@@ -105,41 +131,56 @@ export default function LeadResponseAnalyticsPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('leadResponse.analyticsPage.title')}</h1>
           <p className="text-gray-500 mt-1">{t('leadResponse.analyticsPage.subtitle')}</p>
         </div>
-        {/* Placeholder for date range filters or other controls */}
-         <Button variant="outline" className="bg-white border-gray-300">
-            <CalendarDaysIcon className="w-5 h-5 mr-2 text-gray-500" /> {t('common.filter')} {/* Example, not functional */}
+        <Button variant="outline" className="bg-white border-gray-300">
+          <CalendarDaysIcon className="w-5 h-5 mr-2 text-gray-500" /> {t('common.filter')}
         </Button>
       </div>
 
       {/* Summary Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard title={t('leadResponse.analyticsPage.summary.totalProcessed')} value={summaryStats.totalLeadsProcessed.toLocaleString()} icon={<UsersIcon className="w-6 h-6 text-blue-500" />} />
-        <StatCard title={t('leadResponse.analyticsPage.summary.avgResponseTime')} value={`${summaryStats.averageResponseTime} ${t('common.minutesShort')}`} icon={<ClockIcon className="w-6 h-6 text-amber-500" />} />
-        <StatCard title={t('leadResponse.analyticsPage.summary.successRate')} value={`${summaryStats.successRate.toFixed(1)}%`} icon={<CheckCircleIcon className="w-6 h-6 text-green-500" />} />
-        <StatCard title={t('leadResponse.analyticsPage.summary.failureRate')} value={`${summaryStats.failureRate.toFixed(1)}%`} icon={<XCircleIcon className="w-6 h-6 text-red-500" />} />
+        <StatCard 
+          title={t('leadResponse.analyticsPage.summary.totalProcessed')} 
+          value={summary.totalLeads.toLocaleString()} 
+          icon={<UsersIcon className="w-6 h-6 text-blue-500" />} 
+        />
+        <StatCard 
+          title={t('leadResponse.analyticsPage.summary.avgResponseTime')} 
+          value={`${summary.averageResponseTime} ${t('common.minutesShort')}`} 
+          icon={<ClockIcon className="w-6 h-6 text-amber-500" />} 
+        />
+        <StatCard 
+          title={t('leadResponse.analyticsPage.summary.successRate')} 
+          value={`${summary.successRate.toFixed(1)}%`} 
+          icon={<CheckCircleIcon className="w-6 h-6 text-green-500" />} 
+        />
+        <StatCard 
+          title={t('leadResponse.analyticsPage.summary.failureRate')} 
+          value={`${(100 - summary.successRate).toFixed(1)}%`} 
+          icon={<XCircleIcon className="w-6 h-6 text-red-500" />} 
+        />
       </div>
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <ChartCard title={t('leadResponse.analyticsPage.charts.leadsProcessedTitle')}>
           <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={leadsProcessedOverTime} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+            <AreaChart data={timeSeriesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5}/>
               <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, locale, true)} fontSize={12} />
               <YAxis fontSize={12} />
               <Tooltip formatter={(value: number) => [value.toLocaleString(), t('leadResponse.analyticsPage.charts.leadsProcessedLabel')]} />
-              <Area type="monotone" dataKey="value" name={t('leadResponse.analyticsPage.charts.leadsProcessedLabel') as string} stroke="#3B82F6" fill="#BFDBFE" strokeWidth={2} />
+              <Area type="monotone" dataKey="leads" name={t('leadResponse.analyticsPage.charts.leadsProcessedLabel') as string} stroke="#3B82F6" fill="#BFDBFE" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
         <ChartCard title={t('leadResponse.analyticsPage.charts.responseTimeTitle')}>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={responseTimeTrends} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+            <LineChart data={timeSeriesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5}/>
               <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, locale, true)} fontSize={12} />
               <YAxis unit={` ${t('common.minutesAbbr')}`} fontSize={12} />
               <Tooltip formatter={(value: number) => [value.toFixed(1) + ` ${t('common.minutesAbbr')}`, t('leadResponse.analyticsPage.charts.avgResponseTimeLabel')]} />
-              <Line type="monotone" dataKey="value" name={t('leadResponse.analyticsPage.charts.avgResponseTimeLabel') as string} stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }}/>
+              <Line type="monotone" dataKey="responseTime" name={t('leadResponse.analyticsPage.charts.avgResponseTimeLabel') as string} stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }}/>
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -168,9 +209,9 @@ export default function LeadResponseAnalyticsPage() {
                 {rulePerformance.map((rule) => (
                   <TableRow key={rule.ruleId} className="hover:bg-gray-50">
                     <TableCell className="font-medium text-gray-800">{rule.ruleName}</TableCell>
-                    <TableCell className="text-right">{rule.processedCount.toLocaleString()}</TableCell>
+                    <TableCell className="text-right">{rule.triggerCount.toLocaleString()}</TableCell>
                     <TableCell className="text-right">{rule.successRate.toFixed(1)}%</TableCell>
-                    <TableCell className="text-right">{rule.averageProcessingTime} {t('common.minutesAbbr')}</TableCell>
+                    <TableCell className="text-right">{rule.averageResponseTime} {t('common.minutesAbbr')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
