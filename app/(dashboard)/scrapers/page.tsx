@@ -23,8 +23,8 @@ import {
   CheckCircleIcon,
   ClockIcon,
 } from "@heroicons/react/24/outline"
-import { useTranslation } from "@/lib/i18n/useTranslation"
-import { getScrapers, getScraperStats, updateScraperStatus, executeScraper } from "@/lib/actions/scrapers"
+import { useTranslation } from 'react-i18next'
+import { getScrapers, getScraperStats, updateScraperStatus, executeScraper } from "@/../lib/actions/scrapers"
 import Link from "next/link"
 
 interface Scraper {

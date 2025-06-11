@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PlusCircle, Mail, Linkedin, Phone } from "lucide-react"
 import { PageLoader } from "@/components/core/loading/PageLoader"
-import { ROUTES } from "@/lib/constants/routes"
+import { ROUTES } from "@/constants/routes"
 
 export const metadata = {
   title: "Templates | SIKRY",

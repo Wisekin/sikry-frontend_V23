@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { getCommunications } from "@/lib/actions/communications"
+import { getCommunications } from "@/actions/communications"
 import { CommunicationsTable } from "@/components/communications/CommunicationsTable"
 import { CommunicationFilters } from "@/components/communications/CommunicationFilters"
 import { Button } from "@/components/ui/button"

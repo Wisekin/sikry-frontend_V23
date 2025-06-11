@@ -23,7 +23,7 @@ import {
   ExclamationCircleIcon, // For recent activity type: error
   LightBulbIcon // For example section
 } from "@heroicons/react/24/outline"; // Or solid where appropriate
-import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useTranslation } from "react-i18next";
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton";
 
 interface OverviewData {

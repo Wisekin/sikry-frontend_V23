@@ -26,7 +26,7 @@ import {
   BuildingOffice2Icon,
   EyeIcon // For Preview button
 } from "@heroicons/react/24/outline";
-import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useTranslation } from "react-i18next";
 
 interface Letter {
   id: string;

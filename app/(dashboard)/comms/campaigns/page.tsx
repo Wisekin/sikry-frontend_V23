@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PlusCircle } from "lucide-react"
 import { DataTable } from "@/components/data/tables/DataTable"
 import { PageLoader } from "@/components/core/loading/PageLoader"
-import { ROUTES } from "@/lib/constants/routes"
+import { ROUTES } from "@/constants/routes"
 
 export const metadata = {
   title: "Campaigns | SIKRY",

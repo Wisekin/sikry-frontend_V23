@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton";
-import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useTranslation } from "react-i18next";
 import {
   ChartPieIcon,
   ExclamationTriangleIcon,

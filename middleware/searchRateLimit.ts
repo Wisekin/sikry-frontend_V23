@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { DbRateLimiter } from "@/lib/utils/cache/rateLimiter"
+import { DbRateLimiter } from "@/utils/cache/rateLimiter"
 
 export async function searchRateLimitMiddleware(req: NextRequest) {
   const rateLimiter = new DbRateLimiter()

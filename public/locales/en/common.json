@@ -3,5 +3,98 @@
   "buttons": {
     "submit": "Submit",
     "cancel": "Cancel"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "search": "Search",
+    "companies": "Companies",
+    "marketIntel": "Market Intelligence",
+    "scrapers": "Scrapers",
+    "statistics": "Statistics",
+    "statisticsOverview": "Overview",
+    "statisticsCollectionTrends": "Collection Trends",
+    "statisticsGeographicDistribution": "Geographic Distribution",
+    "statisticsSectorDistribution": "Sector Distribution",
+    "statisticsSourceComparison": "Source Comparison",
+    "communications": "Communications",
+    "overview": "Overview",
+    "financial": "Financial",
+    "reengagement": "Re-engagement",
+    "referrals": "Referrals",
+    "reviews": "Reviews",
+    "funnels": "Funnels",
+    "gapAnalysis": "Gap Analysis",
+    "vsl": "VSL",
+    "leadResponse": "Lead Response",
+    "analytics": "Analytics",
+    "admin": "Admin",
+    "list": "List",
+    "grid": "Grid",
+    "filter": "Filter",
+    "search": "Search",
+    "calendar": "Calendar",
+    "play": "Play",
+    "settings": "Settings",
+    "addUser": "Add User",
+    "security": "Security",
+    "share": "Share",
+    "download": "Download",
+    "upload": "Upload",
+    "add": "Add"
+  },
+  "comms": {
+    "campaigns": "Campaigns",
+    "templates": "Templates",
+    "bulkSender": "Bulk Sender"
+  },
+  "financial": {
+    "records": "Records",
+    "summary": "Summary",
+    "campaignRoi": "Campaign ROI"
+  },
+  "reengagement": {
+    "tasks": "Tasks",
+    "classification": "Classification",
+    "automation": "Automation"
+  },
+  "referrals": {
+    "dashboard": "Dashboard",
+    "tracking": "Tracking",
+    "rewards": "Rewards"
+  },
+  "reviews": {
+    "requests": "Requests",
+    "booster": "Booster",
+    "monitoring": "Monitoring"
+  },
+  "funnels": {
+    "builder": "Builder",
+    "progress": "Progress",
+    "automation": "Automation"
+  },
+  "gapAnalysis": {
+    "form": "Form",
+    "letters": "Letters",
+    "results": "Results"
+  },
+  "vsl": {
+    "templates": "Templates",
+    "pages": "Pages",
+    "tracking": "Tracking"
+  },
+  "leadResponse": {
+    "rules": "Rules",
+    "queue": "Queue",
+    "analytics": "Analytics"
+  },
+  "analytics": {
+    "performance": "Performance",
+    "conversion": "Conversion",
+    "revenue": "Revenue"
+  },
+  "admin": {
+    "teamManagement": "Team Management",
+    "billing": "Billing",
+    "antiSpam": "Anti-Spam"
   }
 }

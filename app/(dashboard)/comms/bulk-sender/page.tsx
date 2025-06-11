@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog"
+import { useTranslation } from 'react-i18next'
 import {
     Upload, FileText, Users, Mail, Send, Calendar, Eye, MousePointer, ShieldCheck, Plus, Search, Star, TrendingUp, Filter,
     Save, Clock, Bold, Italic, Underline, Link2, List, Tags, Info, MessageCircle, GitCompareArrows, BrainCircuit, Sparkles, UserCheck, MessageSquareQuote,
@@ -65,6 +66,7 @@ const calculateReadability = (text: string) => {
 
 
 export default function BulkSenderPage() {
+    const { t } = useTranslation('commsBulkSenderPage');
     const [selectedTab, setSelectedTab] = useState('email');
     const [recipientsCount, setRecipientsCount] = useState(0);
 
@@ -200,9 +202,9 @@ export default function BulkSenderPage() {
         const totalChars = segments > 1 ? segments * (limit === 160 ? 153 : 67) : limit;
         return (
             <div className="text-sm text-brand-text-secondary flex justify-between items-center pt-1">
-                <span>Characters: <span className="font-medium text-brand-text-primary">{count} / {totalChars}</span></span>
+                <span>{t('sms.characters')}: <span className="font-medium text-brand-text-primary">{count} / {totalChars}</span></span>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-text-primary">
-                    {segments} SMS Segment{segments > 1 ? 's' : ''}
+                    {t('sms.segments', { count: segments })}
                 </span>
             </div>
         );
@@ -221,50 +223,17 @@ export default function BulkSenderPage() {
 
     const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onChange }) => (
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 ml-0 sm:ml-4 mt-2 sm:mt-0">
-            <span className="text-xs text-brand-secondary whitespace-nowrap">Theme:</span>
+            <span className="text-xs text-brand-secondary whitespace-nowrap">{t('theme.title')}:</span>
             <div className="flex flex-wrap gap-1">
-                <button 
-                    onClick={() => onChange('brand')} 
-                    className={`w-6 h-6 rounded-full border ${currentColor === 'brand' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
-                    style={{ backgroundColor: '#1B1F3B' }}
-                    title="brand"
-                />
-                <button 
-                    onClick={() => onChange('light')} 
-                    className={`w-6 h-6 rounded-full border ${currentColor === 'light' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
-                    style={{ backgroundColor: '#ffffff' }}
-                    title="Light"
-                />
-                <button 
-                    onClick={() => onChange('blue')} 
-                    className={`w-6 h-6 rounded-full border ${currentColor === 'blue' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
-                    style={{ backgroundColor: '#dbeafe' }}
-                    title="Blue"
-                />
-                <button 
-                    onClick={() => onChange('dark')} 
-                    className={`w-6 h-6 rounded-full border ${currentColor === 'dark' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
-                    style={{ backgroundColor: '#1f2937' }}
-                    title="Dark"
-                />
-                <button 
-                    onClick={() => onChange('purple')} 
-                    className={`w-6 h-6 rounded-full border ${currentColor === 'purple' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
-                    style={{ backgroundColor: '#f3e8ff' }}
-                    title="Purple"
-                />
-                <button 
-                    onClick={() => onChange('green')} 
-                    className={`w-6 h-6 rounded-full border ${currentColor === 'green' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
-                    style={{ backgroundColor: '#d1fae5' }}
-                    title="Green"
-                />
-                <button 
-                    onClick={() => onChange('warm')} 
-                    className={`w-6 h-6 rounded-full border ${currentColor === 'warm' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
-                    style={{ backgroundColor: '#ffedd5' }}
-                    title="Warm"
-                />
+                {Object.entries(colorMap).map(([key, value]) => (
+                    <button 
+                        key={key}
+                        onClick={() => onChange(key as ColorTheme)} 
+                        className={`w-6 h-6 rounded-full border ${currentColor === key ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
+                        style={{ backgroundColor: value.bg }}
+                        title={t(`theme.options.${key}`)}
+                    />
+                ))}
             </div>
         </div>
     );
@@ -417,7 +386,7 @@ export default function BulkSenderPage() {
                                                     <Label htmlFor="send-time" className="text-brand-text-primary font-medium">Delivery Timing</Label>
                                                     <Select value={deliveryOption} onValueChange={setDeliveryOption}>
                                                         <SelectTrigger className="border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary">
-                                                            <SelectValue placeholder="Select send strategy" />
+                                                            <SelectValue placeholder={t('delivery.options.optimal')} />
                                                         </SelectTrigger>
                                                         <SelectContent>
                                                             <SelectItem value="now"><Send className="h-4 w-4 mr-2 inline-block" /> Send Immediately</SelectItem>

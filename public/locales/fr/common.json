@@ -3,5 +3,98 @@
   "buttons": {
     "submit": "Soumettre",
     "cancel": "Annuler"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "search": "Recherche",
+    "companies": "Entreprises",
+    "marketIntel": "Intelligence du marché",
+    "scrapers": "Scrapeurs",
+    "statistics": "Statistiques",
+    "statisticsOverview": "Vue d'ensemble",
+    "statisticsCollectionTrends": "Tendances de collecte",
+    "statisticsGeographicDistribution": "Distribution géographique",
+    "statisticsSectorDistribution": "Distribution par secteur",
+    "statisticsSourceComparison": "Comparaison des sources",
+    "communications": "Communications",
+    "overview": "Vue d'ensemble",
+    "financial": "Financier",
+    "reengagement": "Réengagement",
+    "referrals": "Références",
+    "reviews": "Avis",
+    "funnels": "Entonnoirs",
+    "gapAnalysis": "Analyse des écarts",
+    "vsl": "VSL",
+    "leadResponse": "Réponse aux leads",
+    "analytics": "Analytique",
+    "admin": "Administration",
+    "list": "Liste",
+    "grid": "Grille",
+    "filter": "Filtrer",
+    "search": "Rechercher",
+    "calendar": "Calendrier",
+    "play": "Lancer",
+    "settings": "Paramètres",
+    "addUser": "Ajouter un utilisateur",
+    "security": "Sécurité",
+    "share": "Partager",
+    "download": "Télécharger",
+    "upload": "Téléverser",
+    "add": "Ajouter"
+  },
+  "comms": {
+    "campaigns": "Campagnes",
+    "templates": "Modèles",
+    "bulkSender": "Envoi en masse"
+  },
+  "financial": {
+    "records": "Enregistrements",
+    "summary": "Résumé",
+    "campaignRoi": "ROI des campagnes"
+  },
+  "reengagement": {
+    "tasks": "Tâches",
+    "classification": "Classification",
+    "automation": "Automatisation"
+  },
+  "referrals": {
+    "dashboard": "Tableau de bord",
+    "tracking": "Suivi",
+    "rewards": "Récompenses"
+  },
+  "reviews": {
+    "requests": "Demandes",
+    "booster": "Booster",
+    "monitoring": "Surveillance"
+  },
+  "funnels": {
+    "builder": "Constructeur",
+    "progress": "Progression",
+    "automation": "Automatisation"
+  },
+  "gapAnalysis": {
+    "form": "Formulaire",
+    "letters": "Lettres",
+    "results": "Résultats"
+  },
+  "vsl": {
+    "templates": "Modèles",
+    "pages": "Pages",
+    "tracking": "Suivi"
+  },
+  "leadResponse": {
+    "rules": "Règles",
+    "queue": "File d'attente",
+    "analytics": "Analytique"
+  },
+  "analytics": {
+    "performance": "Performance",
+    "conversion": "Conversion",
+    "revenue": "Revenus"
+  },
+  "admin": {
+    "teamManagement": "Gestion d'équipe",
+    "billing": "Facturation",
+    "antiSpam": "Anti-spam"
   }
 }

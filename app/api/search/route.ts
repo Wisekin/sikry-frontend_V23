@@ -1,9 +1,8 @@
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
-import type { ApiResponse, SearchResult } from '@/types'
-import type { SearchScope } from '@/types/types'
-import { CacheManager } from '@/lib/utils/cache/cacheManager'
-import { DbRateLimiter } from '@/lib/utils/cache/rateLimiter'
+import type { ApiResponse, SearchResult, SearchScope } from '@/types'
+import { CacheManager } from '@/utils/cache/cacheManager'
+import { DbRateLimiter } from '@/utils/cache/rateLimiter'
 
 const supabase = createClient()
 
@@ -15,15 +14,15 @@ const CACHE_TTL: Record<SearchScope, number> = {
   default: 600         // 10 minutes default
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const searchStartTime = Date.now();
   try {
     const url = new URL(request.url)
     const query = url.searchParams.get('q') || ''
-    const scope = url.searchParams.get('scope') || 'companies'
+    const scope = (url.searchParams.get('scope') || 'companies') as SearchScope
     const user = url.searchParams.get('user')
 
     // Get organization context
-    const supabase = getSupabaseServerClient()
     const { data: teamMember } = await supabase
       .from('team_members')
       .select('organization_id, organizations(plan)')
@@ -42,8 +41,8 @@ export async function GET(request: Request) {
     }
 
     // Initialize rate limiter and check limits
-    const rateLimiter = new RateLimiter(teamMember.organization_id, teamMember.organizations.plan)
-    const canProceed = await rateLimiter.checkRateLimit()
+    const rateLimiter = new DbRateLimiter()
+    const { allowed: canProceed } = await rateLimiter.isAllowed(request)
 
     if (!canProceed) {
       return NextResponse.json(
@@ -57,7 +56,7 @@ export async function GET(request: Request) {
     }
 
     // Initialize cache manager
-    const cacheManager = new CacheManager(teamMember.organization_id, teamMember.organizations.plan)
+    const cacheManager = new CacheManager(teamMember.organization_id, teamMember.organizations?.[0]?.plan || 'starter')
     const cacheKey = `search:${scope}:${query}`
 
     // Try to get from cache first
@@ -67,8 +66,8 @@ export async function GET(request: Request) {
     }
 
     // --- Modular Search Integration ---
-    const { parseQuery } = await import('@/lib/search/queryParser');
-    const { companiesHouseAdapter } = await import('@/lib/search/adapters/companiesHouse');
+    const { parseQuery } = await import('@/search/queryParser');
+    const { companiesHouseAdapter } = await import('@/search/adapters/companiesHouse');
 
     // Parse the query using the modular parser
     const parsedQuery = await parseQuery(query);
@@ -149,7 +148,6 @@ export async function GET(request: Request) {
 }
 
 async function performSearch(query: string, scope: string, organizationId: string) {
-  const supabase = getSupabaseServerClient()
 
   // Base query
   let searchQuery = supabase.from(scope === 'companies' ? 'discovered_companies' : scope)

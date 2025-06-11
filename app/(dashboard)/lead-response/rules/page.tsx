@@ -42,7 +42,7 @@ import {
   XCircleIcon, // For inactive status
   AdjustmentsHorizontalIcon // General rules icon
 } from "@heroicons/react/24/outline";
-import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useTranslation } from "react-i18next";
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton"; // Main skeleton loader
 import type { LeadResponseRule } from '@/app/api/lead-response/rules/route'; // Import type from API
 

@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Building2, MessageSquare, Bot, TrendingUp, Calendar, BarChart3, Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useTranslation } from 'react-i18next';
-import { getCompanies } from "@/lib/actions/companies"
-import { getCommunications } from "@/lib/actions/communications"
+import { getCompanies } from "@/actions/companies"
+import { getCommunications } from "@/actions/communications"
 
 interface Activity {
   type: "new_company" | "new_communication" | "scraper_run";

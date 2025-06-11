@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { createMockApiResponse } from '@/lib/utils/mockApiUtils';
+import { createMockApiResponse } from '@/utils/mockApiUtils';
 
 export interface LeadResponseRule {
   id: string;

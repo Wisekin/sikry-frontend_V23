@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Search, Filter, Download, Upload, Building2, Globe, MapPin, Users } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useTranslation } from 'react-i18next';
-import { getCompanies } from "@/lib/actions/companies"
+import { getCompanies } from "@/actions/companies"
 import type { DiscoveredCompany } from "@/types/database"
 
 export default function CompaniesPage() {

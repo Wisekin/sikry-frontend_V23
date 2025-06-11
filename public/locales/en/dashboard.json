@@ -1,0 +1,21 @@
+{
+  "welcome": "Welcome to your dashboard",
+  "overview": "Overview",
+  "recentActivity": "Recent Activity",
+  "quickActions": "Quick Actions",
+  "stats": {
+    "totalCompanies": "Total Companies",
+    "activeCampaigns": "Active Campaigns",
+    "messagesSent": "Messages Sent",
+    "responseRate": "Response Rate"
+  },
+  "noRecentActivity": "No recent activity to display",
+  "viewAll": "View All",
+  "composeMessage": "Compose Message",
+  "createCampaign": "Create Campaign",
+  "addCompany": "Add Company",
+  "runReport": "Run Report",
+  "upcomingTasks": "Upcoming Tasks",
+  "noUpcomingTasks": "No upcoming tasks",
+  "dueToday": "Due Today"
+}
