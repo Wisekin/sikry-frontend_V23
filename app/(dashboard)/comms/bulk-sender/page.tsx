@@ -220,10 +220,10 @@ export default function BulkSenderPage() {
     }
 
     const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onChange }) => (
-        <div className="flex items-center space-x-2 ml-4">
-            <span className="text-xs text-brand-secondary">Theme:</span>
-            <div className="flex space-x-1">
-            <button 
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 ml-0 sm:ml-4 mt-2 sm:mt-0">
+            <span className="text-xs text-brand-secondary whitespace-nowrap">Theme:</span>
+            <div className="flex flex-wrap gap-1">
+                <button 
                     onClick={() => onChange('brand')} 
                     className={`w-6 h-6 rounded-full border ${currentColor === 'brand' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
                     style={{ backgroundColor: '#1B1F3B' }}

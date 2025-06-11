@@ -4159,3 +4159,539 @@ These changes ensure that when you select either the dark or brand color theme, 
 
 ---
 
+_**User**_
+
+it seems the div from which we select the theme is not reponsive and all screens
+
+---
+
+_**Assistant**_
+
+I'll help you make the theme selection div responsive for all screen sizes. Let me modify the ColorPicker component to be more responsive.
+
+
+---
+
+```diff
+  
+      const ColorPicker: React.FC<ColorPickerProps> = ({ currentColor, onChange }) => (
+-         <div className="flex items-center space-x-2 ml-4">
+-             <span className="text-xs text-brand-secondary">Theme:</span>
+-             <div className="flex space-x-1">
++         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 ml-0 sm:ml-4 mt-2 sm:mt-0">
++             <span className="text-xs text-brand-secondary whitespace-nowrap">Theme:</span>
++             <div className="flex flex-wrap gap-1">
+                  <button 
+                      onClick={() => onChange('brand')} 
+```
+
+---
+
+I've made the following changes to make the ColorPicker component responsive:
+
+1. Changed the main container to use `flex-col` on mobile and `flex-row` on larger screens:
+   - `flex flex-col sm:flex-row`
+   - Added proper spacing with `space-y-2` for mobile and `sm:space-y-0 sm:space-x-2` for larger screens
+
+2. Improved alignment:
+   - `items-start` on mobile and `sm:items-center` on larger screens
+   - Added `whitespace-nowrap` to prevent "Theme:" text from wrapping
+
+3. Made the color buttons container more flexible:
+   - Changed from `space-x-1` to `gap-1` for more consistent spacing
+   - Added `flex-wrap` to allow buttons to wrap on smaller screens
+
+4. Adjusted margins:
+   - Removed fixed left margin on mobile (`ml-0`)
+   - Added margin on larger screens (`sm:ml-4`)
+   - Added top margin on mobile (`mt-2`) and removed it on larger screens (`sm:mt-0`)
+
+These changes will make the theme selector:
+- Stack vertically on mobile devices
+- Display horizontally on larger screens
+- Allow color buttons to wrap when space is limited
+- Maintain proper spacing and alignment across all screen sizes
+
+The component should now be fully responsive and look good on all screen sizes.
+
+---
+
+_**User**_
+
+can you fix this? at /gap-analysis/results
+hook.js:608 Error: Échec de la récupération des résultats : Method Not Allowed
+    at fetchData (page.tsx:82:15)
+
+---
+
+_**Assistant**_
+
+I'll help you fix the "Method Not Allowed" error in the gap analysis results page. This error typically occurs when the HTTP method (GET, POST, etc.) being used doesn't match what the server endpoint expects. Let me check the relevant code.
+
+
+---
+
+<details>
+            <summary>Searched codebase "fetchData in gap-analysis/results page.tsx" • **25** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L67-121 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L41-48 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L121-147 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L36-41 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L1-27 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L270-283 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L27-36 |
+| `app/(dashboard)/gap-analysis/form/page.tsx` | L167-234 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L215-249 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L283-312 |
+| `app/(dashboard)/gap-analysis/page.tsx` | L127-147 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L147-175 |
+| `app/(dashboard)/gap-analysis/page.tsx` | L1-65 |
+| `app/(dashboard)/gap-analysis/page.tsx` | L147-187 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L175-195 |
+| `app/(dashboard)/gap-analysis/page.tsx` | L65-104 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L249-270 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L195-215 |
+| `app/(dashboard)/gap-analysis/form/page.tsx` | L681-719 |
+| `app/(dashboard)/gap-analysis/results/loading.tsx` | L1-42 |
+| `app/(dashboard)/gap-analysis/form/page.tsx` | L259-290 |
+| `app/(dashboard)/gap-analysis/page.tsx` | L104-127 |
+| `app/(dashboard)/gap-analysis/results/page.tsx` | L48-67 |
+| `app/(dashboard)/gap-analysis/form/page.tsx` | L32-49 |
+| `app/(dashboard)/gap-analysis/form/page.tsx` | L49-111 |
+
+</details>
+
+---
+
+Let me check the API route for gap analysis results.
+
+
+---
+
+<details>
+            <summary>Searched codebase "api/gap-analysis/results route.ts" • **25** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `app/api/gap-analysis/results/route.ts` | L1-1 |
+| `app/api/gap-analysis/route.ts` | L1-39 |
+| `app/api/gap-analysis/route.ts` | L39-72 |
+| `app/api/gap-analysis/route.ts` | L72-88 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L243-250 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L57-67 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L67-127 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L1-57 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L203-243 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L178-203 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L153-178 |
+| `app/api/gap-analysis/letters/route.ts` | L1-13 |
+| `app/api/statistics/source-comparison/route.ts` | L12-25 |
+| `app/api/gap-analysis/[id]/generate-letter/route.ts` | L127-153 |
+| `app/api/lead-response/analytics/route.ts` | L1-29 |
+| `app/api/search/natural/new-route.ts` | L6-73 |
+| `app/api/search/natural/route.ts` | L175-225 |
+| `app/api/analytics/performance/route.ts` | L12-17 |
+| `app/api/lead-response/analytics/route.ts` | L29-107 |
+| `app/api/analytics/conversion/route.ts` | L9-10 |
+| `app/api/analytics/conversion/route.ts` | L1-8 |
+| `app/api/gap-analysis/letters/route.ts` | L45-63 |
+| `app/api/analytics/performance/route.ts` | L55-77 |
+| `app/api/statistics/source-comparison/route.ts` | L33-79 |
+| `app/api/analytics/performance/route.ts` | L1-10 |
+
+</details>
+
+---
+
+I see the issue. The error "Method Not Allowed" is occurring because there's no API route handler for `/api/gap-analysis/results`. Let me create the necessary API route.
+
+
+---
+
+```diff
+- 
++ import { type NextRequest, NextResponse } from "next/server"
++ import { createClient } from "@/utils/supabase/server"
++ 
++ export async function GET(request: NextRequest) {
++   try {
++     const supabase = createClient()
++     
++     // Get the latest gap analysis results
++     const { data, error } = await supabase
++       .from("gap_analyses")
++       .select(`
++         *,
++         contacts(*),
++         discovered_companies(*)
++       `)
++       .order("created_at", { ascending: false })
++       .limit(1)
++       .single()
++ 
++     if (error) {
++       return NextResponse.json({ error: error.message }, { status: 500 })
++     }
++ 
++     if (!data) {
++       return NextResponse.json({ error: "No gap analysis found" }, { status: 404 })
++     }
++ 
++     // Transform the data into the expected format
++     const results = {
++       summaryStats: {
++         totalGapsIdentified: data.gap_scores ? Object.keys(data.gap_scores).length : 0,
++         averageSeverity: calculateAverageSeverity(data.gap_scores),
++         keyAreasForImprovement: data.priority_areas || [],
++         overallReadinessScore: Math.round(data.overall_score * 20) // Convert 0-5 scale to percentage
++       },
++       detailedResults: transformGapScoresToDetailedResults(data.gap_scores),
++       severityDistributionChartData: generateSeverityDistribution(data.gap_scores),
++       areaDistributionChartData: generateAreaDistribution(data.gap_scores)
++     }
++ 
++     return NextResponse.json(results)
++   } catch (error) {
++     console.error("Error fetching gap analysis results:", error)
++     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
++   }
++ }
++ 
++ function calculateAverageSeverity(gapScores: Record<string, number> | null): 'High' | 'Medium' | 'Low' {
++   if (!gapScores) return 'Medium'
++   
++   const scores = Object.values(gapScores)
++   const average = scores.reduce((a, b) => a + b, 0) / scores.length
++   
++   if (average >= 4) return 'High'
++   if (average >= 2) return 'Medium'
++   return 'Low'
++ }
++ 
++ function transformGapScoresToDetailedResults(gapScores: Record<string, number> | null) {
++   if (!gapScores) return []
++   
++   return Object.entries(gapScores).map(([area, score], index) => ({
++     id: `gap-${index + 1}`,
++     area: formatAreaName(area),
++     gapDescription: generateGapDescription(area, score),
++     severity: calculateSeverity(score),
++     recommendations: generateRecommendations(area, score),
++     responsibleTeam: determineResponsibleTeam(area)
++   }))
++ }
++ 
++ function formatAreaName(area: string): string {
++   return area
++     .split('_')
++     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
++     .join(' ')
++ }
++ 
++ function generateGapDescription(area: string, score: number): string {
++   const descriptions = {
++     technology: [
++       "Current technology infrastructure needs significant modernization",
++       "Technology stack requires strategic updates",
++       "Technology systems are well-maintained"
++     ],
++     process: [
++       "Operational processes need comprehensive review",
++       "Process optimization opportunities identified",
++       "Processes are well-defined and efficient"
++     ],
++     people: [
++       "Team capabilities require development",
++       "Some skill gaps identified",
++       "Team capabilities are strong"
++     ]
++   }
++   
++   const index = score >= 4 ? 0 : score >= 2 ? 1 : 2
++   return descriptions[area as keyof typeof descriptions]?.[index] || "Area requires attention"
++ }
++ 
++ function calculateSeverity(score: number): 'High' | 'Medium' | 'Low' {
++   if (score >= 4) return 'High'
++   if (score >= 2) return 'Medium'
++   return 'Low'
++ }
++ 
++ function generateRecommendations(area: string, score: number): string[] {
++   const recommendations = {
++     technology: [
++       "Implement modern cloud infrastructure",
++       "Upgrade core systems",
++       "Enhance security measures"
++     ],
++     process: [
++       "Streamline operational workflows",
++       "Implement automation solutions",
++       "Optimize resource allocation"
++     ],
++     people: [
++       "Develop training programs",
++       "Enhance team capabilities",
++       "Foster knowledge sharing"
++     ]
++   }
++   
++   return recommendations[area as keyof typeof recommendations] || ["Review current practices", "Identify improvement opportunities"]
++ }
++ 
++ function determineResponsibleTeam(area: string): string {
++   const teams = {
++     technology: "IT Department",
++     process: "Operations Team",
++     people: "HR Department"
++   }
++   
++   return teams[area as keyof typeof teams] || "Management Team"
++ }
++ 
++ function generateSeverityDistribution(gapScores: Record<string, number> | null) {
++   if (!gapScores) return []
++   
++   const severityCounts = {
++     High: 0,
++     Medium: 0,
++     Low: 0
++   }
++   
++   Object.values(gapScores).forEach(score => {
++     if (score >= 4) severityCounts.High++
++     else if (score >= 2) severityCounts.Medium++
++     else severityCounts.Low++
++   })
++   
++   return Object.entries(severityCounts).map(([name, value]) => ({
++     name,
++     value
++   }))
++ }
++ 
++ function generateAreaDistribution(gapScores: Record<string, number> | null) {
++   if (!gapScores) return []
++   
++   return Object.entries(gapScores).map(([name, value]) => ({
++     name: formatAreaName(name),
++     value: Math.round(value * 20) // Convert to percentage
++   }))
++ }
++ 
+```
+
+---
+
+I've created a new API route handler for `/api/gap-analysis/results` that:
+
+1. Fetches the latest gap analysis from the database
+2. Transforms the data into the format expected by the frontend
+3. Includes helper functions to:
+   - Calculate average severity
+   - Transform gap scores into detailed results
+   - Generate severity distribution data
+   - Generate area distribution data
+   - Format area names and descriptions
+   - Generate recommendations based on scores
+   - Determine responsible teams
+
+The error "Method Not Allowed" should now be resolved since we've added the GET handler for the `/api/gap-analysis/results` endpoint. The endpoint will:
+
+1. Return the latest gap analysis results
+2. Include summary statistics
+3. Provide detailed results with recommendations
+4. Include chart data for visualizations
+
+Try refreshing the page or making another request to the gap analysis results page. The error should be resolved now.
+
+---
+
+_**User**_
+
+GET /api/gap-analysis/results 500 in 2312ms
+Error: Failed to fetch results: Internal Server Error
+    at fetchData (page.tsx:82:15)
+
+---
+
+_**Assistant**_
+
+Let me help you debug the 500 Internal Server Error in the gap analysis results API. The error is likely occurring because we need to properly handle the database connection and data transformation. Let me modify the API route to add better error handling and logging.
+
+
+---
+
+```diff
+        .from("gap_analyses")
+        .select(`
+-         *,
+-         contacts(*),
+-         discovered_companies(*)
++         id,
++         overall_score,
++         gap_scores,
++         priority_areas,
++         created_at,
++         contacts (
++           id,
++           name,
++           email
++         ),
++         discovered_companies (
++           id,
++           name,
++           industry
++         )
+        `)
+        .order("created_at", { ascending: false })
+```
+
+```diff
+  
+      if (error) {
++       console.error("Database error:", error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+      }
+  
+      if (!data) {
++       console.log("No gap analysis found")
+        return NextResponse.json({ error: "No gap analysis found" }, { status: 404 })
+      }
++ 
++     // Log the raw data for debugging
++     console.log("Raw gap analysis data:", data)
+  
+      // Transform the data into the expected format
+```
+
+```diff
+          averageSeverity: calculateAverageSeverity(data.gap_scores),
+          keyAreasForImprovement: data.priority_areas || [],
+-         overallReadinessScore: Math.round(data.overall_score * 20) // Convert 0-5 scale to percentage
++         overallReadinessScore: Math.round((data.overall_score || 0) * 20) // Convert 0-5 scale to percentage
+        },
+        detailedResults: transformGapScoresToDetailedResults(data.gap_scores),
+        severityDistributionChartData: generateSeverityDistribution(data.gap_scores),
+        areaDistributionChartData: generateAreaDistribution(data.gap_scores)
+      }
++ 
++     // Log the transformed results for debugging
++     console.log("Transformed results:", results)
+  
+      return NextResponse.json(results)
+    } catch (error) {
+-     console.error("Error fetching gap analysis results:", error)
+-     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
++     console.error("Error in gap analysis results API:", error)
++     return NextResponse.json(
++       { error: "Internal server error", details: error instanceof Error ? error.message : "Unknown error" },
++       { status: 500 }
++     )
+    }
+  }
+  
+  function calculateAverageSeverity(gapScores: Record<string, number> | null): 'High' | 'Medium' | 'Low' {
+-   if (!gapScores) return 'Medium'
++   if (!gapScores || Object.keys(gapScores).length === 0) return 'Medium'
+    
+    const scores = Object.values(gapScores)
+```
+
+```diff
+  
+  function transformGapScoresToDetailedResults(gapScores: Record<string, number> | null) {
+-   if (!gapScores) return []
++   if (!gapScores || Object.keys(gapScores).length === 0) {
++     return [{
++       id: 'gap-1',
++       area: 'General Assessment',
++       gapDescription: 'Initial assessment required',
++       severity: 'Medium' as const,
++       recommendations: ['Complete detailed assessment', 'Identify key areas for improvement'],
++       responsibleTeam: 'Management Team'
++     }]
++   }
+    
+    return Object.entries(gapScores).map(([area, score], index) => ({
+```
+
+```diff
+  
+  function generateSeverityDistribution(gapScores: Record<string, number> | null) {
+-   if (!gapScores) return []
++   if (!gapScores || Object.keys(gapScores).length === 0) {
++     return [
++       { name: 'High', value: 0 },
++       { name: 'Medium', value: 1 },
++       { name: 'Low', value: 0 }
++     ]
++   }
+    
+    const severityCounts = {
+```
+
+```diff
+  
+  function generateAreaDistribution(gapScores: Record<string, number> | null) {
+-   if (!gapScores) return []
++   if (!gapScores || Object.keys(gapScores).length === 0) {
++     return [
++       { name: 'General Assessment', value: 50 }
++     ]
++   }
+    
+    return Object.entries(gapScores).map(([name, value]) => ({
+      name: formatAreaName(name),
+-     value: Math.round(value * 20) // Convert to percentage
++     value: Math.round((value || 0) * 20) // Convert to percentage
+    }))
+  }
+```
+
+---
+
+I've made several improvements to the API route to handle errors better and provide more detailed debugging information:
+
+1. Added more specific database query fields instead of selecting all fields
+2. Added detailed error logging at each step
+3. Added fallback values for when data is missing or empty
+4. Added null checks and default values for calculations
+5. Improved error response with more details
+6. Added logging of raw data and transformed results for debugging
+
+The changes include:
+
+1. More specific database query:
+   - Explicitly selecting only needed fields
+   - Structured nested queries for contacts and companies
+
+2. Better error handling:
+   - Detailed error logging
+   - More informative error responses
+   - Fallback values for missing data
+
+3. Improved data transformation:
+   - Default values when gap scores are missing
+   - Fallback UI states for empty data
+   - Null checks for all calculations
+
+4. Added debugging logs:
+   - Raw database data
+   - Transformed results
+   - Error details
+
+Try refreshing the page now. If you still get an error, check the server logs (they should now be more detailed) and let me know what specific error message you see. This will help us pinpoint the exact issue.
+
+Also, make sure that:
+1. The Supabase client is properly configured
+2. The database has the correct table structure
+3. There is at least one gap analysis record in the database
+
+Let me know if you still see any errors and I'll help you resolve them.
+
+---
+
