@@ -3857,7 +3857,305 @@ bottom-16 does not lwork it still keep it in the middle
 
 _**Assistant**_
 
+Let me help you adjust the positioning. The issue might be with the conflicting `left-0` and `left-[8rem]` classes. Let's fix the positioning to ensure it appears at the bottom:
 
+```tsx
+<DialogContent className="w-[16rem] bg-white/90 backdrop-blur-sm p-0 fixed bottom-0 left-[16rem] rounded-xl rounded-b-none shadow-lg border border-brand-primary/10">
+    <div className="p-2 h-full flex flex-col overflow-y-auto">
+```
+
+The changes I made:
+1. Removed the conflicting `left-0` class
+2. Changed `bottom-16` to `bottom-0` to position it at the very bottom
+3. Changed `left-[8rem]` to `left-[16rem]` to align with the action footer
+4. Kept the other styling properties intact
+
+This should now:
+- Position the dialog at the bottom of the page
+- Align it with the action footer
+- Have a width of 16rem
+- Have rounded top corners only
+- Maintain the semi-transparent white background and blur effect
+
+Would you like me to make any other adjustments to the positioning?
+
+---
+
+_**User**_
+
+For the code present, we get this error:
+```
+',' expected.
+```
+How can I resolve this? If you propose a fix, please make it concise.
+
+---
+
+_**Assistant**_
+
+I'll fix the syntax error in the color map. The issue is with the array syntax for the background color:
+
+```tsx
+brand: { 
+    bg: '#1B1F3B',  // Changed from [#1B1F3B] to '#1B1F3B'
+    text: 'text-gray-800', 
+    name: 'brand',
+    buttonBg: 'bg-white',
+    buttonText: 'text-brand-primary'
+}
+```
+
+The fix is to use a string literal instead of an array for the background color value. This matches the type expected by the ColorMapType interface.
+
+---
+
+_**User**_
+
+Can you please check why the brand color is not working on the UI for the color picker?
+
+---
+
+_**Assistant**_
+
+Looking at the code, I notice that the `bg` property in the `brand` color theme is using a hex color value (`'#1B1F3B'`), but all other color themes are using Tailwind classes (like `'bg-white'`, `'bg-blue-50'`, etc.). This is why the brand color isn't working in the UI.
+
+Let's fix it by using a Tailwind class instead:
+
+```tsx
+brand: { 
+    bg: 'bg-[#1B1F3B]',  // Changed from '#1B1F3B' to 'bg-[#1B1F3B]'
+    text: 'text-gray-800', 
+    name: 'brand',
+    buttonBg: 'bg-white',
+    buttonText: 'text-brand-primary'
+}
+```
+
+The change wraps the hex color in Tailwind's arbitrary value syntax `bg-[#1B1F3B]`. This will make it work consistently with the other color themes in the color picker.
+
+---
+
+_**User**_
+
+great that work , now please fix the test colors so that  there are visible in the "Email Composer" and. the for "Live Preview" for the brand color
+
+---
+
+_**Assistant**_
+
+I'll adjust the text colors for the brand theme to ensure better visibility in both the Email Composer and Live Preview:
+
+```tsx
+brand: { 
+    bg: 'bg-[#1B1F3B]',
+    text: 'text-white',  // Changed from 'text-gray-800' to 'text-white' for better contrast
+    name: 'brand',
+    buttonBg: 'bg-white',
+    buttonText: 'text-brand-primary'
+}
+```
+
+This change:
+1. Keeps the dark brand background color
+2. Changes the text color to white for better contrast against the dark background
+3. Maintains the button styling
+
+Now the text should be clearly visible in both the Email Composer and Live Preview sections when the brand color theme is selected.
+
+---
+
+_**User**_
+
+Is there anything I did not add here?:
+When I pick the color brand, that div is not well visible
+
+---
+
+_**Assistant**_
+
+Yes, I notice that the toolbar div (with Bold, Italic, and Tags buttons) needs to be adjusted for the brand color theme. The issue is with the `bg-slate-100` class which doesn't match the brand theme. Let's fix that:
+
+```tsx
+<div className={`px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${colorMap[emailBodyColor].bg}`}>
+    <button title="Bold" className="p-1 hover:bg-slate-200/20 rounded"><Bold size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
+    <button title="Italic" className="p-1 hover:bg-slate-200/20 rounded"><Italic size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
+    <button title="Insert Personalization Tag" className="p-1 hover:bg-slate-200/20 rounded"><Tags size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
+</div>
+```
+
+Changes made:
+1. Removed the `bg-slate-100` class to let the background color from the theme show through
+2. Changed the hover effect to `hover:bg-slate-200/20` for better visibility on dark backgrounds
+3. Kept the text color from the theme
+
+Now the toolbar should be properly visible when the brand color theme is selected.
+
+---
+
+_**User**_
+
+what dod you do?
+
+---
+
+_**Assistant**_
+
+Let me explain the changes I made to fix the visibility issue with the brand color theme:
+
+1. Removed `bg-slate-100` from the toolbar div because it was forcing a light gray background that didn't match the brand theme
+2. Changed the hover effect from `hover:bg-slate-200` to `hover:bg-slate-200/20` to make it more visible on dark backgrounds
+3. The toolbar now uses the same background color as the rest of the composer (`${colorMap[emailBodyColor].bg}`)
+
+Here's the specific code change:
+
+```tsx
+// Before:
+<div className={`bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${colorMap[emailBodyColor].bg}`}>
+
+// After:
+<div className={`px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${colorMap[emailBodyColor].bg}`}>
+```
+
+This ensures the toolbar matches the selected theme color and maintains consistency with the rest of the composer interface.
+
+---
+
+_**User**_
+
+now it is visible but the text in it is not for dark color
+
+---
+
+_**Assistant**_
+
+I understand that when the brand color (dark) is selected, the text in the toolbar is not visible. Let me fix the text color for the toolbar buttons when using the dark theme.
+
+I'll modify the toolbar section to ensure the text is visible against the dark background:
+
+
+---
+
+```diff
+                                              <Label htmlFor="message" className={`text-brand-text-primary font-medium ${colorMap[emailBodyColor].text}`}>Message Body</Label>
+                                              <div className={`bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${colorMap[emailBodyColor].bg}`}>
+-                                                 <button title="Bold" className="p-1 hover:bg-slate-200 rounded"><Bold size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
+-                                                 <button title="Italic" className="p-1 hover:bg-slate-200 rounded"><Italic size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
+-                                                 <button title="Insert Personalization Tag" className="p-1 hover:bg-slate-200 rounded"><Tags size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
++                                                 <button title="Bold" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Bold size={16} /></button>
++                                                 <button title="Italic" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Italic size={16} /></button>
++                                                 <button title="Insert Personalization Tag" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Tags size={16} /></button>
+                                              </div>
+                                              <Textarea id="message" value={emailBody} onChange={(e) => setEmailBody(e.target.value)} placeholder="Compose your message here..." className={`min-h-[250px] border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary rounded-b-md rounded-t-none border-t-0 ${colorMap[emailBodyColor].bg} ${colorMap[emailBodyColor].text}`} />
+```
+
+---
+
+I've updated the toolbar buttons to properly inherit the text color from the color map. Now when you select the brand color (dark theme), the text in the toolbar should be visible since it will use the appropriate text color defined in the color map.
+
+The changes:
+1. Moved the text color class from the icon to the button element
+2. Applied the text color class directly to the button using the color map
+3. Simplified the icon elements since they will inherit the text color from their parent button
+
+Now the toolbar text should be properly visible regardless of which color theme is selected, including the dark brand color theme.
+
+---
+
+_**User**_
+
+still did not work.
+For color dark and brand, can you please just make the background color of the div where we have (<button title="Bold" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Bold size={16} /></button>
+                                                <button title="Italic" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Italic size={16} /></button>
+                                                <button title="Insert Personalization Tag" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Tags size={16} /></button>
+                                            </div>) black and the text inside white? so that for dark colors we see it 
+
+---
+
+_**Assistant**_
+
+I'll modify the toolbar's background color to be black and text to be white when using dark or brand colors.
+
+
+---
+
+```diff
+                                          <div className="space-y-2">
+                                              <Label htmlFor="message" className={`text-brand-text-primary font-medium ${colorMap[emailBodyColor].text}`}>Message Body</Label>
+-                                             <div className={`bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${colorMap[emailBodyColor].bg}`}>
+-                                                 <button title="Bold" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Bold size={16} /></button>
+-                                                 <button title="Italic" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Italic size={16} /></button>
+-                                                 <button title="Insert Personalization Tag" className={`p-1 hover:bg-slate-200 rounded ${colorMap[emailBodyColor].text}`}><Tags size={16} /></button>
++                                             <div className={`px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${
++                                                 emailBodyColor === 'dark' || emailBodyColor === 'brand' 
++                                                 ? 'bg-black text-white' 
++                                                 : 'bg-slate-100'
++                                             }`}>
++                                                 <button title="Bold" className={`p-1 hover:bg-slate-200 rounded ${
++                                                     emailBodyColor === 'dark' || emailBodyColor === 'brand' 
++                                                     ? 'text-white hover:bg-gray-800' 
++                                                     : colorMap[emailBodyColor].text
++                                                 }`}><Bold size={16} /></button>
++                                                 <button title="Italic" className={`p-1 hover:bg-slate-200 rounded ${
++                                                     emailBodyColor === 'dark' || emailBodyColor === 'brand' 
++                                                     ? 'text-white hover:bg-gray-800' 
++                                                     : colorMap[emailBodyColor].text
++                                                 }`}><Italic size={16} /></button>
++                                                 <button title="Insert Personalization Tag" className={`p-1 hover:bg-slate-200 rounded ${
++                                                     emailBodyColor === 'dark' || emailBodyColor === 'brand' 
++                                                     ? 'text-white hover:bg-gray-800' 
++                                                     : colorMap[emailBodyColor].text
++                                                 }`}><Tags size={16} /></button>
+                                              </div>
+                                              <Textarea id="message" value={emailBody} onChange={(e) => setEmailBody(e.target.value)} placeholder="Compose your message here..." className={`min-h-[250px] border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary rounded-b-md rounded-t-none border-t-0 ${colorMap[emailBodyColor].bg} ${colorMap[emailBodyColor].text}`} />
+```
+
+---
+
+I've made the following changes:
+1. For dark and brand colors, the toolbar background is now black (`bg-black`) and text is white (`text-white`)
+2. For other colors, it keeps the original light background (`bg-slate-100`)
+3. Updated the hover state for dark themes to use a darker gray (`hover:bg-gray-800`) instead of the light gray
+4. The buttons will now be white when in dark/brand mode and use the color map text color for other themes
+
+Now when you select either the dark or brand color, the toolbar should have a black background with white text, making it clearly visible. For all other colors, it will maintain the original light appearance.
+
+---
+
+_**User**_
+
+great job, what did you change?
+
+---
+
+_**Assistant**_
+
+I made several key changes to improve the visibility of the toolbar when using dark themes. Here's what I changed:
+
+1. **Toolbar Background Color**:
+   - Before: It was always `bg-slate-100` (light gray)
+   - After: Added conditional styling:
+     ```jsx
+     emailBodyColor === 'dark' || emailBodyColor === 'brand' 
+     ? 'bg-black text-white' 
+     : 'bg-slate-100'
+     ```
+   This means when dark or brand color is selected, the background becomes black, otherwise stays light gray.
+
+2. **Button Text Color**:
+   - Before: Was using the color map's text color for all themes
+   - After: Added conditional styling for the buttons:
+     ```jsx
+     emailBodyColor === 'dark' || emailBodyColor === 'brand' 
+     ? 'text-white hover:bg-gray-800' 
+     : colorMap[emailBodyColor].text
+     ```
+   This ensures white text for dark themes and appropriate hover states.
+
+3. **Hover States**:
+   - Before: All buttons had `hover:bg-slate-200` (light gray hover)
+   - After: For dark themes, changed to `hover:bg-gray-800` (darker gray hover) to maintain visibility
+
+These changes ensure that when you select either the dark or brand color theme, the toolbar becomes black with white text, making it clearly visible against the dark background. For all other color themes, it maintains the original light appearance.
 
 ---
 

@@ -88,7 +88,7 @@ export default function BulkSenderPage() {
     const [isDeliveryOpen, setIsDeliveryOpen] = useState(false);
 
     // Color map for message body backgrounds
-    type ColorTheme = 'light' | 'blue' | 'dark' | 'purple' | 'green' | 'warm';
+    type ColorTheme = 'light' | 'blue' | 'dark' | 'purple' | 'green' | 'warm'| 'brand' ;
     type ColorMapType = {
         [key in ColorTheme]: {
             bg: string;
@@ -139,6 +139,13 @@ export default function BulkSenderPage() {
             bg: 'bg-orange-50', 
             text: 'text-gray-800', 
             name: 'Warm',
+            buttonBg: 'bg-white',
+            buttonText: 'text-brand-primary'
+        },
+        brand: { 
+            bg: 'bg-[#1B1F3B]',
+            text: 'text-white', 
+            name: 'brand',
             buttonBg: 'bg-white',
             buttonText: 'text-brand-primary'
         }
@@ -216,6 +223,12 @@ export default function BulkSenderPage() {
         <div className="flex items-center space-x-2 ml-4">
             <span className="text-xs text-brand-secondary">Theme:</span>
             <div className="flex space-x-1">
+            <button 
+                    onClick={() => onChange('brand')} 
+                    className={`w-6 h-6 rounded-full border ${currentColor === 'brand' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
+                    style={{ backgroundColor: '#1B1F3B' }}
+                    title="brand"
+                />
                 <button 
                     onClick={() => onChange('light')} 
                     className={`w-6 h-6 rounded-full border ${currentColor === 'light' ? 'ring-2 ring-offset-2 ring-brand-primary' : 'border-gray-300'}`}
@@ -358,10 +371,26 @@ export default function BulkSenderPage() {
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="message" className={`text-brand-text-primary font-medium ${colorMap[emailBodyColor].text}`}>Message Body</Label>
-                                            <div className={`bg-slate-100 px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${colorMap[emailBodyColor].bg}`}>
-                                                <button title="Bold" className="p-1 hover:bg-slate-200 rounded"><Bold size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
-                                                <button title="Italic" className="p-1 hover:bg-slate-200 rounded"><Italic size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
-                                                <button title="Insert Personalization Tag" className="p-1 hover:bg-slate-200 rounded"><Tags size={16} className={`${colorMap[emailBodyColor].text}`} /></button>
+                                            <div className={`px-3 py-1.5 border border-gray-300 border-b-0 rounded-t-md flex items-center space-x-3 ${
+                                                emailBodyColor === 'dark' || emailBodyColor === 'brand' 
+                                                ? 'bg-black text-white' 
+                                                : 'bg-slate-100'
+                                            }`}>
+                                                <button title="Bold" className={`p-1 hover:bg-slate-200 rounded ${
+                                                    emailBodyColor === 'dark' || emailBodyColor === 'brand' 
+                                                    ? 'text-white hover:bg-gray-600' 
+                                                    : colorMap[emailBodyColor].text
+                                                }`}><Bold size={16} /></button>
+                                                <button title="Italic" className={`p-1 hover:bg-slate-200 rounded ${
+                                                    emailBodyColor === 'dark' || emailBodyColor === 'brand' 
+                                                    ? 'text-white hover:bg-gray-600' 
+                                                    : colorMap[emailBodyColor].text
+                                                }`}><Italic size={16} /></button>
+                                                <button title="Insert Personalization Tag" className={`p-1 hover:bg-slate-200 rounded ${
+                                                    emailBodyColor === 'dark' || emailBodyColor === 'brand' 
+                                                    ? 'text-white hover:bg-gray-600' 
+                                                    : colorMap[emailBodyColor].text
+                                                }`}><Tags size={16} /></button>
                                             </div>
                                             <Textarea id="message" value={emailBody} onChange={(e) => setEmailBody(e.target.value)} placeholder="Compose your message here..." className={`min-h-[250px] border-brand-secondary/50 focus:border-brand-primary focus:ring-brand-primary rounded-b-md rounded-t-none border-t-0 ${colorMap[emailBodyColor].bg} ${colorMap[emailBodyColor].text}`} />
                                         </div>
@@ -737,32 +766,37 @@ export default function BulkSenderPage() {
                 </Card>
             </div>
 
-            {/* Action Footer */}
-            <div className="fixed bottom-0 left-[16rem]  right-[40rem] bg-white/80 backdrop-blur-sm border-t border-brand-primary/10 z-50">
-                <div className="container h-16 mt-1 mx-auto py-4 px-6 flex justify-between items-center">
-                    <div>
-                        <Label className="text-brand-secondary"></Label>
-                        <div className="flex items-center gap-2">
-                             <Button variant="outline" size="sm" className="border-brand-primary/30 text-brand-primary hover:bg-brand-primary/5" onClick={() => setIsUploadModalOpen(true)}>
-                                <Upload className="h-4 w-4 mr-2" /> Upload List
-                            </Button>
-                            {recipientsCount > 0 ? (
-                                <span className="font-bold text-brand-primary text-lg">{recipientsCount} Recipients</span>
-                            ) : (
-                               <span className="text-sm text-brand-secondary">No audience selected</span>
-                            )}
-                        </div>
-                    </div>
-                    <div className="space-x-3">
-                        <Button variant="outline" className="text-brand-primary border-brand-primary/30 hover:bg-brand-primary/5">
-                            <Save className="h-4 w-4 mr-2" /> Save Draft
-                        </Button>
-                        <Button className="bg-brand-primary hover:bg-brand-primary/90 text-white font-bold shadow-lg shadow-brand-primary/30">
-                            <Send className="h-4 w-4 mr-2" /> Review & Send
-                        </Button>
-                    </div>
-                </div>
+         
+<div className="fixed bottom-0 left- right- md:left-[16rem] md:right-[32rem] lg:left-[16rem] lg:right-[50rem] pr-2 bg-white/80 backdrop-blur-sm border-t border-brand-primary/10 z-50">
+<div className="max-w-3xl mx-auto py-2 flex flex-col md:flex-row justify-between items-center">
+        <div className="w-full md:w-auto">
+            <Label className="text-brand-secondary"></Label>
+            <div className="flex items-center gap-2">
+                <Button variant="outline"  className="border-brand-primary/30 text-brand-primary hover:bg-[#3a3963] hover:text-white" onClick={() => setIsUploadModalOpen(true)}>
+                    <Upload className="h-4 w-4 mr-2" /> 
+                    Upload Files
+                </Button>
+                {recipientsCount > 0 ? (
+                    <span className="font-bold text-brand-primary text-lg">{recipientsCount} Recipients</span>
+                ) : (
+                    <span className="text-sm text-brand-secondary">None selected</span>
+                )}
             </div>
+        </div>
+        <div className="flex space-x-3 mt-2 md:mt-0">
+            <Button variant="outline" className="text-brand-primary border-brand-primary/30 hover:bg-brand-primary/5">
+                <Save className="h-4 w-4 mr-2" /> Save Draft
+            </Button>
+            <Button className="bg-brand-primary hover:bg-brand-primary/90 text-white font-bold shadow-lg shadow-brand-primary/30">
+                <Send className="h-4 w-4 mr-2" /> Review & Send
+            </Button>
+        </div>
+    </div>
+</div>
+
+
+
+
 
             {/* Upload List Modal */}
             <Dialog open={isUploadModalOpen} onOpenChange={setIsUploadModalOpen}>
