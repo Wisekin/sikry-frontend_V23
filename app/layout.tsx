@@ -5,6 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/providers/ThemeProvider"
 import { cn } from "@/lib/utils"
 import { AuthProvider } from "@/providers/AuthProvider"
+import { TranslationProvider } from "@/providers/TranslationProvider";
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,9 +24,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
         <body className={cn(inter.className, "min-h-screen bg-background font-sans antialiased")}>
 <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
+            <TranslationProvider>
+              <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                {children}
+              </ThemeProvider>
+            </TranslationProvider>
 </AuthProvider>
         
         </body>

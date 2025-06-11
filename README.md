@@ -210,12 +210,14 @@ For support and questions:
 
 Built with ❤️ using Next.js and the ServiceNow Design System
 
+
 ```
-sikry-frontend_V22
+sikry-frontend_V23
+├─ .cursorindexingignore
 ├─ .specstory
+│  ├─ .what-is-this.md
 │  └─ history
-│     └─ 2025-06-05_13-56-help-me-fix-this.md
-├─ Building-Plan.md
+│     └─ 2025-06-10_15-45-fix-syntax-error-in-lead-response-page.md
 ├─ README.md
 ├─ app
 │  ├─ (auth)
@@ -246,18 +248,33 @@ sikry-frontend_V22
 │  │  │  └─ users
 │  │  │     └─ page.tsx
 │  │  ├─ analytics
+│  │  │  ├─ conversion
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  └─ page.tsx
 │  │  │  ├─ loading.tsx
-│  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  ├─ performance
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  └─ page.tsx
+│  │  │  └─ revenue
+│  │  │     ├─ loading.tsx
+│  │  │     └─ page.tsx
 │  │  ├─ comms
 │  │  │  ├─ bulk-sender
 │  │  │  │  ├─ loading.tsx
 │  │  │  │  └─ page.tsx
 │  │  │  ├─ campaigns
 │  │  │  │  ├─ loading.tsx
+│  │  │  │  ├─ new
+│  │  │  │  │  └─ page.tsx
 │  │  │  │  └─ page.tsx
 │  │  │  ├─ page.tsx
 │  │  │  └─ templates
+│  │  │     ├─ [id]
+│  │  │     │  └─ page.tsx
 │  │  │     ├─ loading.tsx
+│  │  │     ├─ new
+│  │  │     │  └─ page.tsx
 │  │  │     └─ page.tsx
 │  │  ├─ companies
 │  │  │  ├─ [id]
@@ -272,19 +289,77 @@ sikry-frontend_V22
 │  │  ├─ dashboard
 │  │  │  └─ page.tsx
 │  │  ├─ financial
+│  │  │  ├─ campaign-roi
+│  │  │  │  └─ page.tsx
 │  │  │  ├─ loading.tsx
-│  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  ├─ records
+│  │  │  │  └─ page.tsx
+│  │  │  └─ summary
+│  │  │     └─ page.tsx
 │  │  ├─ funnels
+│  │  │  ├─ automation
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ builder
+│  │  │  │  └─ page.tsx
 │  │  │  ├─ loading.tsx
-│  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ progress
+│  │  │     └─ page.tsx
 │  │  ├─ gap-analysis
+│  │  │  ├─ form
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ letters
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  └─ page.tsx
 │  │  │  ├─ loading.tsx
-│  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ results
+│  │  │     ├─ loading.tsx
+│  │  │     └─ page.tsx
 │  │  ├─ layout.tsx
+│  │  ├─ layout.tsx.bak
 │  │  ├─ lead-response
-│  │  │  └─ page.tsx
+│  │  │  ├─ analytics
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ loading.tsx
+│  │  │  ├─ page.tsx
+│  │  │  ├─ queue
+│  │  │  │  ├─ loading.tsx
+│  │  │  │  └─ page.tsx
+│  │  │  └─ rules
+│  │  │     ├─ loading.tsx
+│  │  │     └─ page.tsx
 │  │  ├─ market-intel
 │  │  │  └─ page.tsx
+│  │  ├─ new-layout.tsx
+│  │  ├─ notifications
+│  │  │  └─ page.tsx
+│  │  ├─ reengagement
+│  │  │  ├─ automation
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ classification
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ tasks
+│  │  │     └─ page.tsx
+│  │  ├─ referrals
+│  │  │  ├─ dashboard
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  ├─ rewards
+│  │  │  │  └─ page.tsx
+│  │  │  └─ tracking
+│  │  │     └─ page.tsx
+│  │  ├─ reviews
+│  │  │  ├─ booster
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ monitoring
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  └─ requests
+│  │  │     └─ page.tsx
 │  │  ├─ scrapers
 │  │  │  ├─ [id]
 │  │  │  │  └─ configure
@@ -308,11 +383,27 @@ sikry-frontend_V22
 │  │  │  ├─ SectorDistribution.tsx
 │  │  │  ├─ SourceComparison.tsx
 │  │  │  ├─ StatisticsPage.tsx
+│  │  │  ├─ collection-trends
+│  │  │  │  └─ page.tsx
 │  │  │  ├─ exports
 │  │  │  │  └─ page.tsx
-│  │  │  └─ page.tsx
+│  │  │  ├─ geographic-distribution
+│  │  │  │  └─ page.tsx
+│  │  │  ├─ page.tsx
+│  │  │  ├─ sector-distribution
+│  │  │  │  └─ page.tsx
+│  │  │  └─ source-comparison
+│  │  │     └─ page.tsx
 │  │  └─ vsl
-│  │     └─ templates
+│  │     ├─ page.tsx
+│  │     ├─ pages
+│  │     │  ├─ loading.tsx
+│  │     │  └─ page.tsx
+│  │     ├─ templates
+│  │     │  ├─ loading.tsx
+│  │     │  └─ page.tsx
+│  │     └─ tracking
+│  │        ├─ loading.tsx
 │  │        └─ page.tsx
 │  ├─ (marketing)
 │  │  ├─ features
@@ -327,8 +418,14 @@ sikry-frontend_V22
 │  │  │     ├─ route.test.ts
 │  │  │     └─ route.ts
 │  │  ├─ analytics
-│  │  │  └─ dashboard
-│  │  │     ├─ route.test.ts
+│  │  │  ├─ conversion
+│  │  │  │  └─ route.ts
+│  │  │  ├─ dashboard
+│  │  │  │  ├─ route.test.ts
+│  │  │  │  └─ route.ts
+│  │  │  ├─ performance
+│  │  │  │  └─ route.ts
+│  │  │  └─ revenue
 │  │  │     └─ route.ts
 │  │  ├─ auth
 │  │  │  └─ logout
@@ -365,16 +462,30 @@ sikry-frontend_V22
 │  │  │  ├─ [id]
 │  │  │  │  └─ progress
 │  │  │  │     └─ route.ts
+│  │  │  ├─ automation
+│  │  │  │  └─ route.ts
+│  │  │  ├─ builder
+│  │  │  │  └─ route.ts
+│  │  │  ├─ progress
+│  │  │  │  └─ route.ts
 │  │  │  └─ route.ts
 │  │  ├─ gap-analysis
 │  │  │  ├─ [id]
 │  │  │  │  └─ generate-letter
 │  │  │  │     └─ route.ts
+│  │  │  ├─ letters
+│  │  │  │  └─ route.ts
+│  │  │  ├─ results
+│  │  │  │  └─ route.ts
 │  │  │  └─ route.ts
 │  │  ├─ jobs
 │  │  │  └─ schedule
 │  │  │     └─ route.ts
 │  │  ├─ lead-response
+│  │  │  ├─ analytics
+│  │  │  │  └─ route.ts
+│  │  │  ├─ overview
+│  │  │  │  └─ route.ts
 │  │  │  ├─ queue
 │  │  │  │  └─ route.ts
 │  │  │  └─ rules
@@ -390,15 +501,28 @@ sikry-frontend_V22
 │  │  ├─ notifications
 │  │  │  └─ route.ts
 │  │  ├─ reengagement
+│  │  │  ├─ automation
+│  │  │  │  └─ route.ts
 │  │  │  ├─ classify-leads
 │  │  │  │  └─ route.ts
 │  │  │  └─ tasks
 │  │  │     └─ route.ts
 │  │  ├─ referrals
-│  │  │  └─ route.ts
-│  │  ├─ reviews
-│  │  │  └─ requests
+│  │  │  ├─ dashboard
+│  │  │  │  └─ route.ts
+│  │  │  ├─ rewards
+│  │  │  │  └─ route.ts
+│  │  │  ├─ route.ts
+│  │  │  └─ tracking
 │  │  │     └─ route.ts
+│  │  ├─ reviews
+│  │  │  ├─ booster
+│  │  │  │  └─ route.ts
+│  │  │  ├─ monitoring
+│  │  │  │  └─ route.ts
+│  │  │  ├─ requests
+│  │  │  │  └─ route.ts
+│  │  │  └─ route.ts
 │  │  ├─ scrapers
 │  │  │  ├─ [id]
 │  │  │  │  ├─ runs
@@ -416,23 +540,45 @@ sikry-frontend_V22
 │  │  │     └─ test-selector
 │  │  │        └─ route.ts
 │  │  ├─ search
+│  │  │  ├─ connection-test
+│  │  │  │  └─ route.ts
 │  │  │  ├─ natural
+│  │  │  │  ├─ new-route.ts
 │  │  │  │  └─ route.ts
 │  │  │  ├─ route.ts
-│  │  │  └─ suggestions
+│  │  │  ├─ suggestions
+│  │  │  │  └─ route.ts
+│  │  │  └─ test-connection
+│  │  │     └─ route.ts
+│  │  ├─ statistics
+│  │  │  ├─ collection-trends
+│  │  │  │  └─ route.ts
+│  │  │  ├─ geographic-distribution
+│  │  │  │  └─ route.ts
+│  │  │  ├─ sector-distribution
+│  │  │  │  └─ route.ts
+│  │  │  └─ source-comparison
 │  │  │     └─ route.ts
 │  │  ├─ user
 │  │  │  └─ route.ts
 │  │  ├─ vsl
 │  │  │  ├─ pages
 │  │  │  │  └─ route.ts
-│  │  │  └─ track
+│  │  │  ├─ templates
+│  │  │  │  └─ route.ts
+│  │  │  ├─ track
+│  │  │  │  └─ route.ts
+│  │  │  └─ tracking
 │  │  │     └─ route.ts
 │  │  └─ webhooks
 │  │     ├─ external
 │  │     │  └─ route.ts
 │  │     └─ internal
 │  │        └─ route.ts
+│  ├─ dashboard
+│  │  └─ admin
+│  │     └─ security
+│  │        └─ page.tsx
 │  ├─ error.tsx
 │  ├─ globals.css
 │  ├─ itsownglobals.css
@@ -472,6 +618,7 @@ sikry-frontend_V22
 │  │  └─ notCampaignsTable.tsx
 │  ├─ comms-channel-selector.tsx
 │  ├─ communications
+│  │  ├─ CommunicationFilters.tsx
 │  │  └─ CommunicationsTable.tsx
 │  ├─ company
 │  │  ├─ CompanyHeader.tsx
@@ -490,18 +637,21 @@ sikry-frontend_V22
 │  │  │  └─ ToastProvider.tsx
 │  │  ├─ layout
 │  │  │  ├─ AppShell.tsx
+│  │  │  ├─ EnterprisePageHeader.tsx
 │  │  │  └─ SectionContainer.tsx
 │  │  ├─ loading
+│  │  │  ├─ LoadingSkeleton.tsx
 │  │  │  ├─ LoadingSpinner.tsx
 │  │  │  └─ PageLoader.tsx
 │  │  ├─ navigation
 │  │  │  ├─ Breadcrumbs.tsx
 │  │  │  ├─ LanguageSelector.tsx
-│  │  │  ├─ SecondaryMenuBar.md
 │  │  │  ├─ SecondaryMenuBar.tsx
+│  │  │  ├─ SecondaryMenuBar.txt
+│  │  │  ├─ SecondaryMenuBarWrapper.tsx
+│  │  │  ├─ SecondaryMenuBarWrapper.txt
 │  │  │  ├─ SidebarNav.tsx
-│  │  │  ├─ TopNav.tsx
-│  │  │  └─ notTopNav.tsx
+│  │  │  └─ TopNav.tsx
 │  │  ├─ theme
 │  │  │  └─ ThemeToggle.tsx
 │  │  └─ typography
@@ -513,11 +663,13 @@ sikry-frontend_V22
 │  │  │  ├─ CompanyCard.tsx
 │  │  │  └─ IntelCard.tsx
 │  │  ├─ tables
-│  │  │  └─ DataTable.tsx
+│  │  │  ├─ DataTable.tsx
+│  │  │  └─ templateColumns.tsx
 │  │  └─ visualizations
 │  │     ├─ ScoreGauge.tsx
 │  │     └─ TrendChart.tsx
 │  ├─ data-field-pill.tsx
+│  ├─ data-sources-menu.tsx
 │  ├─ engagement-timeline.tsx
 │  ├─ financial
 │  │  └─ FinancialSummaryPanel.tsx
@@ -553,6 +705,7 @@ sikry-frontend_V22
 │  │  ├─ SelectorTester.tsx
 │  │  └─ V2ScraperEditor.tsx
 │  ├─ search
+│  │  ├─ EnhancedSearchBar.tsx
 │  │  ├─ MapView.tsx
 │  │  ├─ ResultsGrid.tsx
 │  │  └─ SmartSearchBar.tsx
@@ -589,6 +742,7 @@ sikry-frontend_V22
 │  │  ├─ pagination.tsx
 │  │  ├─ popover.tsx
 │  │  ├─ progress.tsx
+│  │  ├─ quality-metric-card.tsx
 │  │  ├─ radio-group.tsx
 │  │  ├─ resizable.tsx
 │  │  ├─ scroll-area.tsx
@@ -642,9 +796,12 @@ sikry-frontend_V22
 │  │     └─ fieldDetection.ts
 │  └─ search-engine
 │     ├─ hooks
-│     │  └─ useNaturalLanguage.ts
+│     │  ├─ useNaturalLanguage.ts
+│     │  └─ useNaturalLanguageV2.ts
 │     ├─ types.ts
 │     └─ utils
+│        ├─ externalApis.ts
+│        ├─ nlpUtils.ts
 │        └─ queryParser.ts
 ├─ hooks
 │  ├─ use-mobile.tsx
@@ -660,9 +817,13 @@ sikry-frontend_V22
 │  │  ├─ companyClient.ts
 │  │  ├─ scrapingClient.ts
 │  │  └─ searchClient.ts
+│  ├─ config
+│  │  ├─ external-apis.ts
+│  │  └─ openai.ts
 │  ├─ constants
 │  │  ├─ emailTemplates.ts
 │  │  ├─ enums.ts
+│  │  ├─ organization.ts
 │  │  ├─ regex.ts
 │  │  ├─ routes.ts
 │  │  ├─ scraperTemplates.ts
@@ -672,6 +833,7 @@ sikry-frontend_V22
 │  ├─ hooks
 │  │  ├─ useAuth.ts
 │  │  ├─ useConfig.ts
+│  │  ├─ useDebounce.ts
 │  │  ├─ useRealtime.ts
 │  │  └─ useResponsive.ts
 │  ├─ i18n
@@ -681,6 +843,11 @@ sikry-frontend_V22
 │  ├─ monitoring
 │  │  ├─ logger.ts
 │  │  └─ metrics.ts
+│  ├─ search
+│  │  ├─ adapters
+│  │  │  ├─ adapter.ts
+│  │  │  └─ companiesHouse.ts
+│  │  └─ queryParser.ts
 │  ├─ security
 │  │  ├─ encryption.ts
 │  │  ├─ inputSanitizer.ts
@@ -688,9 +855,21 @@ sikry-frontend_V22
 │  ├─ storage
 │  │  └─ manager.ts
 │  ├─ utils
+│  │  ├─ api-rate-limiter.ts
+│  │  ├─ cache
+│  │  │  ├─ cacheManager.ts
+│  │  │  ├─ index.ts
+│  │  │  ├─ monitoring.ts
+│  │  │  ├─ rateLimiter.ts
+│  │  │  └─ searchCache.ts
+│  │  ├─ cache.ts
+│  │  ├─ data-sources
+│  │  │  └─ index.ts
 │  │  ├─ formatters
 │  │  │  ├─ currencyFormatter.ts
 │  │  │  └─ dateFormatter.ts
+│  │  ├─ mockApiUtils.ts
+│  │  ├─ query-parser.ts
 │  │  ├─ scraping
 │  │  │  ├─ fallbackUtils.ts
 │  │  │  └─ v2Adapter.ts
@@ -700,16 +879,27 @@ sikry-frontend_V22
 │  ├─ utils.ts
 │  └─ webhooks
 │     └─ manager.ts
+├─ middleware
+│  └─ searchRateLimit.ts
 ├─ middleware.ts
 ├─ next.config.mjs
 ├─ package-lock.json
 ├─ package.json
+├─ playwright.config.ts
 ├─ postcss.config.mjs
+├─ progress
+│  ├─ Building-Plan.md
+│  ├─ Building.Plan-reviewed-Only-Search-feature.md
+│  ├─ Full-project-Tree.md
+│  ├─ ROAD-MAP.md
+│  ├─ progress.md
+│  └─ searchbar-feature.md
+├─ project-tree.md
 ├─ providers
 │  ├─ AuthProvider.tsx
+│  ├─ SupabaseProvider.tsx
 │  ├─ ThemeProvider.tsx
-│  ├─ TranslationProvider.tsx
-│  └─ notAuthProvider.tsx
+│  └─ TranslationProvider.tsx
 ├─ public
 │  ├─ favicon.ico
 │  ├─ fonts
@@ -731,11 +921,17 @@ sikry-frontend_V22
 │  ├─ 007-ai-sales-letter-generator.sql
 │  ├─ 008-meta-ad-vsl-system.sql
 │  ├─ 009-instant-lead-response.sql
-│  └─ 010-fix-companies-rls.sql
+│  ├─ 010-fix-companies-rls.sql
+│  ├─ 011-test-companies-rls.sql
+│  ├─ 012-api-cache.sql
+│  ├─ 013-search-rate-limit.sql
+│  ├─ 014-add-metadata-to-api-cache.sql
+│  └─ apply-schema.sh
 ├─ stores
 │  ├─ commsStore.ts
 │  ├─ companyStore.ts
 │  └─ searchStore.ts
+├─ stranslation.md
 ├─ styles
 │  ├─ design-system
 │  │  ├─ components.css
@@ -745,6 +941,12 @@ sikry-frontend_V22
 │     ├─ dark.css
 │     └─ light.css
 ├─ tailwind.config.ts
+├─ test_cases.md
+├─ tests
+│  └─ search
+│     ├─ cache.test.ts
+│     ├─ history.test.ts
+│     └─ rate-limit.test.ts
 ├─ tsconfig.json
 ├─ types
 │  ├─ api.d.ts
@@ -754,16 +956,20 @@ sikry-frontend_V22
 │  ├─ financial.ts
 │  ├─ funnels.ts
 │  ├─ gap-analysis.ts
+│  ├─ index.ts
 │  ├─ lead-response.ts
 │  ├─ market.d.ts
 │  ├─ reengagement.ts
 │  ├─ referral.ts
 │  ├─ reviews.ts
 │  ├─ scraping.d.ts
+│  ├─ search.ts
 │  ├─ supabase.d.ts
+│  ├─ types.ts
 │  └─ vsl.ts
 └─ utils
    └─ supabase
+      ├─ auth.ts
       ├─ client.ts
       └─ server.ts
 
