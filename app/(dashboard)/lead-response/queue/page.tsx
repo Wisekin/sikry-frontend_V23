@@ -28,7 +28,7 @@ import {
   QueueListIcon, // Page icon
   ArrowPathIcon as RefreshIcon,
 } from "@heroicons/react/24/outline";
-import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useTranslation } from 'react-i18next';
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton";
 import type { LeadResponseQueueItem } from '@/app/api/lead-response/queue/route.ts'; // Import type from API
 
@@ -99,14 +99,14 @@ const StatusDisplay: React.FC<{ status: LeadResponseQueueItem['status']; t: Func
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${bgColor} ${textColor}`}>
       {icon}
-      {t(`leadResponse.queuePage.status.${status}`, status.charAt(0).toUpperCase() + status.slice(1))}
+      {t(`status.${status}`, status.charAt(0).toUpperCase() + status.slice(1))}
     </span>
   );
 };
 
 
 export default function LeadResponseQueuePage() {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation('leadResponse.queuePage');
   const [queueItems, setQueueItems] = useState<LeadResponseQueueItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -118,12 +118,12 @@ export default function LeadResponseQueuePage() {
     setError(null);
     try {
       const response = await fetch("/api/lead-response/queue");
-      if (!response.ok) throw new Error(t('leadResponse.queuePage.error.fetchFailed'));
+      if (!response.ok) throw new Error(t('error.fetchFailed'));
       const apiResponse = await response.json();
       setQueueItems(apiResponse.data || []); // Assuming API wraps in { data: ... }
     } catch (err) {
       if (err instanceof Error) setError(err.message);
-      else setError(t('leadResponse.queuePage.error.unknown'));
+      else setError(t('error.unknown'));
     } finally {
       setIsLoading(false);
     }
@@ -144,7 +144,7 @@ export default function LeadResponseQueuePage() {
         });
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || `${t('leadResponse.queuePage.error.actionFailed')} ${action}`);
+            throw new Error(errorData.message || `${t('error.actionFailed')} ${action}`);
         }
         // Optimistic update or refetch
         // For simplicity, refetching the whole queue.
@@ -152,7 +152,7 @@ export default function LeadResponseQueuePage() {
         await fetchQueueItems();
     } catch (err) {
         if (err instanceof Error) setError(err.message); // Display error to user
-        else setError(`${t('leadResponse.queuePage.error.actionFailed')} ${action}`);
+        else setError(`${t('error.actionFailed')} ${action}`);
     } finally {
         setActionLoading(prev => ({...prev, [itemId]: false}));
     }
@@ -169,8 +169,8 @@ export default function LeadResponseQueuePage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('leadResponse.queuePage.title')}</h1>
-          <p className="text-gray-500 mt-1">{t('leadResponse.queuePage.subtitle')}</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('title')}</h1>
+          <p className="text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
         <Button 
             size="lg" 
@@ -196,26 +196,26 @@ export default function LeadResponseQueuePage() {
       <Card className="bg-white border-none shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center text-lg">
-            <QueueListIcon className="w-6 h-6 mr-2 text-purple-600" /> {t('leadResponse.queuePage.tableTitle')}
+            <QueueListIcon className="w-6 h-6 mr-2 text-purple-600" /> {t('tableTitle')}
           </CardTitle>
-          <CardDescription>{t('leadResponse.queuePage.tableDescription')}</CardDescription>
+          <CardDescription>{t('tableDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           {queueItems.length === 0 && !isLoading ? (
             <div className="text-center py-10">
-              <p className="text-gray-500 mb-4">{t('leadResponse.queuePage.noItems')}</p>
+              <p className="text-gray-500 mb-4">{t('noItems')}</p>
             </div>
           ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('leadResponse.queuePage.tableHeaders.leadId')}</TableHead>
-                  <TableHead>{t('leadResponse.queuePage.tableHeaders.ruleTriggered')}</TableHead>
-                  <TableHead>{t('leadResponse.queuePage.tableHeaders.status')}</TableHead>
-                  <TableHead>{t('leadResponse.queuePage.tableHeaders.queuedAt')}</TableHead>
-                  <TableHead>{t('leadResponse.queuePage.tableHeaders.lastAttempt')}</TableHead>
-                  <TableHead>{t('leadResponse.queuePage.tableHeaders.errorMessage')}</TableHead>
+                  <TableHead>{t('tableHeaders.leadId')}</TableHead>
+                  <TableHead>{t('tableHeaders.ruleTriggered')}</TableHead>
+                  <TableHead>{t('tableHeaders.status')}</TableHead>
+                  <TableHead>{t('tableHeaders.queuedAt')}</TableHead>
+                  <TableHead>{t('tableHeaders.lastAttempt')}</TableHead>
+                  <TableHead>{t('tableHeaders.errorMessage')}</TableHead>
                   <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -225,8 +225,8 @@ export default function LeadResponseQueuePage() {
                     <TableCell className="font-medium text-gray-800" title={item.leadId}>{item.leadIdentifier}</TableCell>
                     <TableCell className="text-sm text-gray-600" title={item.ruleId}>{item.ruleTriggered}</TableCell>
                     <TableCell><StatusDisplay status={item.status} t={t} /></TableCell>
-                    <TableCell className="text-xs text-gray-500">{formatDate(item.queuedAt, locale)}</TableCell>
-                    <TableCell className="text-xs text-gray-500">{formatDate(item.lastAttemptAt, locale)}</TableCell>
+                    <TableCell className="text-xs text-gray-500">{formatDate(item.queuedAt, 'en')}</TableCell>
+                    <TableCell className="text-xs text-gray-500">{formatDate(item.lastAttemptAt, 'en')}</TableCell>
                     <TableCell className="text-xs text-red-600 max-w-xs truncate" title={item.errorMessage}>{item.errorMessage || 'N/A'}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-1">
@@ -237,7 +237,7 @@ export default function LeadResponseQueuePage() {
                             className="h-8 px-2 text-xs border-gray-300 text-gray-700 hover:bg-gray-100"
                             onClick={() => handleQueueAction(item.id, 'retry')}
                             disabled={actionLoading[item.id]}
-                            title={t('leadResponse.queuePage.actions.retry') as string}
+                            title={t('actions.retry') as string}
                           >
                             <RetryIcon className={`w-3.5 h-3.5 ${actionLoading[item.id] ? 'animate-spin':''}`} />
                           </Button>
@@ -249,7 +249,7 @@ export default function LeadResponseQueuePage() {
                             className="h-8 px-2 text-xs border-gray-300 text-gray-700 hover:bg-gray-100"
                             onClick={() => handleQueueAction(item.id, 'cancel')}
                             disabled={actionLoading[item.id]}
-                            title={t('leadResponse.queuePage.actions.cancel') as string}
+                            title={t('actions.cancel') as string}
                           >
                             <CancelIcon className={`w-3.5 h-3.5 ${actionLoading[item.id] ? 'animate-pulse':''}`} />
                           </Button>

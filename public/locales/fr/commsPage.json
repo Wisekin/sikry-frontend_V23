@@ -1,0 +1,22 @@
+{
+  "header": {
+    "title": "Communications",
+    "description": "Gérez vos communications et suivez l'engagement.",
+    "newButton": "Nouvelle communication"
+  },
+  "stats": {
+    "total": "Total",
+    "sent": "Envoyé",
+    "delivered": "Livré",
+    "opened": "Ouvert",
+    "replied": "Répondu"
+  },
+  "tabs": {
+    "all": "Toutes les communications",
+    "pending": "En attente",
+    "sent": "Envoyé",
+    "delivered": "Livré",
+    "opened": "Ouvert"
+  },
+  "loading": "Chargement des communications..."
+}

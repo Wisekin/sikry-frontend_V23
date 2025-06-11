@@ -1,0 +1,43 @@
+{
+  "header": {
+    "title": "Compliance",
+    "description": "Monitor and manage your organization's compliance status.",
+    "auditButton": "Run Audit"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "logs": "Logs",
+    "policies": "Policies",
+    "reports": "Reports"
+  },
+  "overview": {
+    "gdpr": {
+      "title": "GDPR Compliance",
+      "status": "Fully compliant"
+    },
+    "ccpa": {
+      "title": "CCPA Compliance",
+      "status": "Fully compliant"
+    },
+    "audit": {
+      "title": "Audit Status",
+      "status": "Passed",
+      "lastAudit": "Last audit: {{days}} days ago"
+    }
+  },
+  "logs": {
+    "title": "Compliance Logs",
+    "description": "View and manage compliance logs",
+    "content": "Compliance log entries will be displayed here."
+  },
+  "policies": {
+    "title": "Compliance Policies",
+    "description": "View and manage compliance policies",
+    "content": "Compliance policy details will be displayed here."
+  },
+  "reports": {
+    "title": "Compliance Reports",
+    "description": "View and generate compliance reports",
+    "content": "Compliance reports will be displayed here."
+  }
+}

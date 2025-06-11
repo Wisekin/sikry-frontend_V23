@@ -30,7 +30,7 @@ import {
   CalendarDaysIcon, // For date filters
 } from "@heroicons/react/24/outline";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import { useTranslation } from "@/lib/i18n/useTranslation";
+import { useTranslation } from 'react-i18next';
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton"; // Using the main skeleton loader
 
 // Helper function for date formatting
@@ -69,7 +69,7 @@ interface AnalyticsData {
 }
 
 export default function LeadResponseAnalyticsPage() {
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation('leadResponse.analyticsPage');
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,12 +79,12 @@ export default function LeadResponseAnalyticsPage() {
     setError(null);
     try {
       const response = await fetch("/api/lead-response/analytics");
-      if (!response.ok) throw new Error(t('leadResponse.analyticsPage.error.fetchFailed'));
+      if (!response.ok) throw new Error(t('error.fetchFailed'));
       const responseData = await response.json();
       setAnalyticsData(responseData.data);
     } catch (err) {
       if (err instanceof Error) setError(err.message);
-      else setError(t('leadResponse.analyticsPage.error.unknown'));
+      else setError(t('error.unknown'));
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +102,7 @@ export default function LeadResponseAnalyticsPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50/50 p-6 text-center">
         <ExclamationTriangleIcon className="w-16 h-16 text-red-500 mb-4" />
-        <h2 className="text-xl font-semibold text-red-700 mb-2">{t('leadResponse.analyticsPage.error.title')}</h2>
+        <h2 className="text-xl font-semibold text-red-700 mb-2">{t('error.title')}</h2>
         <p className="text-gray-600 mb-4">{error}</p>
         <Button onClick={fetchAnalyticsData} className="bg-[#1B1F3B] text-white hover:bg-[#2A3050] flex items-center gap-2">
           <ArrowPathIcon className="w-5 h-5" /> {t('common.tryAgain')}
@@ -115,8 +115,8 @@ export default function LeadResponseAnalyticsPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50/50 p-6 text-center">
         <ChartBarIcon className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-xl font-semibold text-gray-700 mb-2">{t('leadResponse.analyticsPage.noData.title')}</h2>
-        <p className="text-gray-500">{t('leadResponse.analyticsPage.noData.description')}</p>
+        <h2 className="text-xl font-semibold text-gray-700 mb-2">{t('noData.title')}</h2>
+        <p className="text-gray-500">{t('noData.description')}</p>
       </div>
     );
   }
@@ -128,8 +128,8 @@ export default function LeadResponseAnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('leadResponse.analyticsPage.title')}</h1>
-          <p className="text-gray-500 mt-1">{t('leadResponse.analyticsPage.subtitle')}</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('title')}</h1>
+          <p className="text-gray-500 mt-1">{t('subtitle')}</p>
         </div>
         <Button variant="outline" className="bg-white border-gray-300">
           <CalendarDaysIcon className="w-5 h-5 mr-2 text-gray-500" /> {t('common.filter')}
@@ -139,22 +139,22 @@ export default function LeadResponseAnalyticsPage() {
       {/* Summary Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard 
-          title={t('leadResponse.analyticsPage.summary.totalProcessed')} 
+          title={t('summary.totalProcessed')} 
           value={summary.totalLeads.toLocaleString()} 
           icon={<UsersIcon className="w-6 h-6 text-blue-500" />} 
         />
         <StatCard 
-          title={t('leadResponse.analyticsPage.summary.avgResponseTime')} 
+          title={t('summary.avgResponseTime')} 
           value={`${summary.averageResponseTime} ${t('common.minutesShort')}`} 
           icon={<ClockIcon className="w-6 h-6 text-amber-500" />} 
         />
         <StatCard 
-          title={t('leadResponse.analyticsPage.summary.successRate')} 
+          title={t('summary.successRate')} 
           value={`${summary.successRate.toFixed(1)}%`} 
           icon={<CheckCircleIcon className="w-6 h-6 text-green-500" />} 
         />
         <StatCard 
-          title={t('leadResponse.analyticsPage.summary.failureRate')} 
+          title={t('summary.failureRate')} 
           value={`${(100 - summary.successRate).toFixed(1)}%`} 
           icon={<XCircleIcon className="w-6 h-6 text-red-500" />} 
         />
@@ -162,25 +162,25 @@ export default function LeadResponseAnalyticsPage() {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <ChartCard title={t('leadResponse.analyticsPage.charts.leadsProcessedTitle')}>
+        <ChartCard title={t('charts.leadsProcessedTitle')}>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={timeSeriesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5}/>
-              <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, locale, true)} fontSize={12} />
+              <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, 'en', true)} fontSize={12} />
               <YAxis fontSize={12} />
-              <Tooltip formatter={(value: number) => [value.toLocaleString(), t('leadResponse.analyticsPage.charts.leadsProcessedLabel')]} />
-              <Area type="monotone" dataKey="leads" name={t('leadResponse.analyticsPage.charts.leadsProcessedLabel') as string} stroke="#3B82F6" fill="#BFDBFE" strokeWidth={2} />
+              <Tooltip formatter={(value: number) => [value.toLocaleString(), t('charts.leadsProcessedLabel')]} />
+              <Area type="monotone" dataKey="leads" name={t('charts.leadsProcessedLabel') as string} stroke="#3B82F6" fill="#BFDBFE" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
-        <ChartCard title={t('leadResponse.analyticsPage.charts.responseTimeTitle')}>
+        <ChartCard title={t('charts.responseTimeTitle')}>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={timeSeriesData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5}/>
-              <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, locale, true)} fontSize={12} />
+              <XAxis dataKey="date" tickFormatter={(val) => formatDate(val, 'en', true)} fontSize={12} />
               <YAxis unit={` ${t('common.minutesAbbr')}`} fontSize={12} />
-              <Tooltip formatter={(value: number) => [value.toFixed(1) + ` ${t('common.minutesAbbr')}`, t('leadResponse.analyticsPage.charts.avgResponseTimeLabel')]} />
-              <Line type="monotone" dataKey="responseTime" name={t('leadResponse.analyticsPage.charts.avgResponseTimeLabel') as string} stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }}/>
+              <Tooltip formatter={(value: number) => [value.toFixed(1) + ` ${t('common.minutesAbbr')}`, t('charts.avgResponseTimeLabel')]} />
+              <Line type="monotone" dataKey="responseTime" name={t('charts.avgResponseTimeLabel') as string} stroke="#F59E0B" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }}/>
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -190,19 +190,19 @@ export default function LeadResponseAnalyticsPage() {
       <Card className="bg-white border-none shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center text-lg">
-            <ScaleIcon className="w-6 h-6 mr-2 text-purple-600" /> {t('leadResponse.analyticsPage.table.title')}
+            <ScaleIcon className="w-6 h-6 mr-2 text-purple-600" /> {t('table.title')}
           </CardTitle>
-          <CardDescription>{t('leadResponse.analyticsPage.table.description')}</CardDescription>
+          <CardDescription>{t('table.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('leadResponse.analyticsPage.table.headers.ruleName')}</TableHead>
-                  <TableHead className="text-right">{t('leadResponse.analyticsPage.table.headers.processed')}</TableHead>
-                  <TableHead className="text-right">{t('leadResponse.analyticsPage.table.headers.successRate')}</TableHead>
-                  <TableHead className="text-right">{t('leadResponse.analyticsPage.table.headers.avgTime')}</TableHead>
+                  <TableHead>{t('table.headers.ruleName')}</TableHead>
+                  <TableHead className="text-right">{t('table.headers.processed')}</TableHead>
+                  <TableHead className="text-right">{t('table.headers.successRate')}</TableHead>
+                  <TableHead className="text-right">{t('table.headers.avgTime')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

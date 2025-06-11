@@ -1,0 +1,42 @@
+{
+  "header": {
+    "title": "Billing",
+    "subtitle": "Manage your billing information and subscription."
+  },
+  "buttons": {
+    "updatePaymentMethod": "Update Payment Method"
+  },
+  "stats": {
+    "currentPlan": {
+      "title": "Current Plan",
+      "planName": "Pro",
+      "price": "$49/month"
+    },
+    "nextInvoice": {
+      "title": "Next Invoice",
+      "amount": "$49.00",
+      "due": "Due in 15 days"
+    },
+    "usage": {
+      "title": "Usage",
+      "usage": "75%",
+      "ofMonthlyQuota": "Of monthly quota"
+    }
+  },
+  "billingOverview": {
+    "title": "Billing Overview",
+    "description": "Your current billing status and recent transactions"
+  },
+  "invoices": {
+    "title": "Invoices",
+    "description": "View and manage your billing history"
+  },
+  "usageAnalytics": {
+    "title": "Usage Analytics",
+    "description": "Detailed breakdown of your service usage"
+  },
+  "availablePlans": {
+    "title": "Available Plans",
+    "description": "Compare and switch between different subscription plans"
+  }
+}

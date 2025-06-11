@@ -1,0 +1,21 @@
+{
+  "header": {
+    "title": "Security",
+    "subtitle": "Manage your organization's security settings."
+  },
+  "twoFactor": {
+    "title": "Two-Factor Authentication (2FA)",
+    "description": "Enhance security by requiring a second form of verification for all users.",
+    "enforce": "Enforce 2FA for all users"
+  },
+  "sso": {
+    "title": "Single Sign-On (SSO)",
+    "description": "Allow users to sign in using your corporate identity provider.",
+    "button": "Configure SSO"
+  },
+  "apiKeys": {
+    "title": "API Keys",
+    "description": "Manage API keys for programmatic access to your organization's data.",
+    "button": "Manage API Keys"
+  }
+}

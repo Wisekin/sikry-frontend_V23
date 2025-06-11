@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { getCommunications } from "@/lib/actions/communications"
 import { CommunicationsTable } from "@/components/communications/CommunicationsTable"
 import { CommunicationFilters } from "@/components/communications/CommunicationFilters"
@@ -11,6 +12,7 @@ import { Plus } from "lucide-react"
 import type { Communication } from "@/types/database"
 
 export default function CommunicationsPage() {
+  const { t } = useTranslation('commsPage')
   const [communications, setCommunications] = useState<Communication[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
@@ -44,12 +46,12 @@ export default function CommunicationsPage() {
     <div className="container mx-auto py-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Communications</h1>
-          <p className="text-muted-foreground">Manage your outreach communications and track engagement.</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('header.title')}</h1>
+          <p className="text-muted-foreground">{t('header.description')}</p>
         </div>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
-          New Communication
+          {t('header.newButton')}
         </Button>
       </div>
 
@@ -57,7 +59,7 @@ export default function CommunicationsPage() {
       <div className="grid md:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.total')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.total}</div>
@@ -65,7 +67,7 @@ export default function CommunicationsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Sent</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.sent')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">{stats.sent}</div>
@@ -73,7 +75,7 @@ export default function CommunicationsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Delivered</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.delivered')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">{stats.delivered}</div>
@@ -81,7 +83,7 @@ export default function CommunicationsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Opened</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.opened')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">{stats.opened}</div>
@@ -89,7 +91,7 @@ export default function CommunicationsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Replied</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.replied')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">{stats.replied}</div>
@@ -99,17 +101,17 @@ export default function CommunicationsPage() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All Communications</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="sent">Sent</TabsTrigger>
-          <TabsTrigger value="delivered">Delivered</TabsTrigger>
-          <TabsTrigger value="read">Opened</TabsTrigger>
+          <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
+          <TabsTrigger value="pending">{t('tabs.pending')}</TabsTrigger>
+          <TabsTrigger value="sent">{t('tabs.sent')}</TabsTrigger>
+          <TabsTrigger value="delivered">{t('tabs.delivered')}</TabsTrigger>
+          <TabsTrigger value="read">{t('tabs.opened')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="space-y-4">
           <CommunicationFilters />
           {loading ? (
-            <div className="text-center py-8">Loading communications...</div>
+            <div className="text-center py-8">{t('loading')}</div>
           ) : (
             <CommunicationsTable communications={communications} onRefresh={loadCommunications} />
           )}

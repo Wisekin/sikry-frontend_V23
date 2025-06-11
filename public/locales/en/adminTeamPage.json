@@ -1,0 +1,42 @@
+{
+  "header": {
+    "title": "Team Management",
+    "description": "Manage your team members, roles, and permissions.",
+    "inviteButton": "Invite Member"
+  },
+  "overview": {
+    "stats": {
+      "totalMembers": {
+        "title": "Total Members",
+        "description": "Active team members"
+      },
+      "pendingInvites": {
+        "title": "Pending Invites",
+        "description": "Awaiting response"
+      },
+      "activeRoles": {
+        "title": "Active Roles",
+        "description": "Custom roles defined"
+      }
+    },
+    "main": {
+      "title": "Team Overview",
+      "description": "Manage your team members and their roles"
+    }
+  },
+  "members": {
+    "title": "Team Members",
+    "description": "View and manage team members",
+    "status": {
+      "active": "Active"
+    }
+  },
+  "roles": {
+    "title": "Team Roles",
+    "description": "Manage team roles and responsibilities"
+  },
+  "permissions": {
+    "title": "Permissions",
+    "description": "Configure access permissions for roles"
+  }
+}

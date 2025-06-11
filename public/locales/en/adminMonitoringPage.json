@@ -1,0 +1,34 @@
+{
+  "header": {
+    "title": "Monitoring",
+    "description": "Monitor system performance and manage alerts.",
+    "refreshButton": "Refresh Status"
+  },
+  "overview": {
+    "systemStatus": {
+      "title": "System Status",
+      "value": "Healthy",
+      "description": "All systems operational"
+    },
+    "activeAlerts": {
+      "title": "Active Alerts",
+      "description": "Requires attention"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "New notifications"
+    },
+    "mainContent": {
+      "title": "System Overview",
+      "description": "Current system status and performance metrics"
+    }
+  },
+  "alerts": {
+    "title": "System Alerts",
+    "description": "View and manage system alerts"
+  },
+  "metrics": {
+    "title": "System Metrics",
+    "description": "View system performance metrics"
+  }
+}

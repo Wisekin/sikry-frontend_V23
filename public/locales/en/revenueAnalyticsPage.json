@@ -1,0 +1,46 @@
+{
+  "header": {
+    "title": "Revenue Analytics",
+    "subtitle": "Gain insights into your revenue streams and financial performance."
+  },
+  "loading": "Calculating revenue streams...",
+  "error": {
+    "fetch": "Failed to fetch revenue data.",
+    "title": "Could not load revenue data",
+    "tryAgain": "Try Again"
+  },
+  "noData": "No revenue data available for the selected filters.",
+  "filters": {
+    "period": "Time Period:",
+    "last7days": "Last 7 Days",
+    "last30days": "Last 30 Days",
+    "last3months": "Last 3 Months",
+    "last12months": "Last 12 Months",
+    "breakdown": "Breakdown By:",
+    "byProduct": "Product/Service",
+    "bySegment": "Customer Segment",
+    "byRegion": "Region"
+  },
+  "summary": {
+    "totalRevenue": "Total Revenue",
+    "arpu": "ARPU",
+    "mrr": "MRR",
+    "ltv": "LTV"
+  },
+  "charts": {
+    "trend": {
+      "title": "Revenue Trends Over Time",
+      "noData": "No revenue trend data for this period."
+    },
+    "breakdown": {
+      "title": "Revenue Breakdown by {{context}}",
+      "title_product": "Revenue Breakdown by Product",
+      "title_segment": "Revenue Breakdown by Segment",
+      "name_product": "Product/Service Name",
+      "name_segment": "Customer Segment",
+      "revenue": "Revenue",
+      "percentage": "% of Total",
+      "noData": "No breakdown data available."
+    }
+  }
+}

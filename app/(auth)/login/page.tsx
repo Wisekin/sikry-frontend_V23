@@ -10,8 +10,10 @@ import { Label } from "@/components/ui/label"
 import { useAuth } from "@/providers/AuthProvider"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import Link from "next/link"
+import { useTranslation } from 'react-i18next';
 
 export default function LoginPage() {
+  const { t } = useTranslation('auth');
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -52,19 +54,19 @@ export default function LoginPage() {
               <span className="text-white font-bold text-xl">S</span>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
-          <CardDescription className="text-center">Sign in to your SIKSO account</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center">{t('login')}</CardTitle>
+          <CardDescription className="text-center">{t('loginDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -73,13 +75,13 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('password')}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder={t('passwordPlaceholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 pr-10"
@@ -98,18 +100,18 @@ export default function LoginPage() {
             </div>
             {error && <div className="text-sm text-red-600 bg-red-50 p-2 rounded">{error}</div>}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? t('buttons.signingIn') : t('buttons.signIn')}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
             <Link href="/forgot-password" className="text-primary hover:underline">
-              Forgot your password?
+              {t('forgotPassword')}
             </Link>
           </div>
           <div className="mt-6 text-center text-sm">
-            Don't have an account?{" "}
+            {t('noAccount')}{" "}
             <Link href="/signup" className="text-primary hover:underline">
-              Sign up
+              {t('signUp')}
             </Link>
           </div>
         </CardContent>

@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -6,6 +5,7 @@ import EnterprisePageHeader from '@/components/core/layout/EnterprisePageHeader'
 import QualityMetricCard from '@/components/ui/quality-metric-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Users, Eye, Clock, AlertCircle, ExternalLink, BarChart3, LineChart, Filter as FilterIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface PerformanceSummaryMetrics {
   totalVisits: number;
@@ -34,6 +34,7 @@ interface PerformanceData {
 }
 
 const PerformanceAnalyticsPage = () => {
+  const { t } = useTranslation('performanceAnalyticsPage');
   const [data, setData] = useState<PerformanceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,14 +64,14 @@ const PerformanceAnalyticsPage = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [period]);
+  }, [period, t]);
 
   if (isLoading) {
     // This will be typically handled by loading.tsx via Next.js Suspense
     // but as a fallback or for direct component loading state:
     return (
         <div className="min-h-screen bg-gray-50/50">
-          <EnterprisePageHeader title="Performance Analytics" subtitle="Crunching the numbers..." />
+          <EnterprisePageHeader title={t('header.title')} subtitle={t('header.subtitle')} />
           <div className="p-6 md:p-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
               {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-32 rounded-lg bg-white" />)}
@@ -85,17 +86,17 @@ const PerformanceAnalyticsPage = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50/50">
-        <EnterprisePageHeader title="Performance Analytics" subtitle="Error" />
+        <EnterprisePageHeader title={t('header.title')} subtitle={t('error.title')} />
         <div className="p-6 md:p-10">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-red-200 flex flex-col items-center justify-center h-96">
                 <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
-                <h2 className="text-xl font-semibold text-red-700 mb-2">Could not load performance data</h2>
+                <h2 className="text-xl font-semibold text-red-700 mb-2">{t('error.title')}</h2>
                 <p className="text-gray-600 text-center mb-4">{error}</p>
                 <button
                     onClick={() => { setIsLoading(true); setError(null); fetch(`/api/analytics/performance?period=${period}`).then(res => res.json()).then(responseData => { if(responseData.error) throw new Error(responseData.error.message); setData(responseData.data);}).catch(err => setError(err.message)).finally(() => setIsLoading(false)); }}
                     className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg text-sm"
                 >
-                    Try Again
+                    {t('error.tryAgain')}
                 </button>
             </div>
         </div>
@@ -107,8 +108,8 @@ const PerformanceAnalyticsPage = () => {
      // Should be caught by loading or error state, but as a fallback
     return (
         <div className="min-h-screen bg-gray-50/50">
-            <EnterprisePageHeader title="Performance Analytics" subtitle="No data" />
-            <div className="p-6 md:p-10 text-center text-gray-500">No performance data available.</div>
+            <EnterprisePageHeader title={t('header.title')} subtitle={t('noData')} />
+            <div className="p-6 md:p-10 text-center text-gray-500">{t('noData')}</div>
         </div>
     );
   }
@@ -118,36 +119,36 @@ const PerformanceAnalyticsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <EnterprisePageHeader title="Performance Analytics" subtitle="Track user engagement and website traffic metrics." />
+      <EnterprisePageHeader title={t('header.title')} subtitle={t('header.subtitle')} />
       <div className="p-6 md:p-10">
         <div className="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div className="flex flex-col md:flex-row justify-start items-center gap-3">
-                <label htmlFor="periodSelectPerf" className="text-sm font-medium text-gray-700">Time Period:</label>
+                <label htmlFor="periodSelectPerf" className="text-sm font-medium text-gray-700">{t('filters.period')}</label>
                 <select
                     id="periodSelectPerf"
                     value={period}
                     onChange={(e) => setPeriod(e.target.value)}
                     className="p-2 border border-gray-300 rounded-md bg-white text-sm text-gray-700 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 >
-                    <option value="last7days">Last 7 Days</option>
-                    <option value="last30days">Last 30 Days</option>
-                    <option value="last3months">Last 3 Months</option>
+                    <option value="last7days">{t('filters.last7days')}</option>
+                    <option value="last30days">{t('filters.last30days')}</option>
+                    <option value="last3months">{t('filters.last3months')}</option>
                 </select>
                 {/* Add more filters if needed */}
             </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
-          <QualityMetricCard title="Total Visits" value={summaryMetrics.totalVisits.toLocaleString()} icon={<Users className="text-blue-600" />} />
-          <QualityMetricCard title="Unique Visitors" value={summaryMetrics.uniqueVisitors.toLocaleString()} icon={<Users className="text-sky-600" />} />
-          <QualityMetricCard title="Avg. Session" value={`${summaryMetrics.avgSessionDurationMinutes.toFixed(1)} min`} icon={<Clock className="text-emerald-600" />} />
-          <QualityMetricCard title="Bounce Rate" value={`${summaryMetrics.bounceRatePercent.toFixed(1)}%`} icon={<AlertCircle className="text-red-500" />} />
-          <QualityMetricCard title="Pages / Visit" value={summaryMetrics.pagesPerVisit.toFixed(1)} icon={<ExternalLink className="text-purple-600" />} />
-          <QualityMetricCard title="Top Referrer" value={summaryMetrics.topReferrer} icon={<BarChart3 className="text-amber-600" />} />
+          <QualityMetricCard title={t('summary.totalVisits')} value={summaryMetrics.totalVisits.toLocaleString()} icon={<Users className="text-blue-600" />} />
+          <QualityMetricCard title={t('summary.uniqueVisitors')} value={summaryMetrics.uniqueVisitors.toLocaleString()} icon={<Users className="text-sky-600" />} />
+          <QualityMetricCard title={t('summary.avgSessionDuration')} value={`${summaryMetrics.avgSessionDurationMinutes.toFixed(1)} min`} icon={<Clock className="text-emerald-600" />} />
+          <QualityMetricCard title={t('summary.bounceRate')} value={`${summaryMetrics.bounceRatePercent.toFixed(1)}%`} icon={<AlertCircle className="text-red-500" />} />
+          <QualityMetricCard title={t('summary.pagesPerVisit')} value={summaryMetrics.pagesPerVisit.toFixed(1)} icon={<ExternalLink className="text-purple-600" />} />
+          <QualityMetricCard title={t('summary.topReferrer')} value={summaryMetrics.topReferrer} icon={<BarChart3 className="text-amber-600" />} />
         </div>
 
         <div className="mb-8 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-xl font-semibold text-[#1B1F3B] mb-4">User Activity Over Time</h2>
+          <h2 className="text-xl font-semibold text-[#1B1F3B] mb-4">{t('charts.activity.title')}</h2>
           <div className="h-96 bg-slate-50 p-4 rounded-md border-gray-200 border flex items-end space-x-1 md:space-x-2 overflow-x-auto">
             {activityOverTime.map((item, index) => (
               <div key={index} className="flex-grow flex flex-col items-center justify-end h-full" title={`Date: ${item.date}, Visits: ${item.visits}`}>
@@ -159,13 +160,13 @@ const PerformanceAnalyticsPage = () => {
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-xl font-semibold text-[#1B1F3B] mb-4">Top Performing Pages</h2>
+          <h2 className="text-xl font-semibold text-[#1B1F3B] mb-4">{t('charts.topPages.title')}</h2>
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-4 py-3 text-left font-medium text-gray-600">Page Path</th>
-                  <th className="px-4 py-3 text-right font-medium text-gray-600">Views</th>
+                  <th className="px-4 py-3 text-left font-medium text-gray-600">{t('charts.topPages.path')}</th>
+                  <th className="px-4 py-3 text-right font-medium text-gray-600">{t('charts.topPages.views')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">

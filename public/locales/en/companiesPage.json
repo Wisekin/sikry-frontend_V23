@@ -1,0 +1,31 @@
+{
+  "title": "Companies",
+  "verified": "Verified",
+  "import": "Import",
+  "export": "Export",
+  "addNew": "Add New",
+  "listTitle": "Company List",
+  "filters": {
+    "title": "Filters",
+    "searchPlaceholder": "Search by company name...",
+    "selectIndustryPlaceholder": "Select an industry",
+    "allIndustries": "All Industries",
+    "industrySoftwareDev": "Software Development",
+    "industryMarketing": "Marketing",
+    "industryFintech": "Fintech",
+    "employeesSuffix": "employees"
+  },
+  "tableHeaders": {
+    "name": "Name",
+    "domain": "Domain",
+    "industry": "Industry",
+    "location": "Location",
+    "size": "Company Size",
+    "confidence": "Confidence",
+    "status": "Status"
+  },
+  "noResults": {
+    "title": "No Companies Found",
+    "description": "Try adjusting your search or filter criteria."
+  }
+}

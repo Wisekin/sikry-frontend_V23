@@ -1,0 +1,22 @@
+{
+  "header": {
+    "title": "Communications",
+    "description": "Manage your outreach communications and track engagement.",
+    "newButton": "New Communication"
+  },
+  "stats": {
+    "total": "Total",
+    "sent": "Sent",
+    "delivered": "Delivered",
+    "opened": "Opened",
+    "replied": "Replied"
+  },
+  "tabs": {
+    "all": "All Communications",
+    "pending": "Pending",
+    "sent": "Sent",
+    "delivered": "Delivered",
+    "opened": "Opened"
+  },
+  "loading": "Loading communications..."
+}

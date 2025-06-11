@@ -1,18 +1,18 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Users, UserPlus, Shield, Key } from "lucide-react"
-import { useSearchParams } from "next/navigation"
-import { SecondaryMenuBar } from "@/components/core/navigation/SecondaryMenuBar"
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Users, UserPlus, Shield, Pencil, Trash2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function TeamManagementPage() {
-  const searchParams = useSearchParams()
-  const activeTab = searchParams.get('tab') || 'overview'
-  const viewMode = searchParams.get('view') || 'grid'
-  const [searchQuery, setSearchQuery] = useState('')
+  const { t } = useTranslation('adminTeamPage');
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'overview';
+  const viewMode = searchParams.get('view') || 'grid';
+  const [searchQuery, setSearchQuery] = useState('');
 
   const teamMembers = [
     {
@@ -33,16 +33,13 @@ export default function TeamManagementPage() {
       lastActive: "5 minutes ago",
       avatar: "MW"
     },
-    // Add more team members as needed
   ];
 
   const handleDelete = (id: string) => {
-    // Implement delete functionality
     console.log('Delete member:', id);
   };
 
   const handleEdit = (id: string) => {
-    // Implement edit functionality
     console.log('Edit member:', id);
   };
 
@@ -60,45 +57,42 @@ export default function TeamManagementPage() {
       case 'overview':
         return (
           <>
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Total Members</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-500">{t('overview.stats.totalMembers.title')}</CardTitle>
                   <Users className="w-5 h-5 text-blue-500" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-blue-600">24</div>
-                  <p className="text-xs text-gray-500">Active team members</p>
+                  <p className="text-xs text-gray-500">{t('overview.stats.totalMembers.description')}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Pending Invites</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-500">{t('overview.stats.pendingInvites.title')}</CardTitle>
                   <UserPlus className="w-5 h-5 text-amber-500" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-amber-600">3</div>
-                  <p className="text-xs text-gray-500">Awaiting response</p>
+                  <p className="text-xs text-gray-500">{t('overview.stats.pendingInvites.description')}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Active Roles</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-500">{t('overview.stats.activeRoles.title')}</CardTitle>
                   <Shield className="w-5 h-5 text-emerald-500" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-emerald-600">5</div>
-                  <p className="text-xs text-gray-500">Custom roles defined</p>
+                  <p className="text-xs text-gray-500">{t('overview.stats.activeRoles.description')}</p>
                 </CardContent>
               </Card>
             </div>
-
-            {/* Main Content */}
             <Card className="bg-white border-none shadow-sm">
               <CardHeader>
-                <CardTitle>Team Overview</CardTitle>
-                <CardDescription>Manage your team members and their roles</CardDescription>
+                <CardTitle>{t('overview.main.title')}</CardTitle>
+                <CardDescription>{t('overview.main.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -107,13 +101,13 @@ export default function TeamManagementPage() {
               </CardContent>
             </Card>
           </>
-        )
+        );
       case 'members':
         return (
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Team Members</CardTitle>
-              <CardDescription>View and manage team members</CardDescription>
+              <CardTitle>{t('members.title')}</CardTitle>
+              <CardDescription>{t('members.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}`}>
@@ -128,7 +122,7 @@ export default function TeamManagementPage() {
                       <p className="text-sm text-gray-400">{member.email}</p>
                       <div className="mt-2 flex items-center gap-2">
                         <span className={`px-2 py-1 rounded-full text-xs ${member.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
-                          {member.status}
+                          {t(`members.status.${member.status.toLowerCase()}`)}
                         </span>
                         <span className="text-xs text-gray-400">{member.lastActive}</span>
                       </div>
@@ -140,7 +134,7 @@ export default function TeamManagementPage() {
                         className="text-gray-500 hover:text-[#2A3050]"
                         onClick={() => handleEdit(member.id)}
                       >
-                        <PencilSquareIcon className="w-4 h-4" />
+                        <Pencil className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -148,7 +142,7 @@ export default function TeamManagementPage() {
                         className="text-gray-500 hover:text-red-600"
                         onClick={() => handleDelete(member.id)}
                       >
-                        <TrashIcon className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
@@ -156,13 +150,13 @@ export default function TeamManagementPage() {
               </div>
             </CardContent>
           </Card>
-        )
+        );
       case 'roles':
         return (
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Team Roles</CardTitle>
-              <CardDescription>Manage team roles and responsibilities</CardDescription>
+              <CardTitle>{t('roles.title')}</CardTitle>
+              <CardDescription>{t('roles.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}`}>
@@ -170,13 +164,13 @@ export default function TeamManagementPage() {
               </div>
             </CardContent>
           </Card>
-        )
+        );
       case 'permissions':
         return (
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Permissions</CardTitle>
-              <CardDescription>Configure access permissions for roles</CardDescription>
+              <CardTitle>{t('permissions.title')}</CardTitle>
+              <CardDescription>{t('permissions.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className={`${viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}`}>
@@ -184,31 +178,27 @@ export default function TeamManagementPage() {
               </div>
             </CardContent>
           </Card>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50/50">
       <div className="p-6 space-y-6">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">Team Management</h1>
-            <p className="text-gray-500 mt-1">
-              Manage your team members, roles, and permissions.
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('header.title')}</h1>
+            <p className="text-gray-500 mt-1">{t('header.description')}</p>
           </div>
           <Button size="lg" className="bg-[#1B1F3B] text-white hover:bg-[#2A3050] flex items-center gap-2">
             <UserPlus className="w-5 h-5" />
-            <span>Invite Member</span>
+            <span>{t('header.inviteButton')}</span>
           </Button>
         </div>
-
         {renderContent()}
       </div>
     </div>
-  )
+  );
 }

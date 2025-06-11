@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CreditCard, Receipt, Activity, Package } from "lucide-react"
 import { useSearchParams } from "next/navigation"
+import { useTranslation } from "react-i18next"
 
 export default function BillingPage() {
+  const { t } = useTranslation('adminBillingPage');
   const searchParams = useSearchParams()
   const activeTab = searchParams.get('tab') || 'overview'
 
@@ -20,32 +22,32 @@ export default function BillingPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Current Plan</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-500">{t('stats.currentPlan.title')}</CardTitle>
                   <Package className="w-5 h-5 text-emerald-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-emerald-600">Pro</div>
-                  <p className="text-xs text-gray-500">$49/month</p>
+                  <div className="text-2xl font-bold text-emerald-600">{t('stats.currentPlan.planName')}</div>
+                  <p className="text-xs text-gray-500">{t('stats.currentPlan.price')}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Next Invoice</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-500">{t('stats.nextInvoice.title')}</CardTitle>
                   <Receipt className="w-5 h-5 text-amber-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-amber-600">$49.00</div>
-                  <p className="text-xs text-gray-500">Due in 15 days</p>
+                  <div className="text-2xl font-bold text-amber-600">{t('stats.nextInvoice.amount')}</div>
+                  <p className="text-xs text-gray-500">{t('stats.nextInvoice.due')}</p>
                 </CardContent>
               </Card>
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">Usage</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-500">{t('stats.usage.title')}</CardTitle>
                   <Activity className="w-5 h-5 text-emerald-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-emerald-600">75%</div>
-                  <p className="text-xs text-gray-500">Of monthly quota</p>
+                  <div className="text-2xl font-bold text-emerald-600">{t('stats.usage.usage')}</div>
+                  <p className="text-xs text-gray-500">{t('stats.usage.ofMonthlyQuota')}</p>
                 </CardContent>
               </Card>
             </div>
@@ -53,8 +55,8 @@ export default function BillingPage() {
             {/* Main Content */}
             <Card className="bg-white border-none shadow-sm">
               <CardHeader>
-                <CardTitle>Billing Overview</CardTitle>
-                <CardDescription>Your current billing status and recent transactions</CardDescription>
+                <CardTitle>{t('billingOverview.title')}</CardTitle>
+                <CardDescription>{t('billingOverview.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -68,8 +70,8 @@ export default function BillingPage() {
         return (
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Invoices</CardTitle>
-              <CardDescription>View and manage your billing history</CardDescription>
+              <CardTitle>{t('invoices.title')}</CardTitle>
+              <CardDescription>{t('invoices.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -82,8 +84,8 @@ export default function BillingPage() {
         return (
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Usage Analytics</CardTitle>
-              <CardDescription>Detailed breakdown of your service usage</CardDescription>
+              <CardTitle>{t('usageAnalytics.title')}</CardTitle>
+              <CardDescription>{t('usageAnalytics.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -96,8 +98,8 @@ export default function BillingPage() {
         return (
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Available Plans</CardTitle>
-              <CardDescription>Compare and switch between different subscription plans</CardDescription>
+              <CardTitle>{t('availablePlans.title')}</CardTitle>
+              <CardDescription>{t('availablePlans.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -117,14 +119,12 @@ export default function BillingPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">Billing</h1>
-            <p className="text-gray-500 mt-1">
-              Manage your billing information and subscription.
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('header.title')}</h1>
+            <p className="text-gray-500 mt-1">{t('header.subtitle')}</p>
           </div>
           <Button size="lg" className="bg-[#1B1F3B] text-white hover:bg-[#2A3050] flex items-center gap-2">
             <CreditCard className="w-5 h-5" />
-            <span>Update Payment Method</span>
+            <span>{t('buttons.updatePaymentMethod')}</span>
           </Button>
         </div>
 

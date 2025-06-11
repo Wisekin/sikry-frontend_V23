@@ -25,6 +25,7 @@ import {
   ArrowTrendingDownIcon,
   AdjustmentsHorizontalIcon,
 } from "@heroicons/react/24/outline"
+import { useTranslation } from "react-i18next"
 
 // --- Helper component for chart tooltips
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -39,36 +40,37 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function AdminPage() {
+  const { t } = useTranslation('adminPage');
   const [detailedSectionsOpen, setDetailedSectionsOpen] = useState(false);
 
   const adminSections = [
     {
-      title: "Team Management",
-      description: "Manage users, roles, and permissions.",
+      title: t('sections.teamManagement.title'),
+      description: t('sections.teamManagement.description'),
       icon: UserGroupIcon,
       href: "/admin/team",
       iconColor: "text-blue-600",
       bgColor: "bg-blue-50",
     },
     {
-      title: "Billing & Usage",
-      description: "Monitor usage and manage billing.",
+      title: t('sections.billingUsage.title'),
+      description: t('sections.billingUsage.description'),
       icon: CreditCardIcon,
       href: "/admin/billing",
       iconColor: "text-emerald-600",
       bgColor: "bg-emerald-50",
     },
     {
-      title: "Security Settings",
-      description: "Configure 2FA, SSO, and policies.",
+      title: t('sections.securitySettings.title'),
+      description: t('sections.securitySettings.description'),
       icon: ShieldCheckIcon,
       href: "/admin/security",
       iconColor: "text-amber-600",
       bgColor: "bg-amber-50",
     },
     {
-      title: "Compliance",
-      description: "GDPR, data retention, and privacy.",
+      title: t('sections.compliance.title'),
+      description: t('sections.compliance.description'),
       icon: DocumentTextIcon,
       href: "/admin/compliance",
       iconColor: "text-purple-600",
@@ -105,7 +107,7 @@ export default function AdminPage() {
 
   const systemMetricsData = {
     api: {
-      name: "API Response",
+      name: t('systemMetrics.api.name'),
       value: "156ms",
       change: "-12%",
       trend: "down",
@@ -117,7 +119,7 @@ export default function AdminPage() {
       color: "hsl(142.1 76.2% 42.2%)" // Green
     },
     cpu: {
-      name: "CPU Usage",
+      name: t('systemMetrics.cpu.name'),
       value: "42%",
       change: "+3%",
       trend: "up",
@@ -129,7 +131,7 @@ export default function AdminPage() {
       color: "hsl(38.3 95.8% 53.1%)" // Amber
     },
     memory: {
-      name: "Memory Usage",
+      name: t('systemMetrics.memory.name'),
       value: "68%",
       change: "+2%",
       trend: "up",
@@ -141,7 +143,7 @@ export default function AdminPage() {
       color: "hsl(38.3 95.8% 53.1%)" // Amber
     },
     errors: {
-        name: "Error Rate",
+        name: t('systemMetrics.errors.name'),
         value: "0.02%",
         change: "-5%",
         trend: "down",
@@ -159,14 +161,14 @@ export default function AdminPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">Administration</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('header.title')}</h1>
           <p className="text-gray-500 mt-1">
-            Central hub for managing your organization's settings, users, and security.
+            {t('header.subtitle')}
           </p>
         </div>
         <Button size="lg" className="bg-[#1B1F3B] text-white hover:bg-[#2A3050] flex items-center gap-2">
           <Cog6ToothIcon className="w-5 h-5" />
-          <span>Global Settings</span>
+          <span>{t('header.button')}</span>
         </Button>
       </div>
       
@@ -178,7 +180,7 @@ export default function AdminPage() {
             onClick={() => setDetailedSectionsOpen(!detailedSectionsOpen)}
         >
             <AdjustmentsHorizontalIcon className="w-5 h-5"/>
-            <span>Manage Detailed Sections</span>
+            <span>{t('detailedSections.button')}</span>
             <ChevronRightIcon className={`w-5 h-5 text-gray-400 transform transition-transform duration-300 ${detailedSectionsOpen ? 'rotate-90' : ''}`} />
         </Button>
 
@@ -187,26 +189,26 @@ export default function AdminPage() {
                 <Card className="bg-white border-none shadow-sm mt-2">
                   <Tabs defaultValue="users" className="p-4">
                     <TabsList className="grid w-full grid-cols-3 mb-4 bg-gray-100 p-1 rounded-lg max-w-md">
-                      <TabsTrigger value="users" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">Users</TabsTrigger>
-                      <TabsTrigger value="security" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">Security</TabsTrigger>
-                      <TabsTrigger value="billing" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">Billing</TabsTrigger>
+                      <TabsTrigger value="users" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">{t('tabs.users')}</TabsTrigger>
+                      <TabsTrigger value="security" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">{t('tabs.security')}</TabsTrigger>
+                      <TabsTrigger value="billing" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">{t('tabs.billing')}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="users">
                       <div className="p-6 bg-gray-50 rounded-lg">
-                        <h3 className="text-lg font-semibold">User Management</h3>
-                        <p className="text-gray-600">The user management interface, including tables, invites, and role assignments, will be displayed here.</p>
+                        <h3 className="text-lg font-semibold">{t('tabs.users.content.title')}</h3>
+                        <p className="text-gray-600">{t('tabs.users.content.description')}</p>
                       </div>
                     </TabsContent>
                     <TabsContent value="security">
                       <div className="p-6 bg-gray-50 rounded-lg">
-                        <h3 className="text-lg font-semibold">Security Configuration</h3>
-                        <p className="text-gray-600">Settings for Single Sign-On (SSO), 2-Factor Authentication (2FA), and API key management will be displayed here.</p>
+                        <h3 className="text-lg font-semibold">{t('tabs.security.content.title')}</h3>
+                        <p className="text-gray-600">{t('tabs.security.content.description')}</p>
                       </div>
                     </TabsContent>
                     <TabsContent value="billing">
                       <div className="p-6 bg-gray-50 rounded-lg">
-                        <h3 className="text-lg font-semibold">Billing & Subscriptions</h3>
-                        <p className="text-gray-600">Your current plan, usage metrics, payment history, and invoices will be displayed here.</p>
+                        <h3 className="text-lg font-semibold">{t('tabs.billing.content.title')}</h3>
+                        <p className="text-gray-600">{t('tabs.billing.content.description')}</p>
                       </div>
                     </TabsContent>
                   </Tabs>
@@ -220,42 +222,42 @@ export default function AdminPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="bg-white border-none shadow-sm hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-500">{t('quickStats.totalUsers.title')}</CardTitle>
             <UserGroupIcon className="w-5 h-5 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#1B1F3B]">12</div>
-            <p className="text-xs text-green-600 flex items-center gap-1">+2 this month</p>
+            <p className="text-xs text-green-600 flex items-center gap-1">{t('quickStats.totalUsers.change')}</p>
           </CardContent>
         </Card>
         <Card className="bg-white border-none shadow-sm hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Monthly Usage</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-500">{t('quickStats.monthlyUsage.title')}</CardTitle>
             <CreditCardIcon className="w-5 h-5 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#1B1F3B]">$2,450</div>
-            <p className="text-xs text-gray-500">75% of budget utilized</p>
+            <p className="text-xs text-gray-500">{t('quickStats.monthlyUsage.description')}</p>
           </CardContent>
         </Card>
         <Card className="bg-white border-none shadow-sm hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Compliance Score</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-500">{t('quickStats.complianceScore.title')}</CardTitle>
             <ShieldCheckIcon className="w-5 h-5 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-emerald-600">100%</div>
-            <p className="text-xs text-gray-500">Fully GDPR & CCPA compliant</p>
+            <p className="text-xs text-gray-500">{t('quickStats.complianceScore.description')}</p>
           </CardContent>
         </Card>
         <Card className="bg-white border-none shadow-sm hover:shadow-lg transition-shadow duration-300">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">System Health</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-500">{t('quickStats.systemHealth.title')}</CardTitle>
             <ServerIcon className="w-5 h-5 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-emerald-600">99.98%</div>
-            <p className="text-xs text-gray-500">Uptime last 30 days</p>
+            <p className="text-xs text-gray-500">{t('quickStats.systemHealth.description')}</p>
           </CardContent>
         </Card>
       </div>
@@ -266,8 +268,8 @@ export default function AdminPage() {
         <div className="lg:col-span-2 space-y-6">
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
-                <CardTitle className="text-lg">Admin Control Panel</CardTitle>
-                <CardDescription>Select a category to configure its settings.</CardDescription>
+                <CardTitle className="text-lg">{t('adminSections.title')}</CardTitle>
+                <CardDescription>{t('adminSections.description')}</CardDescription>
             </CardHeader>
             <CardContent className="grid md:grid-cols-2 gap-4">
               {adminSections.map((section) => (
@@ -293,7 +295,7 @@ export default function AdminPage() {
           <Card className="bg-white border-none shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
-                <ClockIcon className="w-5 h-5 text-gray-500" /> Recent Activity
+                <ClockIcon className="w-5 h-5 text-gray-500" /> {t('recentActivity.title')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -313,7 +315,7 @@ export default function AdminPage() {
                 ))}
               </div>
               <Button variant="outline" className="w-full mt-6 border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-[#1B1F3B]">
-                View Full Audit Log
+                {t('recentActivity.button')}
               </Button>
             </CardContent>
           </Card>
@@ -324,9 +326,9 @@ export default function AdminPage() {
       <Card className="bg-white border-none shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center text-lg">
-            <ServerIcon className="w-5 h-5 mr-2 text-gray-500" /> System Status
+            <ServerIcon className="w-5 h-5 mr-2 text-gray-500" /> {t('systemStatus.title')}
           </CardTitle>
-          <CardDescription>Real-time system health and performance metrics.</CardDescription>
+          <CardDescription>{t('systemStatus.description')}</CardDescription>
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {Object.entries(systemMetricsData).map(([key, metric]) => (

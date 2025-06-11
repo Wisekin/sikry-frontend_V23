@@ -3,8 +3,11 @@ import Link from 'next/link';
 import EnterprisePageHeader from '@/components/core/layout/EnterprisePageHeader';
 import QualityMetricCard from '@/components/ui/quality-metric-card';
 import { BarChart3, TrendingUp, Users, DollarSign, Goal, Activity, LineChart } from 'lucide-react'; // Goal for conversion, Activity for performance
+import { useTranslation } from 'react-i18next';
 
 const AnalyticsOverviewPage = () => {
+  const { t } = useTranslation('analyticsOverviewPage');
+
   // Mock data for any overview cards - can be minimal if page is mostly for navigation
   const overviewStats = {
     keyMetric1: "Value 1",
@@ -12,14 +15,14 @@ const AnalyticsOverviewPage = () => {
   };
 
   const navLinks = [
-    { href: "/analytics/performance", title: "Performance Analytics", description: "Dive into traffic, engagement, and user behavior metrics.", icon: <Activity className="text-blue-600 group-hover:text-blue-700" /> },
-    { href: "/analytics/conversion", title: "Conversion Analytics", description: "Track funnel performance and identify drop-off points.", icon: <Goal className="text-emerald-600 group-hover:text-emerald-700" /> },
-    { href: "/analytics/revenue", title: "Revenue Analytics", description: "Analyze sales trends, LTV, and revenue by source.", icon: <LineChart className="text-purple-600 group-hover:text-purple-700" /> },
+    { href: "/analytics/performance", title: t("links.performance.title"), description: t("links.performance.description"), icon: <Activity className="text-blue-600 group-hover:text-blue-700" /> },
+    { href: "/analytics/conversion", title: t("links.conversion.title"), description: t("links.conversion.description"), icon: <Goal className="text-emerald-600 group-hover:text-emerald-700" /> },
+    { href: "/analytics/revenue", title: t("links.revenue.title"), description: t("links.revenue.description"), icon: <LineChart className="text-purple-600 group-hover:text-purple-700" /> },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <EnterprisePageHeader title="Analytics Overview" subtitle="Explore key metrics and insights across your application." />
+      <EnterprisePageHeader title={t("header.title")} subtitle={t("header.subtitle")} />
       <div className="p-6 md:p-10">
         {/* Optional: High-level QualityMetricCards if needed */}
         {/*
@@ -44,4 +47,5 @@ const AnalyticsOverviewPage = () => {
     </div>
   );
 };
+
 export default AnalyticsOverviewPage;

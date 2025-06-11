@@ -1,0 +1,64 @@
+{
+  "header": {
+    "title": "Anti-Spam Settings",
+    "description": "Configure spam protection and compliance settings"
+  },
+  "status": {
+    "title": "Spam Protection Status",
+    "description": "Real-time spam detection and filtering metrics"
+  },
+  "spamMetrics": {
+    "detectionRate": "Spam Detection Rate",
+    "falsePositives": "False Positives",
+    "blockedMessages": "Blocked Messages",
+    "quarantined": "Quarantined"
+  },
+  "filterConfig": {
+    "title": "Spam Filter Configuration",
+    "description": "Adjust spam detection sensitivity and rules",
+    "enableSpamDetection": {
+      "label": "Enable Spam Detection",
+      "description": "Automatically detect and filter spam messages"
+    },
+    "autoQuarantine": {
+      "label": "Auto-Quarantine Suspicious Messages",
+      "description": "Automatically quarantine messages with high spam scores"
+    },
+    "senderReputation": {
+      "label": "Sender Reputation Checking",
+      "description": "Check sender reputation against known spam databases"
+    },
+    "spamThreshold": {
+      "label": "Spam Score Threshold",
+      "description": "Messages with scores above this threshold will be marked as spam (1-10 scale)"
+    }
+  },
+  "whitelist": {
+    "title": "Whitelist",
+    "description": "Trusted senders and domains",
+    "placeholder": "Enter email addresses or domains (one per line)...",
+    "updateButton": "Update Whitelist"
+  },
+  "blacklist": {
+    "title": "Blacklist",
+    "description": "Blocked senders and domains",
+    "placeholder": "Enter email addresses or domains to block (one per line)...",
+    "updateButton": "Update Blacklist"
+  },
+  "compliance": {
+    "title": "Compliance Settings",
+    "description": "Configure compliance and regulatory requirements",
+    "gdpr": {
+      "label": "GDPR Compliance Mode",
+      "description": "Enable additional privacy protections for EU recipients"
+    },
+    "canSpam": {
+      "label": "CAN-SPAM Act Compliance",
+      "description": "Ensure all messages comply with CAN-SPAM requirements"
+    },
+    "unsubscribe": {
+      "label": "Automatic Unsubscribe Links",
+      "description": "Automatically add unsubscribe links to all marketing emails"
+    }
+  }
+}

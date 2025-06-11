@@ -1,0 +1,20 @@
+{
+  "header": {
+    "title": "Users",
+    "subtitle": "Manage your team members and their roles.",
+    "button": "Invite User"
+  },
+  "list": {
+    "title": "All Users",
+    "description": "Showing {{count}} users.",
+    "searchPlaceholder": "Search by name or email..."
+  },
+  "table": {
+    "name": "Name",
+    "role": "Role",
+    "status": "Status",
+    "lastActive": "Last Active",
+    "actions": "Actions",
+    "manage": "Manage"
+  }
+}
