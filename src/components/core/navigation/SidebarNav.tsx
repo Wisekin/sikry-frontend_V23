@@ -30,6 +30,8 @@ import {
   UserPlus,
   CreditCard,
   ShieldAlert,
+  Monitor,
+  FileCheck,
 } from "lucide-react"
 
 export function SidebarNav() {
@@ -63,283 +65,308 @@ export function SidebarNav() {
       icon: Database,
     },
     {
-      title: t('nav.statistics'),
+      title: t('nav.statistics.title'),
       href: "/statistics",
       icon: BarChart3,
       subItems: [
         {
-          title: t('nav.statisticsOverview'),
-          href: "/statistics",
+          title: t('nav.statistics.overview'),
+          href: "/statistics/overview",
           icon: BarChart2,
         },
         {
-          title: t('nav.statisticsCollectionTrends'),
+          title: t('nav.statistics.collectionTrends'),
           href: "/statistics/collection-trends",
           icon: BarChart,
         },
         {
-          title: t('nav.statisticsGeographicDistribution'),
+          title: t('nav.statistics.geographicDistribution'),
           href: "/statistics/geographic-distribution",
           icon: Map,
         },
         {
-          title: t('nav.statisticsSectorDistribution'),
+          title: t('nav.statistics.sectorDistribution'),
           href: "/statistics/sector-distribution",
           icon: PieChart,
         },
         {
-          title: t('nav.statisticsSourceComparison'),
+          title: t('nav.statistics.sourceComparison'),
           href: "/statistics/source-comparison",
           icon: BarChart,
         },
       ],
     },
     {
-      title: t('nav.communications'),
+      title: t('nav.communications.title'),
       href: "/comms",
       icon: MessageSquare,
       subItems: [
         {
-          title: t('nav.overview'),
+          title: t('nav.communications.overview'),
           href: "/comms/overview",
           icon: BarChart2,
         },
         {
-          title: t('comms.campaigns'),
+          title: t('nav.communications.campaigns'),
           href: "/comms/campaigns",
           icon: MessageSquare,
         },
         {
-          title: t('comms.templates'),
+          title: t('nav.communications.templates'),
           href: "/comms/templates",
           icon: MessageSquare,
         },
         {
-          title: t('comms.bulkSender'),
+          title: t('nav.communications.bulkSender'),
           href: "/comms/bulk-sender",
           icon: MessageSquare,
         },
       ],
     },
     {
-      title: t('nav.financial'),
+      title: t('nav.financial.title'),
       href: "/financial",
       icon: Wallet,
       subItems: [
         {
-          title: t('financial.records'),
+          title: t('nav.financial.records'),
           href: "/financial/records",
           icon: BarChart2,
         },
         {
-          title: t('financial.summary'),
+          title: t('nav.financial.summary'),
           href: "/financial/summary",
           icon: BarChart2,
         },
         {
-          title: t('financial.campaignRoi'),
+          title: t('nav.financial.campaignRoi'),
           href: "/financial/campaign-roi",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.reengagement'),
+      title: t('nav.reengagement.title'),
       href: "/reengagement",
       icon: RefreshCw,
       subItems: [
         {
-          title: t('reengagement.tasks'),
+          title: t('nav.reengagement.tasks'),
           href: "/reengagement/tasks",
           icon: BarChart2,
         },
         {
-          title: t('reengagement.classification'),
+          title: t('nav.reengagement.classification'),
           href: "/reengagement/classification",
           icon: BarChart2,
         },
         {
-          title: t('reengagement.automation'),
+          title: t('nav.reengagement.automation'),
           href: "/reengagement/automation",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.referrals'),
+      title: t('nav.referrals.title'),
       href: "/referrals",
       icon: Users,
       subItems: [
         {
-          title: t('referrals.dashboard'),
+          title: t('nav.referrals.dashboard'),
           href: "/referrals/dashboard",
           icon: BarChart2,
         },
         {
-          title: t('referrals.tracking'),
+          title: t('nav.referrals.tracking'),
           href: "/referrals/tracking",
           icon: BarChart2,
         },
         {
-          title: t('referrals.rewards'),
+          title: t('nav.referrals.rewards'),
           href: "/referrals/rewards",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.reviews'),
+      title: t('nav.reviews.title'),
       href: "/reviews",
       icon: Star,
       subItems: [
         {
-          title: t('reviews.requests'),
+          title: t('nav.reviews.requests'),
           href: "/reviews/requests",
           icon: BarChart2,
         },
         {
-          title: t('reviews.booster'),
+          title: t('nav.reviews.booster'),
           href: "/reviews/booster",
           icon: BarChart2,
         },
         {
-          title: t('reviews.monitoring'),
+          title: t('nav.reviews.monitoring'),
           href: "/reviews/monitoring",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.funnels'),
+      title: t('nav.funnels.title'),
       href: "/funnels",
       icon: Filter,
       subItems: [
         {
-          title: t('funnels.builder'),
+          title: t('nav.funnels.builder'),
           href: "/funnels/builder",
           icon: BarChart2,
         },
         {
-          title: t('funnels.progress'),
+          title: t('nav.funnels.progress'),
           href: "/funnels/progress",
           icon: BarChart2,
         },
         {
-          title: t('funnels.automation'),
+          title: t('nav.funnels.automation'),
           href: "/funnels/automation",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.gapAnalysis'),
+      title: t('nav.gapAnalysis.title'),
       href: "/gap-analysis",
       icon: Gauge,
       subItems: [
         {
-          title: t('gapAnalysis.form'),
+          title: t('nav.gapAnalysis.form'),
           href: "/gap-analysis/form",
           icon: BarChart2,
         },
         {
-          title: t('gapAnalysis.letters'),
+          title: t('nav.gapAnalysis.letters'),
           href: "/gap-analysis/letters",
           icon: BarChart2,
         },
         {
-          title: t('gapAnalysis.results'),
+          title: t('nav.gapAnalysis.results'),
           href: "/gap-analysis/results",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.vsl'),
+      title: t('nav.vsl.title'),
       href: "/vsl",
       icon: Video,
       subItems: [
         {
-          title: t('vsl.templates'),
+          title: t('nav.vsl.templates'),
           href: "/vsl/templates",
           icon: BarChart2,
         },
         {
-          title: t('vsl.pages'),
+          title: t('nav.vsl.pages'),
           href: "/vsl/pages",
           icon: BarChart2,
         },
         {
-          title: t('vsl.tracking'),
+          title: t('nav.vsl.tracking'),
           href: "/vsl/tracking",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.leadResponse'),
+      title: t('nav.leadResponse.title'),
       href: "/lead-response",
       icon: MessageCircle,
       subItems: [
         {
-          title: t('leadResponse.rules'),
+          title: t('nav.leadResponse.rules'),
           href: "/lead-response/rules",
           icon: BarChart2,
         },
         {
-          title: t('leadResponse.queue'),
+          title: t('nav.leadResponse.queue'),
           href: "/lead-response/queue",
           icon: BarChart2,
         },
         {
-          title: t('leadResponse.analytics'),
+          title: t('nav.leadResponse.analytics'),
           href: "/lead-response/analytics",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.analytics'),
+      title: t('nav.analytics.title'),
       href: "/analytics",
       icon: BarChart4,
       subItems: [
         {
-          title: t('analytics.performance'),
+          title: t('nav.analytics.performance'),
           href: "/analytics/performance",
           icon: BarChart2,
         },
         {
-          title: t('analytics.conversion'),
+          title: t('nav.analytics.conversion'),
           href: "/analytics/conversion",
           icon: BarChart2,
         },
         {
-          title: t('analytics.revenue'),
+          title: t('nav.analytics.revenue'),
           href: "/analytics/revenue",
           icon: BarChart2,
         },
       ],
     },
     {
-      title: t('nav.admin'),
+      title: t('nav.admin.title'),
       href: "/admin",
-      icon: Settings,
+      icon: Shield,
       subItems: [
         {
-          title: t('admin.teamManagement'),
+          title: t('nav.admin.teamManagement'),
           href: "/admin/team",
           icon: UserPlus,
         },
         {
-          title: t('admin.billing'),
+          title: t('nav.admin.users'),
+          href: "/admin/users",
+          icon: Users,
+        },
+        {
+          title: t('nav.admin.billing'),
           href: "/admin/billing",
           icon: CreditCard,
         },
         {
-          title: t('admin.antiSpam'),
+          title: t('nav.admin.security'),
+          href: "/admin/security",
+          icon: ShieldAlert,
+        },
+        {
+          title: t('nav.admin.compliance'),
+          href: "/admin/compliance",
+          icon: FileCheck,
+        },
+        {
+          title: t('nav.admin.monitoring'),
+          href: "/admin/monitoring",
+          icon: Monitor,
+        },
+        {
+          title: t('nav.admin.antiSpam'),
           href: "/admin/anti-spam",
           icon: ShieldAlert,
         },
       ],
+    },
+    {
+      title: t('nav.settings'),
+      href: "/settings",
+      icon: Settings,
     },
   ]
 

@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -9,6 +10,7 @@ import { Sparkles, Copy, Check } from "lucide-react"
 import { Text } from "@/components/core/typography/Text"
 
 export function AISelector() {
+  const { t } = useTranslation('scrapingPage')
   const [description, setDescription] = useState("")
   const [selectors, setSelectors] = useState<
     Array<{
@@ -49,13 +51,13 @@ export function AISelector() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="w-5 h-5" />
-          AI Selector Generator
+          {t('aiSelector.title')}
         </CardTitle>
-        <CardDescription>Describe what you want to extract and let AI generate CSS selectors</CardDescription>
+        <CardDescription>{t('aiSelector.description')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <label className="text-caption font-medium mb-2 block">Describe the data you want to extract</label>
+          <label className="text-caption font-medium mb-2 block">{t('aiSelector.prompt')}</label>
           <Textarea
             placeholder="I want to extract the company name, contact email, phone number, and office address from company websites..."
             value={description}
@@ -71,7 +73,7 @@ export function AISelector() {
 
         {selectors.length > 0 && (
           <div className="space-y-4">
-            <Text className="font-medium">Generated Selectors</Text>
+            <Text className="font-medium">{t('aiSelector.generatedSelectors')}</Text>
             {selectors.map((item, index) => (
               <div key={index} className="p-3 border rounded-lg">
                 <div className="flex items-center justify-between mb-2">

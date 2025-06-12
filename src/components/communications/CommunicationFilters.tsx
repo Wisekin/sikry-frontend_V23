@@ -1,7 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -24,29 +31,12 @@ async function getContacts() {
   return [] as Contact[]
 }
 
-const STATUS_OPTIONS = [
-  { value: "pending", label: "Pending" },
-  { value: "sent", label: "Sent" },
-  { value: "delivered", label: "Delivered" },
-  { value: "read", label: "Opened" },
-  { value: "answered", label: "Replied" },
-  { value: "failed", label: "Failed" },
-]
-
-const CHANNEL_OPTIONS = [
-  { value: "email", label: "Email" },
-  { value: "sms", label: "SMS" },
-  { value: "whatsapp", label: "WhatsApp" },
-  { value: "call", label: "Call" },
-  { value: "linkedin", label: "LinkedIn" },
-  { value: "other", label: "Other" },
-]
-
 export interface CommunicationFiltersProps {
   onChange?: (filters: Record<string, any>) => void
 }
 
 export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
+  const { t } = useTranslation("commsPage")
   const [status, setStatus] = useState<string>("")
   const [channel, setChannel] = useState<string>("")
   const [company, setCompany] = useState<string>("")
@@ -55,6 +45,24 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to?: Date | undefined }>({ from: undefined, to: undefined })
   const [companies, setCompanies] = useState<DiscoveredCompany[]>([])
   const [contacts, setContacts] = useState<Contact[]>([])
+
+  const STATUS_OPTIONS = [
+    { value: "pending", label: t("statusOptions.pending") },
+    { value: "sent", label: t("statusOptions.sent") },
+    { value: "delivered", label: t("statusOptions.delivered") },
+    { value: "read", label: t("statusOptions.opened") },
+    { value: "answered", label: t("statusOptions.replied") },
+    { value: "failed", label: t("statusOptions.failed") },
+  ]
+
+  const CHANNEL_OPTIONS = [
+    { value: "email", label: t("channelOptions.email") },
+    { value: "sms", label: t("channelOptions.sms") },
+    { value: "whatsapp", label: t("channelOptions.whatsapp") },
+    { value: "call", label: t("channelOptions.call") },
+    { value: "linkedin", label: t("channelOptions.linkedin") },
+    { value: "other", label: t("channelOptions.other") },
+  ]
 
   useEffect(() => {
     getCompanies().then(setCompanies)
@@ -76,7 +84,7 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
   }, [status, channel, company, contact, subject, dateRange, onChange])
 
   const formatDateRange = (range: { from: Date | undefined; to?: Date | undefined }) => {
-    if (!range.from) return "Select dates"
+    if (!range.from) return t("filters.datePlaceholder")
     if (!range.to) return format(range.from, "LLL dd, y")
     return `${format(range.from, "LLL dd, y")} - ${format(range.to, "LLL dd, y")}`
   }
@@ -87,13 +95,13 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           {/* Status */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Status</label>
+            <label className="text-sm font-medium">{t("filters.status")}</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger>
-                <SelectValue placeholder="All" />
+                <SelectValue placeholder={t("filters.all")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all">{t("filters.all")}</SelectItem>
                 {STATUS_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                 ))}
@@ -103,13 +111,13 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
 
           {/* Channel */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Channel</label>
+            <label className="text-sm font-medium">{t("filters.channel")}</label>
             <Select value={channel} onValueChange={setChannel}>
               <SelectTrigger>
-                <SelectValue placeholder="All" />
+                <SelectValue placeholder={t("filters.all")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all">{t("filters.all")}</SelectItem>
                 {CHANNEL_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                 ))}
@@ -119,13 +127,13 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
 
           {/* Company */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Company</label>
+            <label className="text-sm font-medium">{t("filters.company")}</label>
             <Select value={company} onValueChange={setCompany}>
               <SelectTrigger>
-                <SelectValue placeholder="All" />
+                <SelectValue placeholder={t("filters.all")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all">{t("filters.all")}</SelectItem>
                 {companies.map((c) => (
                   <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                 ))}
@@ -135,13 +143,13 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
 
           {/* Contact */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Contact</label>
+            <label className="text-sm font-medium">{t("filters.contact")}</label>
             <Select value={contact} onValueChange={setContact}>
               <SelectTrigger>
-                <SelectValue placeholder="All" />
+                <SelectValue placeholder={t("filters.all")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="all">{t("filters.all")}</SelectItem>
                 {contacts.map((c) => (
                   <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                 ))}
@@ -151,18 +159,18 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
 
           {/* Subject */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Subject</label>
+            <label className="text-sm font-medium">{t("filters.subject")}</label>
             <Input
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="Search subject..."
+              placeholder={t("search.subjectPlaceholder")}
             />
           </div>
 
           {/* Date Range */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Sent Date</label>
+            <label className="text-sm font-medium">{t("filters.sentDate")}</label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -220,7 +228,7 @@ export function CommunicationFilters({ onChange }: CommunicationFiltersProps) {
               setDateRange({ from: undefined, to: undefined })
             }}
           >
-            Reset Filters
+            {t("filters.resetButton")}
           </Button>
         </div>
       </CardContent>

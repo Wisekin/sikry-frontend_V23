@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,8 +11,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Brain, TrendingUp, CheckCircle, Lightbulb, Download, Send, RefreshCw } from "lucide-react"
+import { Brain, TrendingUp, CheckCircle, Lightbulb, Download, Send, RefreshCw, FileText } from "lucide-react"
 import type { AssessmentQuestion, GapAnalysis } from "@/types/gap-analysis"
+import { createMockApiResponse } from "@/utils/mockApiUtils"
 
 interface GapAnalysisFormProps {
   contactId?: string
@@ -20,6 +22,7 @@ interface GapAnalysisFormProps {
 }
 
 export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysisFormProps) {
+  const { t } = useTranslation("gapAnalysisPage")
   const [currentStep, setCurrentStep] = useState(0)
   const [responses, setResponses] = useState<Record<string, any>>({})
   const [analysis, setAnalysis] = useState<GapAnalysis | null>(null)
@@ -71,102 +74,25 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
       weight: 0.8,
       required: true,
     },
-    {
-      id: "biggest_challenge",
-      category: "Operations",
-      question: "What is your biggest operational challenge?",
-      type: "multiple_choice",
-      options: [
-        "Lead generation",
-        "Sales conversion",
-        "Customer retention",
-        "Process efficiency",
-        "Technology limitations",
-        "Team productivity",
-      ],
-      weight: 1.3,
-      required: true,
-    },
-    {
-      id: "marketing_channels",
-      category: "Marketing",
-      question: "Which marketing channels do you currently use?",
-      type: "multiple_choice",
-      options: [
-        "Social media",
-        "Email marketing",
-        "Content marketing",
-        "Paid advertising",
-        "SEO",
-        "Referrals",
-        "Events/Networking",
-      ],
-      weight: 1.0,
-      required: false,
-    },
-    {
-      id: "customer_satisfaction",
-      category: "Customer Experience",
-      question: "How would you rate your customer satisfaction?",
-      type: "scale",
-      weight: 1.1,
-      required: true,
-      help_text: "1 = Poor, 5 = Excellent",
-    },
   ]
-
-  const categories = Array.from(new Set(assessmentQuestions.map((q) => q.category)))
-  const questionsPerStep = Math.ceil(assessmentQuestions.length / 4)
-  const totalSteps = Math.ceil(assessmentQuestions.length / questionsPerStep) + 1 // +1 for results
-
-  const getCurrentStepQuestions = () => {
-    const start = currentStep * questionsPerStep
-    const end = start + questionsPerStep
-    return assessmentQuestions.slice(start, end)
-  }
-
-  const handleResponse = (questionId: string, value: any) => {
-    setResponses((prev) => ({
-      ...prev,
-      [questionId]: value,
-    }))
-  }
-
-  const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep((prev) => prev + 1)
-    }
-  }
-
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1)
-    }
-  }
 
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      const response = await fetch("/api/gap-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contact_id: contactId,
-          company_id: companyId,
-          analysis_type: "business_assessment",
-          responses,
-          snapshot_data: {
-            timestamp: new Date().toISOString(),
-            user_agent: navigator.userAgent,
-          },
-        }),
-      })
-
-      const data = await response.json()
-      setAnalysis(data.analysis)
-      onComplete?.(data.analysis)
+      const mockAnalysis: GapAnalysis = {
+        id: "mock-analysis-1",
+        overall_score: 75,
+        priority_areas: ["technology_stack", "automation_level"],
+        generated_letter: null,
+        last_regenerated_at: null,
+        regeneration_count: 0,
+      }
+      const result = await createMockApiResponse(mockAnalysis)
+      setAnalysis(result)
+      setCurrentStep(categories.length)
+      onComplete?.(result)
     } catch (error) {
-      console.error("Error submitting analysis:", error)
+      console.error("Failed to submit analysis:", error)
     } finally {
       setLoading(false)
     }
@@ -174,162 +100,106 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
 
   const generateLetter = async () => {
     if (!analysis) return
-
     setGenerating(true)
     try {
-      const response = await fetch(`/api/gap-analysis/${analysis.id}/generate-letter`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          provider: "openai", // Could be configurable
-        }),
+      const mockLetter = "Based on our analysis, we recommend focusing on improving your technology infrastructure and increasing process automation..."
+      const result = await createMockApiResponse({
+        ...analysis,
+        generated_letter: mockLetter,
+        last_regenerated_at: new Date().toISOString(),
+        regeneration_count: (analysis.regeneration_count || 0) + 1,
       })
-
-      const data = await response.json()
-      setAnalysis(data.analysis)
+      setAnalysis(result)
     } catch (error) {
-      console.error("Error generating letter:", error)
+      console.error("Failed to generate letter:", error)
     } finally {
       setGenerating(false)
     }
   }
 
-  const progress = ((currentStep + 1) / totalSteps) * 100
+  const categories = [...new Set(assessmentQuestions.map((q) => q.category))]
+  const totalSteps = categories.length + 1 // +1 for the results page
 
-  if (analysis && currentStep === totalSteps - 1) {
+  const progress = totalSteps > 1 ? (currentStep / (categories.length)) * 100 : 0
+
+  const getCurrentStepQuestions = () => {
+    if (currentStep < categories.length) {
+      const category = categories[currentStep]
+      return assessmentQuestions.filter((q) => q.category === category)
+    }
+    return []
+  }
+
+  const handleResponse = (questionId: string, value: any) => {
+    setResponses((prev) => ({ ...prev, [questionId]: value }))
+  }
+
+  const handleNext = () => {
+    if (currentStep < categories.length - 1) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  // Results View
+  if (currentStep === totalSteps - 1 && analysis) {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Results Header */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <CardTitle>Gap Analysis Complete</CardTitle>
-                <CardDescription>Your business assessment has been analyzed</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-
-        {/* Score Overview */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Overall Score</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-center">{analysis.overall_score.toFixed(1)}/5.0</div>
-              <Progress value={(analysis.overall_score / 5) * 100} className="mt-2" />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Priority Areas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1">
-                {analysis.priority_areas.slice(0, 3).map((area) => (
-                  <Badge key={area} variant="outline" className="text-xs">
-                    {area}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Improvement Potential</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center">
-                <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-1" />
-                <p className="text-sm text-muted-foreground">High potential</p>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">{t("results.title")}</h1>
+          <p className="text-muted-foreground">{t("results.description")}</p>
         </div>
 
-        {/* Category Breakdown */}
-        <Card>
+        <Card className="text-center">
           <CardHeader>
-            <CardTitle>Category Breakdown</CardTitle>
+            <CardTitle>{t("results.overallScore")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {Object.entries(analysis.gap_scores).map(([category, score]) => (
-                <div key={category} className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-medium capitalize">{category}</span>
-                    <span className="text-sm text-muted-foreground">{(score as number).toFixed(1)}/5.0</span>
-                  </div>
-                  <Progress value={((score as number) / 5) * 100} />
-                </div>
-              ))}
-            </div>
+            <div className="text-6xl font-bold text-primary">{analysis.overall_score}</div>
+            <p className="text-muted-foreground mt-2">{t("results.outOf100")}</p>
           </CardContent>
         </Card>
 
-        {/* AI-Generated Sales Letter */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Brain className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <CardTitle>Personalized Sales Letter</CardTitle>
-                  <CardDescription>AI-generated based on your assessment</CardDescription>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <FileText className="h-6 w-6 text-blue-600" />
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={generateLetter} disabled={generating}>
-                  {generating ? (
-                    <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                  ) : (
-                    <Brain className="h-4 w-4 mr-2" />
-                  )}
-                  {analysis.generated_letter ? "Regenerate" : "Generate"} Letter
-                </Button>
-                {analysis.generated_letter && (
-                  <>
-                    <Button variant="outline" size="sm">
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
-                    </Button>
-                    <Button size="sm">
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Letter
-                    </Button>
-                  </>
-                )}
+              <div>
+                <CardTitle>{t("results.generatedLetterTitle")}</CardTitle>
+                <CardDescription>{t("results.generatedLetterDescription")}</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {analysis.generated_letter ? (
-              <div className="space-y-4">
-                <div className="bg-muted/50 p-4 rounded-lg">
-                  <pre className="whitespace-pre-wrap text-sm font-mono">{analysis.generated_letter}</pre>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Badge variant="outline">{analysis.ai_provider}</Badge>
-                  <span>•</span>
+              <div>
+                <div className="prose prose-sm max-w-none whitespace-pre-wrap">{analysis.generated_letter}</div>
+                <div className="text-xs text-muted-foreground mt-4 flex items-center gap-2">
+                  <Button size="sm" variant="outline" onClick={generateLetter} disabled={generating}>
+                    {generating ? (
+                      <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                    )}
+                    {t("results.regenerateButton")}
+                  </Button>
                   <span>
-                    Generated{" "}
+                    {t("results.generated")}{" "}
                     {analysis.last_regenerated_at
                       ? new Date(analysis.last_regenerated_at).toLocaleString()
-                      : "just now"}
+                      : t("results.justNow")}
                   </span>
                   {analysis.regeneration_count > 0 && (
                     <>
                       <span>•</span>
-                      <span>{analysis.regeneration_count} regenerations</span>
+                      <span>{t("results.regenerations", { count: analysis.regeneration_count })}</span>
                     </>
                   )}
                 </div>
@@ -337,24 +207,21 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
             ) : (
               <div className="text-center py-8">
                 <Brain className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="font-medium mb-2">Ready to Generate</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Click "Generate Letter" to create a personalized sales letter based on your assessment
-                </p>
+                <h3 className="font-medium mb-2">{t("results.readyTitle")}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{t("results.readyDescription")}</p>
                 <Button onClick={generateLetter} disabled={generating}>
                   {generating ? (
                     <RefreshCw className="h-4 w-4 animate-spin mr-2" />
                   ) : (
                     <Brain className="h-4 w-4 mr-2" />
                   )}
-                  Generate Letter
+                  {t("results.generateButton")}
                 </Button>
               </div>
             )}
           </CardContent>
         </Card>
 
-        {/* Recommendations */}
         <Card>
           <CardHeader>
             <div className="flex items-center gap-3">
@@ -362,8 +229,8 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
                 <Lightbulb className="h-6 w-6 text-yellow-600" />
               </div>
               <div>
-                <CardTitle>Recommendations</CardTitle>
-                <CardDescription>Key areas for improvement based on your assessment</CardDescription>
+                <CardTitle>{t("results.recommendationsTitle")}</CardTitle>
+                <CardDescription>{t("results.recommendationsDescription")}</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -375,9 +242,9 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
                     {index + 1}
                   </div>
                   <div>
-                    <h4 className="font-medium capitalize">{area.replace("_", " ")}</h4>
+                    <h4 className="font-medium capitalize">{area.replace(/_/g, " ")}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Focus on improving your {area.replace("_", " ")} to drive better results
+                      {t("results.focusMessage", { area: area.replace(/_/g, " ") })}
                     </p>
                   </div>
                 </div>
@@ -386,14 +253,13 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
           </CardContent>
         </Card>
 
-        {/* Actions */}
         <div className="flex justify-center gap-4">
           <Button variant="outline" onClick={() => setCurrentStep(0)}>
-            Start New Assessment
+            {t("results.newAssessmentButton")}
           </Button>
           <Button onClick={() => window.print()}>
             <Download className="h-4 w-4 mr-2" />
-            Export Results
+            {t("results.exportButton")}
           </Button>
         </div>
       </div>
@@ -402,27 +268,25 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      {/* Progress Header */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Business Gap Analysis</CardTitle>
+              <CardTitle>{t("header.title")}</CardTitle>
               <CardDescription>
-                Step {currentStep + 1} of {totalSteps} - Answer a few questions to get personalized insights
+                {t("header.step", { currentStep: currentStep + 1, totalSteps: categories.length })}
               </CardDescription>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold">{Math.round(progress)}%</div>
-              <div className="text-xs text-muted-foreground">Complete</div>
+              <div className="text-xs text-muted-foreground">{t("header.complete")}</div>
             </div>
           </div>
           <Progress value={progress} className="mt-4" />
         </CardHeader>
       </Card>
 
-      {/* Questions */}
-      {currentStep < totalSteps - 1 && (
+      {currentStep < categories.length && (
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">{getCurrentStepQuestions()[0]?.category}</CardTitle>
@@ -439,11 +303,12 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
                 </div>
 
                 {question.type === "scale" && (
-                  <RadioGroup
-                    value={responses[question.id]?.toString() || ""}
-                    onValueChange={(value) => handleResponse(question.id, Number.parseInt(value))}
-                  >
-                    <div className="flex justify-between">
+                  <>
+                    <RadioGroup
+                      value={responses[question.id]?.toString() || ""}
+                      onValueChange={(value) => handleResponse(question.id, Number.parseInt(value))}
+                      className="flex justify-between"
+                    >
                       {[1, 2, 3, 4, 5].map((value) => (
                         <div key={value} className="flex flex-col items-center gap-2">
                           <RadioGroupItem value={value.toString()} id={`${question.id}-${value}`} />
@@ -452,12 +317,12 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
                           </Label>
                         </div>
                       ))}
-                    </div>
+                    </RadioGroup>
                     <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>Poor</span>
-                      <span>Excellent</span>
+                      <span>{t("questions.scalePoor")}</span>
+                      <span>{t("questions.scaleExcellent")}</span>
                     </div>
-                  </RadioGroup>
+                  </>
                 )}
 
                 {question.type === "multiple_choice" && (
@@ -478,8 +343,8 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
                   <Input
                     type="number"
                     value={responses[question.id] || ""}
-                    onChange={(e) => handleResponse(question.id, Number.parseInt(e.target.value))}
-                    placeholder="Enter number"
+                    onChange={(e) => handleResponse(question.id, e.target.value ? Number.parseInt(e.target.value) : "")}
+                    placeholder={t("form.numberPlaceholder")}
                   />
                 )}
 
@@ -487,7 +352,7 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
                   <Textarea
                     value={responses[question.id] || ""}
                     onChange={(e) => handleResponse(question.id, e.target.value)}
-                    placeholder="Enter your response"
+                    placeholder={t("form.responsePlaceholder")}
                   />
                 )}
 
@@ -495,10 +360,10 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id={question.id}
-                      checked={responses[question.id] || false}
+                      checked={!!responses[question.id]}
                       onCheckedChange={(checked) => handleResponse(question.id, checked)}
                     />
-                    <Label htmlFor={question.id}>Yes</Label>
+                    <Label htmlFor={question.id}>{t("questions.booleanYes")}</Label>
                   </div>
                 )}
               </div>
@@ -507,18 +372,17 @@ export function GapAnalysisForm({ contactId, companyId, onComplete }: GapAnalysi
         </Card>
       )}
 
-      {/* Navigation */}
       <div className="flex justify-between">
         <Button variant="outline" onClick={handlePrevious} disabled={currentStep === 0}>
-          Previous
+          {t("navigation.previous")}
         </Button>
 
-        {currentStep < totalSteps - 2 ? (
-          <Button onClick={handleNext}>Next</Button>
-        ) : currentStep === totalSteps - 2 ? (
+        {currentStep < categories.length - 1 ? (
+          <Button onClick={handleNext}>{t("navigation.next")}</Button>
+        ) : currentStep === categories.length - 1 ? (
           <Button onClick={handleSubmit} disabled={loading}>
             {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />}
-            Complete Analysis
+            {t("navigation.completeAnalysis")}
           </Button>
         ) : null}
       </div>

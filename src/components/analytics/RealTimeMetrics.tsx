@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ClockIcon, SignalIcon } from "@heroicons/react/24/solid"
 
 export function RealTimeMetrics() {
+  const { t } = useTranslation("analyticsDashboard")
   const [metrics, setMetrics] = useState({
     activeScrapers: 8,
     dataPointsToday: 1247,
@@ -32,12 +34,12 @@ export function RealTimeMetrics() {
   }, [isLive])
 
   const realTimeEvents = [
-    { time: "2s ago", event: "Company data extracted", type: "success" },
-    { time: "15s ago", event: "New scraper started", type: "info" },
-    { time: "32s ago", event: "Email campaign sent", type: "success" },
-    { time: "1m ago", event: "Rate limit reached", type: "warning" },
-    { time: "2m ago", event: "Data enrichment completed", type: "success" },
-  ]
+    { time: "2s", eventKey: "realTimeMetrics.events.extract", type: "success" },
+    { time: "15s", eventKey: "realTimeMetrics.events.start", type: "info" },
+    { time: "32s", eventKey: "realTimeMetrics.events.send", type: "success" },
+    { time: "1m", eventKey: "realTimeMetrics.events.limit", type: "warning" },
+    { time: "2m", eventKey: "realTimeMetrics.events.enrich", type: "success" },
+  ].map(event => ({ ...event, event: t(event.eventKey), time: t('realTimeMetrics.ago', { time: event.time }) }));
 
   return (
     <div className="space-y-4">
@@ -46,11 +48,11 @@ export function RealTimeMetrics() {
           <CardTitle className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <SignalIcon className="w-5 h-5 text-green-500" />
-              <span>Real-Time Metrics</span>
+              <span>{t('realTimeMetrics.title')}</span>
               {isLive && (
                 <div className="flex items-center gap-1">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-green-600">LIVE</span>
+                  <span className="text-xs text-green-600">{t('realTimeMetrics.live')}</span>
                 </div>
               )}
             </div>
@@ -60,19 +62,19 @@ export function RealTimeMetrics() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{metrics.activeScrapers}</div>
-              <div className="text-sm text-gray-600">Active Scrapers</div>
+              <div className="text-sm text-gray-600">{t('realTimeMetrics.activeScrapers')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">{metrics.dataPointsToday.toLocaleString()}</div>
-              <div className="text-sm text-gray-600">Data Points Today</div>
+              <div className="text-sm text-gray-600">{t('realTimeMetrics.dataPointsToday')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">{metrics.successRate.toFixed(1)}%</div>
-              <div className="text-sm text-gray-600">Success Rate</div>
+              <div className="text-sm text-gray-600">{t('realTimeMetrics.successRate')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">{metrics.avgResponseTime.toFixed(1)}s</div>
-              <div className="text-sm text-gray-600">Avg Response</div>
+              <div className="text-sm text-gray-600">{t('realTimeMetrics.avgResponse')}</div>
             </div>
           </div>
         </CardContent>
@@ -82,7 +84,7 @@ export function RealTimeMetrics() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ClockIcon className="w-5 h-5 text-blue-500" />
-            Live Activity Feed
+            {t('realTimeMetrics.activityFeed')}
           </CardTitle>
         </CardHeader>
         <CardContent>

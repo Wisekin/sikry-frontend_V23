@@ -55,11 +55,10 @@
   },
   "recipients": {
     "title": "Recipients",
-    "count": "{{count}} Recipients",
-    "upload": "Upload List",
-    "uploadButton": "Upload CSV",
-    "uploadModalTitle": "Upload Recipients",
-    "uploadModalDescription": "Upload a CSV file containing your recipient list."
+    "selectRecipients": "Select Recipients",
+    "totalSelected": "{{count}} recipients selected",
+    "noRecipients": "No recipients selected. Please add recipients to send messages.",
+    "addRecipients": "Add Recipients"
   },
   "delivery": {
     "title": "Delivery",
@@ -84,13 +83,44 @@
     }
   },
   "actions": {
-    "send": "Send",
-    "save": "Save as Draft",
+    "send": "Send Messages",
+    "schedule": "Schedule Messages",
     "cancel": "Cancel",
-    "close": "Close"
+    "sending": "Sending...",
+    "scheduled": "Messages Scheduled"
   },
   "abTesting": {
     "title": "A/B Testing",
     "description": "Test different versions of your message to optimize performance"
+  },
+  "title": "Bulk Sender",
+  "description": "Send communications in bulk to multiple recipients.",
+  "compose": {
+    "title": "Compose Message",
+    "subject": "Subject",
+    "subjectPlaceholder": "Enter message subject",
+    "message": "Message",
+    "messagePlaceholder": "Type your message here...",
+    "attachments": "Attachments",
+    "addAttachment": "Add Attachment"
+  },
+  "schedule": {
+    "title": "Schedule",
+    "sendNow": "Send Now",
+    "scheduleForLater": "Schedule for Later",
+    "dateTime": "Date & Time",
+    "timezone": "Timezone"
+  },
+  "preview": {
+    "title": "Preview",
+    "previewRecipient": "Preview Recipient",
+    "previewMessage": "Preview your message as it will appear to recipients.",
+    "noPreview": "Compose a message to see a preview."
+  },
+  "validation": {
+    "subjectRequired": "Subject is required",
+    "messageRequired": "Message is required",
+    "recipientsRequired": "At least one recipient is required",
+    "scheduleRequired": "Please select a valid date and time for scheduling"
   }
-} 
+}

@@ -12,12 +12,12 @@ if (typeof window !== 'undefined') {
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-      fallbackLng: 'en-GB',
+      fallbackLng: 'en',
       debug: process.env.NODE_ENV === 'development',
       ns: [
         'common',
         'auth',
-        'dashboard',
+        'dashboardPage',
         'companiesPage',
         'analyticsOverviewPage',
         'performanceAnalyticsPage',
@@ -31,11 +31,19 @@ if (typeof window !== 'undefined') {
         'adminAntiSpamPage',
         'adminMonitoringPage',
         'commsPage',
-        'commsBulkSenderPage'
+        'commsBulkSenderPage',
+        'searchPage',
+        'statisticsOverviewPage',
+        'statisticsPage',
+        'reviews',
+        'gapAnalysisPage',
+        'analyticsDashboard',
+        'scrapingPage',
       ],
       defaultNS: 'common',
       backend: {
         loadPath: '/locales/{{lng}}/{{ns}}.json',
+        addPath: '/api/locales/add/{{lng}}/{{ns}}',
         requestOptions: {
           cache: 'no-cache',
         },
@@ -48,7 +56,7 @@ if (typeof window !== 'undefined') {
         caches: ['localStorage'],
         lookupLocalStorage: 'i18nextLng',
       },
-      supportedLngs: ['en-GB', 'fr'],
+      supportedLngs: ['en', 'fr'],
       nonExplicitSupportedLngs: true,
       load: 'languageOnly',
       cleanCode: true,

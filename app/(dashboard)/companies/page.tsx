@@ -74,7 +74,7 @@ export default function CompaniesPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-sm text-muted-foreground">
-            {t("pagination.showing", { ns: 'common', count: filteredCompanies.length })} {t("pagination.results", { ns: 'common', count: filteredCompanies.length })}
+            {t("pagination.showingResults", { ns: 'common', count: filteredCompanies.length })}
           </p>
         </div>
         <div className="flex space-x-2">

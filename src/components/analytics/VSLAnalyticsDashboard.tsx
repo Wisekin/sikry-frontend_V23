@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -62,6 +63,7 @@ interface AnalyticsData {
 }
 
 export function VSLAnalyticsDashboard() {
+  const { t } = useTranslation("analyticsDashboard")
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState("7d")
@@ -85,7 +87,7 @@ export function VSLAnalyticsDashboard() {
   }
 
   if (loading || !data) {
-    return <div>Loading analytics...</div>
+    return <div>{t('loading')}</div>
   }
 
   const chartData = [
@@ -108,18 +110,18 @@ export function VSLAnalyticsDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
-          <p className="text-muted-foreground">Track performance across all your marketing channels</p>
+          <h1 className="text-3xl font-bold">{t('title')}</h1>
+          <p className="text-muted-foreground">{t('description')}</p>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-32">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="24h">24 Hours</SelectItem>
-            <SelectItem value="7d">7 Days</SelectItem>
-            <SelectItem value="30d">30 Days</SelectItem>
-            <SelectItem value="90d">90 Days</SelectItem>
+            <SelectItem value="24h">{t('timeRanges.24h')}</SelectItem>
+            <SelectItem value="7d">{t('timeRanges.7d')}</SelectItem>
+            <SelectItem value="30d">{t('timeRanges.30d')}</SelectItem>
+            <SelectItem value="90d">{t('timeRanges.90d')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -128,63 +130,63 @@ export function VSLAnalyticsDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Page Views</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('keyMetrics.totalPages.title')}</CardTitle>
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data.vsl_performance.total_views.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">+12% from last period</p>
+            <p className="text-xs text-muted-foreground">{t('keyMetrics.totalPages.change', { value: 12 })}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('keyMetrics.conversionRate.title')}</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data.vsl_performance.conversion_rate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">+2.1% from last period</p>
+            <p className="text-xs text-muted-foreground">{t('keyMetrics.conversionRate.change', { value: 2.1 })}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Response Time</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('keyMetrics.avgResponseTime.title')}</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{Math.floor(data.lead_response.avg_response_time / 60)}m</div>
-            <p className="text-xs text-muted-foreground">-30s from last period</p>
+            <p className="text-xs text-muted-foreground">{t('keyMetrics.avgResponseTime.change', { value: 30 })}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenue Attribution</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('keyMetrics.revenueAttribution.title')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${data.revenue_attribution.total_revenue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">+18% from last period</p>
+            <p className="text-xs text-muted-foreground">{t('keyMetrics.revenueAttribution.change', { value: 18 })}</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="vsl" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="vsl">VSL Performance</TabsTrigger>
-          <TabsTrigger value="lead-response">Lead Response</TabsTrigger>
-          <TabsTrigger value="funnels">Funnels</TabsTrigger>
-          <TabsTrigger value="revenue">Revenue</TabsTrigger>
+          <TabsTrigger value="vsl">{t('tabs.vsl')}</TabsTrigger>
+          <TabsTrigger value="lead-response">{t('tabs.leadResponse')}</TabsTrigger>
+          <TabsTrigger value="funnels">{t('tabs.funnels')}</TabsTrigger>
+          <TabsTrigger value="revenue">{t('tabs.revenue')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="vsl" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>Views & Conversions Trend</CardTitle>
-                <CardDescription>Daily performance over the selected period</CardDescription>
+                <CardTitle>{t('vslPerformance.trend.title')}</CardTitle>
+                <CardDescription>{t('vslPerformance.trend.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -202,8 +204,8 @@ export function VSLAnalyticsDashboard() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Top Performing Pages</CardTitle>
-                <CardDescription>Best converting VSL pages</CardDescription>
+                <CardTitle>{t('vslPerformance.topPages.title')}</CardTitle>
+                <CardDescription>{t('vslPerformance.topPages.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -212,7 +214,7 @@ export function VSLAnalyticsDashboard() {
                       <div>
                         <p className="font-medium">{page.page_name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {page.views} views • {page.leads} leads
+                          {t('vslPerformance.topPages.stats', { views: page.views, leads: page.leads })}
                         </p>
                       </div>
                       <Badge variant="secondary">{page.conversion_rate.toFixed(1)}%</Badge>
@@ -228,13 +230,13 @@ export function VSLAnalyticsDashboard() {
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>Response Performance</CardTitle>
-                <CardDescription>Lead response metrics and SLA compliance</CardDescription>
+                <CardTitle>{t('leadResponse.performance.title')}</CardTitle>
+                <CardDescription>{t('leadResponse.performance.description')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>SLA Compliance</span>
+                    <span>{t('leadResponse.performance.slaCompliance')}</span>
                     <span>
                       {Math.round((data.lead_response.responded_within_sla / data.lead_response.total_leads) * 100)}%
                     </span>
@@ -244,7 +246,7 @@ export function VSLAnalyticsDashboard() {
 
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Success Rate</span>
+                    <span>{t('leadResponse.performance.successRate')}</span>
                     <span>{data.lead_response.success_rate.toFixed(1)}%</span>
                   </div>
                   <Progress value={data.lead_response.success_rate} />
@@ -253,23 +255,23 @@ export function VSLAnalyticsDashboard() {
                 <div className="grid grid-cols-3 gap-4 pt-4">
                   <div className="text-center">
                     <Mail className="h-6 w-6 mx-auto mb-2 text-blue-500" />
-                    <p className="text-sm font-medium">Email</p>
+                    <p className="text-sm font-medium">{t('leadResponse.performance.email.label')}</p>
                     <p className="text-xs text-muted-foreground">
-                      {data.lead_response.channel_performance.email.sent} sent
+                      {t('leadResponse.performance.email.sent', { count: data.lead_response.channel_performance.email.sent })}
                     </p>
                   </div>
                   <div className="text-center">
                     <MessageSquare className="h-6 w-6 mx-auto mb-2 text-green-500" />
-                    <p className="text-sm font-medium">SMS</p>
+                    <p className="text-sm font-medium">{t('leadResponse.performance.sms.label')}</p>
                     <p className="text-xs text-muted-foreground">
-                      {data.lead_response.channel_performance.sms.sent} sent
+                      {t('leadResponse.performance.sms.sent', { count: data.lead_response.channel_performance.sms.sent })}
                     </p>
                   </div>
                   <div className="text-center">
                     <Phone className="h-6 w-6 mx-auto mb-2 text-orange-500" />
-                    <p className="text-sm font-medium">Calls</p>
+                    <p className="text-sm font-medium">{t('leadResponse.performance.calls.label')}</p>
                     <p className="text-xs text-muted-foreground">
-                      {data.lead_response.channel_performance.calls.attempted} attempted
+                      {t('leadResponse.performance.calls.attempted', { count: data.lead_response.channel_performance.calls.attempted })}
                     </p>
                   </div>
                 </div>
@@ -278,8 +280,8 @@ export function VSLAnalyticsDashboard() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Channel Distribution</CardTitle>
-                <CardDescription>Response channel usage breakdown</CardDescription>
+                <CardTitle>{t('leadResponse.distribution.title')}</CardTitle>
+                <CardDescription>{t('leadResponse.distribution.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -309,31 +311,31 @@ export function VSLAnalyticsDashboard() {
           <div className="grid gap-4 md:grid-cols-3">
             <Card>
               <CardHeader>
-                <CardTitle>Active Funnels</CardTitle>
+                <CardTitle>{t('funnels.active.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{data.funnel_performance.active_funnels}</div>
-                <p className="text-sm text-muted-foreground">Currently running</p>
+                <p className="text-sm text-muted-foreground">{t('funnels.active.description')}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Total Contacts</CardTitle>
+                <CardTitle>{t('funnels.contacts.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{data.funnel_performance.total_contacts.toLocaleString()}</div>
-                <p className="text-sm text-muted-foreground">In active funnels</p>
+                <p className="text-sm text-muted-foreground">{t('funnels.contacts.description')}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Completion Rate</CardTitle>
+                <CardTitle>{t('funnels.completion.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{data.funnel_performance.completion_rate.toFixed(1)}%</div>
-                <p className="text-sm text-muted-foreground">Average across all funnels</p>
+                <p className="text-sm text-muted-foreground">{t('funnels.completion.description')}</p>
               </CardContent>
             </Card>
           </div>
@@ -343,28 +345,28 @@ export function VSLAnalyticsDashboard() {
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>Revenue Attribution</CardTitle>
-                <CardDescription>Revenue breakdown by channel</CardDescription>
+                <CardTitle>{t('revenue.attribution.title')}</CardTitle>
+                <CardDescription>{t('revenue.attribution.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span>VSL Pages</span>
+                    <span>{t('revenue.attribution.vsl')}</span>
                     <span className="font-bold">${data.revenue_attribution.vsl_attributed.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span>Lead Response</span>
+                    <span>{t('revenue.attribution.leadResponse')}</span>
                     <span className="font-bold">
                       ${data.revenue_attribution.lead_response_attributed.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span>Funnels</span>
+                    <span>{t('revenue.attribution.funnels')}</span>
                     <span className="font-bold">${data.revenue_attribution.funnel_attributed.toLocaleString()}</span>
                   </div>
                   <hr />
                   <div className="flex justify-between items-center text-lg">
-                    <span className="font-bold">Total</span>
+                    <span className="font-bold">{t('revenue.attribution.total')}</span>
                     <span className="font-bold">${data.revenue_attribution.total_revenue.toLocaleString()}</span>
                   </div>
                 </div>
@@ -373,8 +375,8 @@ export function VSLAnalyticsDashboard() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Revenue Trend</CardTitle>
-                <CardDescription>Daily revenue over time</CardDescription>
+                <CardTitle>{t('revenue.trend.title')}</CardTitle>
+                <CardDescription>{t('revenue.trend.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>

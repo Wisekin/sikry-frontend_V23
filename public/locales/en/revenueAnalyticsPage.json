@@ -28,19 +28,63 @@
     "ltv": "LTV"
   },
   "charts": {
-    "trend": {
-      "title": "Revenue Trends Over Time",
-      "noData": "No revenue trend data for this period."
+    "revenue": {
+      "title": "Revenue Trends",
+      "subtitle": "Daily revenue trends"
     },
-    "breakdown": {
-      "title": "Revenue Breakdown by {{context}}",
-      "title_product": "Revenue Breakdown by Product",
-      "title_segment": "Revenue Breakdown by Segment",
-      "name_product": "Product/Service Name",
-      "name_segment": "Customer Segment",
-      "revenue": "Revenue",
-      "percentage": "% of Total",
-      "noData": "No breakdown data available."
+    "distribution": {
+      "title": "Revenue Distribution",
+      "subtitle": "Revenue by product/service"
+    },
+    "forecast": {
+      "title": "Revenue Forecast",
+      "subtitle": "Projected revenue trends"
+    },
+    "comparison": {
+      "title": "Period Comparison",
+      "subtitle": "Revenue comparison with previous periods"
     }
+  },
+  "title": "Revenue Analytics",
+  "subtitle": "Track and analyze your revenue metrics",
+  "timeRange": {
+    "title": "Time Range",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "thisYear": "This Year",
+    "lastYear": "Last Year",
+    "custom": "Custom Range"
+  },
+  "metrics": {
+    "totalRevenue": "Total Revenue",
+    "recurringRevenue": "Recurring Revenue",
+    "oneTimeRevenue": "One-Time Revenue",
+    "averageOrderValue": "Average Order Value",
+    "totalOrders": "Total Orders",
+    "refundRate": "Refund Rate",
+    "netRevenue": "Net Revenue",
+    "revenueGrowth": "Revenue Growth"
+  },
+  "segments": {
+    "title": "Revenue Segments",
+    "byProduct": "By Product",
+    "byRegion": "By Region",
+    "byCustomer": "By Customer Type",
+    "byChannel": "By Sales Channel"
+  },
+  "actions": {
+    "export": "Export Data",
+    "refresh": "Refresh Data",
+    "customize": "Customize View",
+    "share": "Share Report"
+  },
+  "messages": {
+    "loading": "Loading revenue data...",
+    "error": "Error loading revenue data",
+    "noData": "No revenue data available for the selected time range"
   }
 }

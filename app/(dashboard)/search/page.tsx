@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense, forwardRef } from "react"
 import { useSearchParams } from "next/navigation"
+import { useTranslation } from 'react-i18next'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -199,6 +200,7 @@ const ResultsGrid = ({ companies, layout = 'grid' }: { companies: Company[], lay
 
 // Main Search Page Content
 function SearchContent() {
+  const { t } = useTranslation(['searchPage', 'common']);
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -207,13 +209,32 @@ function SearchContent() {
   const [viewMode, setViewMode] = useState<"grid" | "list" | "map">("grid");
   const [selectedSources, setSelectedSources] = useState<string[]>(["google", "linkedin"]);
   const [filters, setFilters] = useState({
-    industry: "All Industries",
+    industry: t('filters.allIndustries'),
     location: "",
     employeeCount: "All Sizes",
     confidenceScore: 70, // Default to a reasonable minimum
     hasEmail: false,
     hasPhone: false,
   });
+
+  const toggleSource = (source: string) => {
+    setSelectedSources(prev => 
+      prev.includes(source) 
+        ? prev.filter(s => s !== source) 
+        : [...prev, source]
+    );
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      industry: t('filters.allIndustries'),
+      location: "",
+      employeeCount: "All Sizes",
+      confidenceScore: 70,
+      hasEmail: false,
+      hasPhone: false,
+    });
+  };
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -266,93 +287,100 @@ function SearchContent() {
     return true;
   });
 
-  const handleClearFilters = () => setFilters({ industry: "All Industries", location: "", employeeCount: "All Sizes", confidenceScore: 0, hasEmail: false, hasPhone: false });
-
-  const toggleSource = (source: string) => setSelectedSources(prev => prev.includes(source) ? prev.filter(s => s !== source) : [...prev, source]);
 
   return (
     <div className="space-y-6 max-w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">Company Search</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">
+            {t('companySearch.title', { ns: 'searchPage' })}
+          </h1>
           <p className="text-gray-500 mt-1">
-            {loading ? "Searching for companies..." : `${filteredCompanies.length} results found.`}
+            {loading 
+              ? t('searching', { ns: 'searchPage' }) 
+              : `${filteredCompanies.length} ${t('results.found', { ns: 'searchPage' })}`
+            }
           </p>
           {error && (
             <div className="mt-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-              Error: {error}
+              {t('error', { ns: 'searchPage' })} {error}
             </div>
           )}
         </div>
         <Button size="lg" className="bg-[#1B1F3B] text-white hover:bg-[#2A3050] flex items-center gap-2">
-            <Download className="w-5 h-5" /> Export Results
+          <Download className="w-5 h-5" /> {t('exportButton', { ns: 'searchPage' })}
         </Button>
       </div>
-
+      
       {/* Search and Source Filters */}
       <Card className="bg-white p-4 shadow-sm">
         <div className="grid md:grid-cols-3 gap-4 items-center">
-            <div className="md:col-span-2">
-                <Input placeholder="Search by company name, domain, or industry..." className="p-6 text-base border-gray-300 focus:ring-2 focus:ring-[#2A3050]"/>
-            </div>
-            <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-600">Sources:</span>
-                {["google", "linkedin", "crunchbase"].map(source => (
-                    <button key={source} onClick={() => toggleSource(source)} className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 ${selectedSources.includes(source) ? 'bg-[#1B1F3B] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
-                        {source === "google" && <Globe className="w-4 h-4" />}
-                        {source === "linkedin" && <Linkedin className="w-4 h-4" />}
-                        {source === "crunchbase" && <Database className="w-4 h-4" />}
-                        <span className="capitalize">{source}</span>
-                    </button>
-                ))}
-            </div>
+          <div className="md:col-span-2">
+            <Input 
+              placeholder={t('searchPlaceholder', { ns: 'searchPage' })} 
+              className="p-6 text-base border-gray-300 focus:ring-2 focus:ring-[#2A3050]" 
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-600">
+              {t('sources.title', { ns: 'searchPage' })}
+            </span>
+            {["google", "linkedin", "crunchbase"].map(source => (
+              <button key={source} onClick={() => toggleSource(source)} className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 ${selectedSources.includes(source) ? 'bg-[#1B1F3B] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>
+                {source === "google" && <Globe className="w-4 h-4" />}
+                {source === "linkedin" && <Linkedin className="w-4 h-4" />}
+                {source === "crunchbase" && <Database className="w-4 h-4" />}
+                <span className="capitalize">{source}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </Card>
-
-
+      
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Advanced Filters Sidebar */}
         <aside className="lg:col-span-3 lg:sticky lg:top-8 h-fit">
-            <Card className="bg-white border-none shadow-sm">
-                <CardHeader className="border-b border-gray-100">
-                    <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                        <Filter className="w-5 h-5 text-[#1B1F3B]" /> Advanced Filters
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-6">
-                    {/* Industry */}
-                    <div>
-                        <h3 className="text-sm font-semibold mb-2 flex items-center text-gray-700"><Briefcase className="w-4 h-4 mr-2" /> Industry</h3>
-                        <Select value={filters.industry} onValueChange={value => setFilters(prev => ({ ...prev, industry: value }))}>
-                            <SelectTrigger className="w-full bg-gray-50 border-gray-200"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="All Industries">All Industries</SelectItem>
-                                <SelectItem value="Luxury Goods & Jewelry">Luxury Goods & Jewelry</SelectItem>
-                                <SelectItem value="Marketing & Advertising">Marketing & Advertising</SelectItem>
-                                <SelectItem value="Financial Technology">Financial Technology</SelectItem>
-                                <SelectItem value="Data & Analytics">Data & Analytics</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                     {/* Location */}
-                    <div>
-                        <h3 className="text-sm font-semibold mb-2 flex items-center text-gray-700"><MapPin className="w-4 h-4 mr-2" /> Location</h3>
-                        <Input placeholder="e.g., Geneva, Switzerland" value={filters.location} onChange={e => setFilters(prev => ({ ...prev, location: e.target.value }))} className="bg-gray-50 border-gray-200" />
-                    </div>
-                    {/* Confidence Score */}
-                    <div className="pt-4 border-t border-gray-100">
-                        <h3 className="text-sm font-semibold mb-3 flex items-center text-gray-700"><Star className="w-4 h-4 mr-2" /> Minimum Confidence</h3>
-                        <div className="flex items-center gap-4">
-                             <Slider value={[filters.confidenceScore]} min={0} max={100} step={1} onValueChange={value => setFilters(prev => ({ ...prev, confidenceScore: value[0] }))}/>
-                             <span className="px-3 py-1 text-sm font-semibold rounded-md bg-gray-100 text-[#1B1F3B] w-20 text-center">{filters.confidenceScore}%</span>
-                        </div>
-                    </div>
-                    <Button variant="outline" onClick={handleClearFilters} className="w-full border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-[#1B1F3B]">
-                        <RefreshCw className="w-4 h-4 mr-2" /> Clear All Filters
-                    </Button>
-                </CardContent>
-            </Card>
+          <Card className="bg-white border-none shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <Filter className="w-5 h-5 text-[#1B1F3B]" /> 
+                {t('advancedFilters.title', { ns: 'searchPage' })}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-6">
+              {/* Industry */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2 flex items-center text-gray-700"><Briefcase className="w-4 h-4 mr-2" /> {t('industry.title', 'Industry')}</h3>
+                <Select value={filters.industry} onValueChange={value => setFilters(prev => ({ ...prev, industry: value }))}>
+                  <SelectTrigger className="w-full bg-gray-50 border-gray-200"><SelectValue placeholder={t('industry.select', 'Select industry')} /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All Industries">{t('industry.all', 'All Industries')}</SelectItem>
+                    <SelectItem value="Luxury Goods & Jewelry">Luxury Goods & Jewelry</SelectItem>
+                    <SelectItem value="Marketing & Advertising">Marketing & Advertising</SelectItem>
+                    <SelectItem value="Financial Technology">Financial Technology</SelectItem>
+                    <SelectItem value="Data & Analytics">Data & Analytics</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {/* Location */}
+              <div>
+                <h3 className="text-sm font-semibold mb-2 flex items-center text-gray-700"><MapPin className="w-4 h-4 mr-2" /> {t('location.title', 'Location')}</h3>
+                <Input placeholder={t('location.placeholder', 'e.g., Geneva, Switzerland')} value={filters.location} onChange={e => setFilters(prev => ({ ...prev, location: e.target.value }))} className="bg-gray-50 border-gray-200" />
+              </div>
+              {/* Confidence Score */}
+              <div className="pt-4 border-t border-gray-100">
+                <h3 className="text-sm font-semibold mb-3 flex items-center text-gray-700"><Star className="w-4 h-4 mr-2" /> {t('confidenceScore.title', 'Minimum Confidence')}</h3>
+                <div className="flex items-center gap-4">
+                  <Slider value={[filters.confidenceScore]} min={0} max={100} step={1} onValueChange={value => setFilters(prev => ({ ...prev, confidenceScore: value[0] }))} />
+                  <span className="px-3 py-1 text-sm font-semibold rounded-md bg-gray-100 text-[#1B1F3B] w-20 text-center">{filters.confidenceScore}%</span>
+                </div>
+              </div>
+              <Button variant="outline" onClick={handleClearFilters} className="w-full border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-[#1B1F3B]">
+                <RefreshCw className="w-4 h-4 mr-2" /> {t('clearFilters', 'Clear All Filters')}
+              </Button>
+            </CardContent>
+          </Card>
         </aside>
 
         {/* Main Content Area */}
@@ -360,40 +388,40 @@ function SearchContent() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
             <Tabs value={viewMode} onValueChange={value => setViewMode(value as "grid" | "list" | "map")}>
               <TabsList className="bg-white shadow-sm border">
-                <TabsTrigger value="grid"><Grid className="w-4 h-4 mr-1"/> Grid</TabsTrigger>
-                <TabsTrigger value="list"><List className="w-4 h-4 mr-1"/> List</TabsTrigger>
-                <TabsTrigger value="map"><MapIcon className="w-4 h-4 mr-1"/> Map</TabsTrigger>
+                <TabsTrigger value="grid"><Grid className="w-4 h-4 mr-1" /> {t('gridView', 'Grid')}</TabsTrigger>
+                <TabsTrigger value="list"><List className="w-4 h-4 mr-1" /> {t('listView', 'List')}</TabsTrigger>
+                <TabsTrigger value="map"><MapIcon className="w-4 h-4 mr-1" /> {t('mapView', 'Map')}</TabsTrigger>
               </TabsList>
             </Tabs>
             <Select>
-                <SelectTrigger className="w-full md:w-[200px] bg-white shadow-sm border"><SelectValue placeholder="Sort by Relevance" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="relevance">Sort by Relevance</SelectItem>
-                  <SelectItem value="confidence">Sort by Confidence</SelectItem>
-                  <SelectItem value="newest">Sort by Newest</SelectItem>
-                </SelectContent>
+              <SelectTrigger className="w-full md:w-[200px] bg-white shadow-sm border"><SelectValue placeholder={t('sortPlaceholder', 'Sort by Relevance')} /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="relevance">{t('sortRelevance', 'Sort by Relevance')}</SelectItem>
+                <SelectItem value="confidence">{t('sortConfidence', 'Sort by Confidence')}</SelectItem>
+                <SelectItem value="newest">{t('sortNewest', 'Sort by Newest')}</SelectItem>
+              </SelectContent>
             </Select>
           </div>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-24 text-center">
               <Loader2 className="w-10 h-10 animate-spin text-[#1B1F3B] mb-4" />
-              <h2 className="text-xl font-semibold text-[#1B1F3B]">Searching The Web...</h2>
-              <p className="text-muted-foreground">Please wait while we gather and enrich the results.</p>
+              <h2 className="text-xl font-semibold text-[#1B1F3B]">{t('loading', 'Searching The Web...')}</h2>
+              <p className="text-muted-foreground">{t('loadingDescription', 'Please wait while we gather and enrich the results.')}</p>
             </div>
           ) : (
             <Tabs value={viewMode} className="w-full">
               <TabsContent value="grid"><ResultsGrid companies={filteredCompanies} /></TabsContent>
               <TabsContent value="list"><ResultsGrid companies={filteredCompanies} layout="list" /></TabsContent>
-              <TabsContent value="map">{/* MapView would go here */} <div className="text-center p-10 bg-white rounded-xl shadow-sm">Map View Placeholder</div> </TabsContent>
+              <TabsContent value="map">{/* MapView would go here */} <div className="text-center p-10 bg-white rounded-xl shadow-sm">{t('mapPlaceholder', 'Map View Placeholder')}</div> </TabsContent>
             </Tabs>
           )}
 
           {!loading && filteredCompanies.length === 0 && (
             <div className="text-center py-24 bg-white rounded-xl shadow-sm">
-              <h3 className="text-xl font-semibold text-[#1B1F3B] mb-2">No Results Found</h3>
-              <p className="text-muted-foreground mb-4">Try adjusting your filters or search terms for a better match.</p>
-              <Button variant="outline" onClick={handleClearFilters}>Clear All Filters</Button>
+              <h3 className="text-xl font-semibold text-[#1B1F3B] mb-2">{t('noResults.title', 'No Results Found')}</h3>
+              <p className="text-muted-foreground mb-4">{t('noResults.suggestion', 'Try adjusting your filters or search terms for a better match.')}</p>
+              <Button variant="outline" onClick={handleClearFilters}>{t('clearFilters', 'Clear All Filters')}</Button>
             </div>
           )}
         </main>

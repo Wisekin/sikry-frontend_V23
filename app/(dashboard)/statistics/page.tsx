@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Bar, Pie, Line } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
@@ -96,6 +97,7 @@ const QualityMetricCard = ({ title, percentage, color, icon: Icon }: { title: st
 
 
 export default function StatisticsPage() {
+  const { t } = useTranslation('statisticsPage')
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
 
   const toggleCard = (cardId: string) => {
@@ -134,7 +136,7 @@ export default function StatisticsPage() {
   const collectionTrendsData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [{
-      label: 'Companies Added',
+      label: t('charts.companiesAdded'),
       data: [65, 59, 80, 81, 56, 55, 40],
       backgroundColor: 'rgba(60, 69, 104, 0.8)',
       borderColor: '#2A3050',
@@ -147,7 +149,7 @@ export default function StatisticsPage() {
   const sectorAnalysisData = {
     labels: ['Technology', 'Finance', 'Healthcare', 'Manufacturing', 'Retail', 'Other'],
     datasets: [{
-      label: 'Distribution',
+      label: t('charts.distribution'),
       data: [35, 25, 15, 12, 8, 5],
       // --- NEW: Upgraded Pie Chart Colors ---
       backgroundColor: [
@@ -182,7 +184,7 @@ export default function StatisticsPage() {
   const performanceMetricsData = {
     labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q1 (Prev)', 'Q2 (Prev)'],
     datasets: [{
-      label: 'Data Quality Score',
+      label: t('charts.qualityScore'),
       data: [92, 95, 93, 94, 88, 90],
       fill: true,
       backgroundColor: 'rgba(60, 69, 104, 0.1)',
@@ -197,9 +199,9 @@ export default function StatisticsPage() {
     <div className="min-h-screen space-y-8 bg-white text-[#1B1F3B] p-6 md:p-10">
       {/* Header */}
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">Enterprise Analytics Dashboard</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-[#1B1F3B]">{t('header.title')}</h1>
         <p className="text-gray-500 mt-1">
-          Monitor key metrics, track performance, and gain valuable insights into your business operations.
+          {t('header.subtitle')}
         </p>
       </div>
 
@@ -208,47 +210,47 @@ export default function StatisticsPage() {
         <Card className="bg-gray-50 border-gray-200 hover:bg-gray-100 transition-colors duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <BuildingOfficeIcon className="w-4 h-4" /> Total Companies
+              <BuildingOfficeIcon className="w-4 h-4" /> {t('keyMetrics.totalCompanies')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-[#1B1F3B]">12,458</div>
             <p className="text-sm text-green-600 flex items-center gap-1">
-              <ArrowTrendingUpIcon className="w-3 h-3" /> +124 this month
+              <ArrowTrendingUpIcon className="w-3 h-3" /> {t('keyMetrics.companiesThisMonth', { count: 124 })}
             </p>
           </CardContent>
         </Card>
         <Card className="bg-gray-50 border-gray-200 hover:bg-gray-100 transition-colors duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <ChartBarIcon className="w-4 h-4" /> Active Scrapers
+              <ChartBarIcon className="w-4 h-4" /> {t('keyMetrics.activeScrapers')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-[#1B1F3B]">87</div>
-            <p className="text-sm text-gray-500">Last run: 2 hours ago</p>
+            <p className="text-sm text-gray-500">{t('keyMetrics.lastRun', { time: '2 hours ago' })}</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-50 border-gray-200 hover:bg-gray-100 transition-colors duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <GlobeAltIcon className="w-4 h-4" /> Campaigns
+              <GlobeAltIcon className="w-4 h-4" /> {t('keyMetrics.campaigns')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-[#1B1F3B]">34</div>
-            <p className="text-sm text-green-600">92% delivery rate</p>
+            <p className="text-sm text-green-600">{t('keyMetrics.deliveryRate', { rate: 92 })}</p>
           </CardContent>
         </Card>
         <Card className="bg-gray-50 border-gray-200 hover:bg-gray-100 transition-colors duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <EyeIcon className="w-4 h-4" /> Data Quality
+              <EyeIcon className="w-4 h-4" /> {t('keyMetrics.dataQuality')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-600">94%</div>
-            <p className="text-sm text-green-600">+2% from last month</p>
+            <p className="text-sm text-green-600">{t('keyMetrics.qualityIncrease', { percent: 2 })}</p>
           </CardContent>
         </Card>
       </div>
@@ -259,10 +261,10 @@ export default function StatisticsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-lg text-[#1B1F3B]">
-                <ChartBarIcon className="w-5 h-5 text-blue-600" /> Collection Trends
+                <ChartBarIcon className="w-5 h-5 text-blue-600" /> {t('charts.collectionTrends')}
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => toggleCard("collection")} className="flex items-center gap-1 text-gray-600 hover:bg-gray-100">
-                {expandedCard === "collection" ? "Collapse" : "Expand"}
+                {expandedCard === "collection" ? t('actions.collapse') : t('actions.expand')}
                 {expandedCard === "collection" ? <ChevronUpIcon className="w-4 h-4" /> : <ChevronDownIcon className="w-4 h-4" />}
               </Button>
             </div>
@@ -271,11 +273,11 @@ export default function StatisticsPage() {
             <div className="h-64"><Bar data={collectionTrendsData} options={chartOptions} /></div>
             {expandedCard === "collection" && (
               <div className="mt-6 pt-4 border-t border-gray-200 space-y-3">
-                  <h4 className="font-medium mb-2 text-gray-800">Top Performing Sources:</h4>
+                  <h4 className="font-medium mb-2 text-gray-800">{t('tables.topSources')}</h4>
                   <div className="space-y-1">
-                    <div className="flex justify-between text-sm"><span className="text-gray-600">LinkedIn Scraper</span><span className="font-medium text-[#1B1F3B]">34%</span></div>
-                    <div className="flex justify-between text-sm"><span className="text-gray-600">Company Websites</span><span className="font-medium text-[#1B1F3B]">28%</span></div>
-                    <div className="flex justify-between text-sm"><span className="text-gray-600">Public Directories</span><span className="font-medium text-[#1B1F3B]">22%</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-gray-600">{t('tables.linkedinScraper')}</span><span className="font-medium text-[#1B1F3B]">34%</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-gray-600">{t('tables.companyWebsites')}</span><span className="font-medium text-[#1B1F3B]">28%</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-gray-600">{t('tables.publicDirectories')}</span><span className="font-medium text-[#1B1F3B]">22%</span></div>
                   </div>
               </div>
             )}
@@ -285,10 +287,10 @@ export default function StatisticsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-lg text-[#1B1F3B]">
-                <CircleStackIcon className="w-5 h-5 text-purple-600" /> Sector Analysis
+                <CircleStackIcon className="w-5 h-5 text-purple-600" /> {t('charts.sectorAnalysis')}
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => toggleCard("sector")} className="flex items-center gap-1 text-gray-600 hover:bg-gray-100">
-                {expandedCard === "sector" ? "Collapse" : "Expand"}
+                {expandedCard === "sector" ? t('actions.collapse') : t('actions.expand')}
                 {expandedCard === "sector" ? <ChevronUpIcon className="w-4 h-4" /> : <ChevronDownIcon className="w-4 h-4" />}
               </Button>
             </div>
@@ -302,36 +304,36 @@ export default function StatisticsPage() {
       {/* Detailed Analytics Tabs */}
       <Tabs defaultValue="quality" className="w-full">
         <TabsList className="grid w-full grid-cols-4 mb-6 bg-gray-100 p-1 rounded-lg">
-          <TabsTrigger value="overview" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">Overview</TabsTrigger>
-          <TabsTrigger value="performance" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">Performance</TabsTrigger>
-          <TabsTrigger value="sources" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">Data Sources</TabsTrigger>
-          <TabsTrigger value="quality" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">Quality</TabsTrigger>
+          <TabsTrigger value="overview" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">{t('tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="performance" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">{t('tabs.performance')}</TabsTrigger>
+          <TabsTrigger value="sources" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">{t('tabs.dataSources')}</TabsTrigger>
+          <TabsTrigger value="quality" className="text-gray-600 data-[state=active]:bg-[#3C4568] data-[state=active]:text-white rounded-md">{t('tabs.quality')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="bg-white border-gray-200 hover:border-[#3C4568] transition-colors duration-300">
-              <CardHeader><CardTitle className="text-base text-gray-800">Data Collection Summary</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-base text-gray-800">{t('tabs.dataCollectionSummary')}</CardTitle></CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex justify-between"><span className="text-sm text-gray-600">Total Records</span><span className="font-medium text-[#1B1F3B]">124,567</span></div>
-                <div className="flex justify-between"><span className="text-sm text-gray-600">This Month</span><span className="font-medium text-[#1B1F3B]">11,234</span></div>
-                <div className="flex justify-between"><span className="text-sm text-gray-600">Success Rate</span><span className="font-medium text-green-600">94.2%</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.totalRecords')}</span><span className="font-medium text-[#1B1F3B]">124,567</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.thisMonth')}</span><span className="font-medium text-[#1B1F3B]">11,234</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.successRate')}</span><span className="font-medium text-green-600">94.2%</span></div>
               </CardContent>
             </Card>
             <Card className="bg-white border-gray-200 hover:border-[#3C4568] transition-colors duration-300">
-              <CardHeader><CardTitle className="text-base text-gray-800">Top Industries</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-base text-gray-800">{t('tabs.topIndustries')}</CardTitle></CardHeader>
               <CardContent className="space-y-2">
-                <div className="flex justify-between"><span className="text-sm text-gray-600">Technology</span><span className="font-medium text-[#1B1F3B]">35%</span></div>
-                <div className="flex justify-between"><span className="text-sm text-gray-600">Finance</span><span className="font-medium text-[#1B1F3B]">25%</span></div>
-                <div className="flex justify-between"><span className="text-sm text-gray-600">Healthcare</span><span className="font-medium text-[#1B1F3B]">15%</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.technology')}</span><span className="font-medium text-[#1B1F3B]">35%</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.finance')}</span><span className="font-medium text-[#1B1F3B]">25%</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.healthcare')}</span><span className="font-medium text-[#1B1F3B]">15%</span></div>
               </CardContent>
             </Card>
             <Card className="bg-white border-gray-200 hover:border-[#3C4568] transition-colors duration-300">
-              <CardHeader><CardTitle className="text-base text-gray-800">Regional Distribution</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-base text-gray-800">{t('tabs.regionalDistribution')}</CardTitle></CardHeader>
               <CardContent className="space-y-2">
-                <div className="flex justify-between"><span className="text-sm text-gray-600">DACH Region</span><span className="font-medium text-[#1B1F3B]">68%</span></div>
-                <div className="flex justify-between"><span className="text-sm text-gray-600">EU</span><span className="font-medium text-[#1B1F3B]">22%</span></div>
-                <div className="flex justify-between"><span className="text-sm text-gray-600">Global</span><span className="font-medium text-[#1B1F3B]">10%</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.dach')}</span><span className="font-medium text-[#1B1F3B]">68%</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.eu')}</span><span className="font-medium text-[#1B1F3B]">22%</span></div>
+                <div className="flex justify-between"><span className="text-sm text-gray-600">{t('tabs.global')}</span><span className="font-medium text-[#1B1F3B]">10%</span></div>
               </CardContent>
             </Card>
           </div>
@@ -339,13 +341,13 @@ export default function StatisticsPage() {
 
         <TabsContent value="performance">
           <Card className="bg-white border-gray-200">
-            <CardHeader><CardTitle className="flex items-center gap-2 text-[#1B1F3B]"><CpuChipIcon className="w-5 h-5 text-orange-500"/> Performance Metrics</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="flex items-center gap-2 text-[#1B1F3B]"><CpuChipIcon className="w-5 h-5 text-orange-500"/> {t('charts.performanceMetrics')}</CardTitle></CardHeader>
             <CardContent>
               <div className="h-72 mb-4"><Line data={performanceMetricsData} options={chartOptions} /></div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                  <div className="p-3 bg-gray-50 rounded-lg"><div className="text-lg font-bold text-green-600">98.5%</div><div className="text-xs text-gray-500">Uptime</div></div>
-                  <div className="p-3 bg-gray-50 rounded-lg"><div className="text-lg font-bold text-blue-600">156ms</div><div className="text-xs text-gray-500">Avg Response</div></div>
-                  <div className="p-3 bg-gray-50 rounded-lg"><div className="text-lg font-bold text-green-600">↓ 0.3%</div><div className="text-xs text-gray-500">Error Rate</div></div>
+                  <div className="p-3 bg-gray-50 rounded-lg"><div className="text-lg font-bold text-green-600">98.5%</div><div className="text-xs text-gray-500">{t('tabs.uptime')}</div></div>
+                  <div className="p-3 bg-gray-50 rounded-lg"><div className="text-lg font-bold text-blue-600">156ms</div><div className="text-xs text-gray-500">{t('tabs.avgResponse')}</div></div>
+                  <div className="p-3 bg-gray-50 rounded-lg"><div className="text-lg font-bold text-green-600">↓ 0.3%</div><div className="text-xs text-gray-500">{t('tabs.errorRate')}</div></div>
               </div>
             </CardContent>
           </Card>
@@ -353,27 +355,27 @@ export default function StatisticsPage() {
 
         <TabsContent value="sources">
           <Card className="bg-white border-gray-200">
-            <CardHeader><CardTitle className="text-gray-800">Data Source Performance</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-gray-800">{t('tables.dataSourcePerformance')}</CardTitle></CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead className="border-b border-gray-200">
                     <tr className="text-sm font-medium text-gray-500">
-                      <th className="p-3">Source</th><th className="p-3">Records</th><th className="p-3">Quality</th><th className="p-3">Status</th>
+                      <th className="p-3">{t('tables.source')}</th><th className="p-3">{t('tables.records')}</th><th className="p-3">{t('tables.quality')}</th><th className="p-3">{t('tables.status')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="p-3 font-medium text-gray-800">LinkedIn Scraper</td><td>42,567</td><td className="text-green-600 font-medium">98%</td><td><span className="bg-green-100 text-green-800 px-2 py-1 text-xs rounded-full font-semibold">Active</span></td>
+                      <td className="p-3 font-medium text-gray-800">{t('tables.linkedinScraper')}</td><td>42,567</td><td className="text-green-600 font-medium">98%</td><td><span className="bg-green-100 text-green-800 px-2 py-1 text-xs rounded-full font-semibold">{t('tables.active')}</span></td>
                     </tr>
                     <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="p-3 font-medium text-gray-800">Company Websites</td><td>34,891</td><td className="text-green-600 font-medium">95%</td><td><span className="bg-green-100 text-green-800 px-2 py-1 text-xs rounded-full font-semibold">Active</span></td>
+                      <td className="p-3 font-medium text-gray-800">{t('tables.companyWebsites')}</td><td>34,891</td><td className="text-green-600 font-medium">95%</td><td><span className="bg-green-100 text-green-800 px-2 py-1 text-xs rounded-full font-semibold">{t('tables.active')}</span></td>
                     </tr>
                      <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                      <td className="p-3 font-medium text-gray-800">Public Directories</td><td>28,234</td><td className="text-yellow-600 font-medium">87%</td><td><span className="bg-yellow-100 text-yellow-800 px-2 py-1 text-xs rounded-full font-semibold">Monitoring</span></td>
+                      <td className="p-3 font-medium text-gray-800">{t('tables.publicDirectories')}</td><td>28,234</td><td className="text-yellow-600 font-medium">87%</td><td><span className="bg-yellow-100 text-yellow-800 px-2 py-1 text-xs rounded-full font-semibold">{t('tables.monitoring')}</span></td>
                     </tr>
                     <tr className="hover:bg-gray-50 transition-colors">
-                        <td className="p-3 font-medium text-gray-800">API Integrations</td><td>18,875</td><td className="text-red-600 font-medium">72%</td><td><span className="bg-red-100 text-red-800 px-2 py-1 text-xs rounded-full font-semibold">Needs Attention</span></td>
+                        <td className="p-3 font-medium text-gray-800">{t('tables.apiIntegrations')}</td><td>18,875</td><td className="text-red-600 font-medium">72%</td><td><span className="bg-red-100 text-red-800 px-2 py-1 text-xs rounded-full font-semibold">{t('tables.needsAttention')}</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -386,27 +388,27 @@ export default function StatisticsPage() {
         <TabsContent value="quality">
             <Card className="bg-white border-gray-200">
                 <CardHeader>
-                    <CardTitle className="text-gray-800">Data Quality Breakdown</CardTitle>
+                    <CardTitle className="text-gray-800">{t('qualityBreakdown.title')}</CardTitle>
                     <p className="text-gray-500 text-sm mt-1">
-                        An overview of the core data quality dimensions.
+                        {t('qualityBreakdown.subtitle')}
                     </p>
                 </CardHeader>
                 <CardContent>
                     <div className="grid md:grid-cols-3 gap-8">
                         <QualityMetricCard 
-                            title="Completeness" 
+                            title={t('qualityBreakdown.completeness')} 
                             percentage={96}
                             color="text-emerald-500"
                             icon={DocumentTextIcon}
                         />
                         <QualityMetricCard 
-                            title="Accuracy" 
+                            title={t('qualityBreakdown.accuracy')} 
                             percentage={94}
                             color="text-blue-500"
                             icon={CheckCircleIcon}
                         />
                         <QualityMetricCard 
-                            title="Freshness" 
+                            title={t('qualityBreakdown.timeliness')} 
                             percentage={92}
                             color="text-purple-500"
                             icon={ClockIcon}

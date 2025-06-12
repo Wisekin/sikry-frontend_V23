@@ -1,5 +1,8 @@
 "use client"
 
+"use client"
+
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,6 +12,7 @@ import { Play, CheckCircle, XCircle, AlertCircle } from "lucide-react"
 import { Text } from "@/components/core/typography/Text"
 
 export function SelectorTester() {
+  const { t } = useTranslation('scrapingPage')
   const [url, setUrl] = useState("")
   const [selector, setSelector] = useState("")
   const [results, setResults] = useState<
@@ -42,17 +46,17 @@ export function SelectorTester() {
   return (
     <Card className="shadow-card">
       <CardHeader>
-        <CardTitle>CSS Selector Tester</CardTitle>
-        <CardDescription>Test CSS selectors against live web pages</CardDescription>
+        <CardTitle>{t('selectorTester.title')}</CardTitle>
+        <CardDescription>{t('selectorTester.description')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="text-caption font-medium mb-2 block">Target URL</label>
+            <label className="text-caption font-medium mb-2 block">{t('selectorTester.targetUrl')}</label>
             <Input placeholder="https://example.com" value={url} onChange={(e) => setUrl(e.target.value)} />
           </div>
           <div>
-            <label className="text-caption font-medium mb-2 block">CSS Selector</label>
+            <label className="text-caption font-medium mb-2 block">{t('selectorTester.cssSelector')}</label>
             <Input
               placeholder="h1.company-name, .contact-email"
               value={selector}
@@ -68,7 +72,7 @@ export function SelectorTester() {
 
         {results.length > 0 && (
           <div className="space-y-4">
-            <Text className="font-medium">Test Results</Text>
+            <Text className="font-medium">{t('selectorTester.testResults')}</Text>
             {results.map((result, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                 <div className="flex items-center gap-3">

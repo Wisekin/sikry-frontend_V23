@@ -15,7 +15,7 @@ interface ReviewBoosterPanelProps {
 }
 
 export function ReviewBoosterPanel({ contactId, campaignId, className }: ReviewBoosterPanelProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation('reviews')
   const [stats, setStats] = useState({
     total_requests: 0,
     total_sent: 0,
@@ -94,7 +94,7 @@ export function ReviewBoosterPanel({ contactId, campaignId, className }: ReviewB
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Star className="w-5 h-5 text-yellow-500" />
-          {t("reviews.title")}
+          {t("title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -102,32 +102,32 @@ export function ReviewBoosterPanel({ contactId, campaignId, className }: ReviewB
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">{stats.total_sent}</div>
-            <div className="text-xs text-gray-500">{t("reviews.sent")}</div>
+            <div className="text-xs text-gray-500">{t("sent")}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">{stats.total_clicked}</div>
-            <div className="text-xs text-gray-500">{t("reviews.clicked")}</div>
+            <div className="text-xs text-gray-500">{t("clicked")}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">{stats.total_completed}</div>
-            <div className="text-xs text-gray-500">{t("reviews.completed")}</div>
+            <div className="text-xs text-gray-500">{t("completed")}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-600">{stats.completion_rate}%</div>
-            <div className="text-xs text-gray-500">{t("reviews.rate")}</div>
+            <div className="text-xs text-gray-500">{t("rate")}</div>
           </div>
         </div>
 
         {/* Performance Metrics */}
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span>{t("reviews.clickRate")}</span>
+            <span>{t("clickRate")}</span>
             <span className="font-medium">{stats.click_rate}%</span>
           </div>
           <Progress value={stats.click_rate} className="h-2" />
 
           <div className="flex items-center justify-between text-sm">
-            <span>{t("reviews.completionRate")}</span>
+            <span>{t("completionRate")}</span>
             <span className="font-medium">{stats.completion_rate}%</span>
           </div>
           <Progress value={stats.completion_rate} className="h-2" />
@@ -136,7 +136,7 @@ export function ReviewBoosterPanel({ contactId, campaignId, className }: ReviewB
         {/* Platform Breakdown */}
         {stats.platform_breakdown.length > 0 && (
           <div className="space-y-2">
-            <h4 className="font-medium text-sm">{t("reviews.platformBreakdown")}</h4>
+            <h4 className="font-medium text-sm">{t("platformBreakdown")}</h4>
             {stats.platform_breakdown.map((platform: any) => (
               <div key={platform.platform} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
@@ -144,7 +144,7 @@ export function ReviewBoosterPanel({ contactId, campaignId, className }: ReviewB
                     {platform.platform}
                   </Badge>
                   <span>
-                    {platform.requests} {t("reviews.requests")}
+                    {platform.requests} {t("requests")}
                   </span>
                 </div>
                 <span className="font-medium">{platform.rate}%</span>
@@ -157,14 +157,14 @@ export function ReviewBoosterPanel({ contactId, campaignId, className }: ReviewB
         {contactId && (
           <Button onClick={handleRequestReview} className="w-full" size="sm">
             <Send className="w-4 h-4 mr-2" />
-            {t("reviews.requestReview")}
+            {t("requestReview")}
           </Button>
         )}
 
         {/* Recent Activity */}
         {stats.recent_activity.length > 0 && (
           <div className="space-y-2">
-            <h4 className="font-medium text-sm">{t("reviews.recentActivity")}</h4>
+            <h4 className="font-medium text-sm">{t("recentActivity")}</h4>
             <div className="space-y-2 max-h-32 overflow-y-auto">
               {stats.recent_activity.slice(0, 3).map((activity: any) => (
                 <div key={activity.id} className="flex items-center gap-2 text-xs">
@@ -173,7 +173,7 @@ export function ReviewBoosterPanel({ contactId, campaignId, className }: ReviewB
                   {activity.status === "sent" && <Send className="w-3 h-3 text-gray-500" />}
                   {activity.status === "pending" && <Clock className="w-3 h-3 text-yellow-500" />}
                   <span className="flex-1 truncate">{activity.contact?.name || "Unknown"}</span>
-                  <Badge variant="outline" size="sm">
+                  <Badge variant="outline">
                     {activity.status}
                   </Badge>
                 </div>

@@ -1,100 +1,121 @@
 {
-  "welcome": "Bienvenue",
-  "buttons": {
-    "submit": "Soumettre",
-    "cancel": "Annuler"
+  "search": {
+    "mainTitle": "Recherche d'entreprises",
+    "filters": {
+      "title": "Filtres avancés",
+      "locationPlaceholder": "par ex., Genève, Suisse",
+      "clear": "Effacer tous les filtres"
+    },
+    "views": {
+      "grid": "Vue grille",
+      "list": "Vue liste",
+      "map": "Vue carte"
+    },
+    "sort": {
+      "relevance": "Trier par pertinence",
+      "nameAsc": "Nom (A-Z)",
+      "nameDesc": "Nom (Z-A)",
+      "dateAsc": "Date (plus ancien)",
+      "dateDesc": "Date (plus récent)"
+    },
+    "noResults": {
+      "title": "Aucun résultat trouvé",
+      "description": "Essayez de modifier vos critères de recherche"
+    }
   },
   "nav": {
     "dashboard": "Tableau de bord",
     "search": "Recherche",
     "companies": "Entreprises",
-    "marketIntel": "Intelligence du marché",
-    "scrapers": "Scrapeurs",
-    "statistics": "Statistiques",
-    "statisticsOverview": "Vue d'ensemble",
-    "statisticsCollectionTrends": "Tendances de collecte",
-    "statisticsGeographicDistribution": "Distribution géographique",
-    "statisticsSectorDistribution": "Distribution par secteur",
-    "statisticsSourceComparison": "Comparaison des sources",
-    "communications": "Communications",
-    "overview": "Vue d'ensemble",
-    "financial": "Financier",
-    "reengagement": "Réengagement",
-    "referrals": "Références",
-    "reviews": "Avis",
-    "funnels": "Entonnoirs",
-    "gapAnalysis": "Analyse des écarts",
-    "vsl": "VSL",
-    "leadResponse": "Réponse aux leads",
-    "analytics": "Analytique",
-    "admin": "Administration",
-    "list": "Liste",
-    "grid": "Grille",
-    "filter": "Filtrer",
-    "search": "Rechercher",
-    "calendar": "Calendrier",
-    "play": "Lancer",
-    "settings": "Paramètres",
-    "addUser": "Ajouter un utilisateur",
-    "security": "Sécurité",
-    "share": "Partager",
-    "download": "Télécharger",
-    "upload": "Téléverser",
-    "add": "Ajouter"
+    "marketIntel": "Intelligence de marché",
+    "scrapers": "Scrapers",
+    "statistics": {
+      "title": "Statistiques",
+      "overview": "Aperçu",
+      "collectionTrends": "Tendances de collecte",
+      "geographicDistribution": "Distribution géographique",
+      "sectorDistribution": "Distribution par secteur",
+      "sourceComparison": "Comparaison des sources"
+    },
+    "communications": {
+      "title": "Communications",
+      "overview": "Aperçu",
+      "campaigns": "Campagnes",
+      "templates": "Modèles",
+      "bulkSender": "Envoyeur en masse"
+    },
+    "financial": {
+      "title": "Financier",
+      "records": "Registres",
+      "summary": "Résumé",
+      "campaignRoi": "ROI des campagnes"
+    },
+    "reengagement": {
+      "title": "Ré-engagement",
+      "tasks": "Tâches",
+      "classification": "Classification",
+      "automation": "Automatisation"
+    },
+    "referrals": {
+      "title": "Références",
+      "dashboard": "Tableau de bord",
+      "tracking": "Suivi",
+      "rewards": "Récompenses"
+    },
+    "reviews": {
+      "title": "Avis",
+      "requests": "Demandes",
+      "booster": "Booster",
+      "monitoring": "Surveillance"
+    },
+    "funnels": {
+      "title": "Entonnoirs",
+      "builder": "Constructeur",
+      "progress": "Progrès",
+      "automation": "Automatisation"
+    },
+    "gapAnalysis": {
+      "title": "Analyse des écarts",
+      "form": "Formulaire",
+      "letters": "Lettres",
+      "results": "Résultats"
+    },
+    "vsl": {
+      "title": "VSL",
+      "templates": "Modèles",
+      "pages": "Pages",
+      "tracking": "Suivi"
+    },
+    "leadResponse": {
+      "title": "Réponse aux leads",
+      "rules": "Règles",
+      "queue": "File d'attente",
+      "analytics": "Analytique"
+    },
+    "analytics": {
+      "title": "Analytique",
+      "performance": "Performance",
+      "conversion": "Conversion",
+      "revenue": "Revenu"
+    },
+    "admin": {
+      "title": "Admin",
+      "teamManagement": "Gestion d'équipe",
+      "billing": "Facturation",
+      "antiSpam": "Anti-Spam",
+      "compliance": "Conformité",
+      "security": "Sécurité",
+      "monitoring": "Surveillance"
+    },
+    "settings": "Paramètres"
   },
-  "comms": {
-    "campaigns": "Campagnes",
-    "templates": "Modèles",
-    "bulkSender": "Envoi en masse"
+  "pagination": {
+    "showingResults_one": "Affiche 1 résultat",
+    "showingResults_other": "Affiche {{count}} résultats",
+    "showingCount": "Affiche {{count}} sur {{total}}"
   },
-  "financial": {
-    "records": "Enregistrements",
-    "summary": "Résumé",
-    "campaignRoi": "ROI des campagnes"
-  },
-  "reengagement": {
-    "tasks": "Tâches",
-    "classification": "Classification",
-    "automation": "Automatisation"
-  },
-  "referrals": {
-    "dashboard": "Tableau de bord",
-    "tracking": "Suivi",
-    "rewards": "Récompenses"
-  },
-  "reviews": {
-    "requests": "Demandes",
-    "booster": "Booster",
-    "monitoring": "Surveillance"
-  },
-  "funnels": {
-    "builder": "Constructeur",
-    "progress": "Progression",
-    "automation": "Automatisation"
-  },
-  "gapAnalysis": {
-    "form": "Formulaire",
-    "letters": "Lettres",
-    "results": "Résultats"
-  },
-  "vsl": {
-    "templates": "Modèles",
-    "pages": "Pages",
-    "tracking": "Suivi"
-  },
-  "leadResponse": {
-    "rules": "Règles",
-    "queue": "File d'attente",
-    "analytics": "Analytique"
-  },
-  "analytics": {
-    "performance": "Performance",
-    "conversion": "Conversion",
-    "revenue": "Revenus"
-  },
-  "admin": {
-    "teamManagement": "Gestion d'équipe",
-    "billing": "Facturation",
-    "antiSpam": "Anti-spam"
-  }
+  "nav.admin.users": "nav.admin.users",
+  "search.refine": "search.refine",
+  "search.filters.marketing": "search.filters.marketing",
+  "search.filters.label": "search.filters.label"
 }

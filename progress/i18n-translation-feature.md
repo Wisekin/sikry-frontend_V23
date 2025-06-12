@@ -1,4 +1,6 @@
 ## 🤖 Agent Rules
+- **File System Integrity**: NEVER remove a page or file without explicit permission from the user.
+- **Avoid Duplication**: ALWAYS verify that a file or page does not already exist before creating a new one.
 IMPORTANT: These rules must never be deleted and must be referenced before any action:
 1. Always verify file existence before creation using appropriate tools
 2. Update this progress file after EVERY significant change:
@@ -46,6 +48,18 @@ IMPORTANT: These rules must never be deleted and must be referenced before any a
 - Aligned client-side and server-side i18n configuration
 - Resolved React context errors in analytics page
 - Standardized i18n setup across the application
+- **Resolved Final Bugs (June 2025)**:
+  - Fixed persistent JSON syntax errors in `public/locales/en/common.json` and `public/locales/fr/common.json` that caused API route failures.
+  - Patched the dynamic API route at `app/api/locales/add/[...params]/route.ts` to be compatible with Next.js 15, resolving the `params.params` error by updating the function signature to correctly destructure params: `({ params: { params } })`.
+- Updated search page with comprehensive i18n support
+  - Added searchPage namespace configuration
+  - Implemented French translations for search UI
+  - Added dynamic content translation support
+  - Updated filter system with translations
+  - Implemented grid/list view translations
+- Added detailed search page translation examples to documentation
+- Updated i18n implementation guide with real-world examples
+- Added search-specific best practices to documentation
 
 ### Review Summary
 The i18n translation feature has been successfully implemented with the following components:
@@ -116,6 +130,13 @@ The i18n translation feature has been successfully implemented with the followin
 6. Check RTL support if applicable
 
 ### Common Issues and Solutions
+
+4. **API Route Failures & Next.js 15 `params` Error**:
+   - **Symptom**: The app experiences `500 Internal Server Error` on `POST` requests to `/api/locales/add/...`, and the server logs show `JSON.parse` errors and/or `Error: Route ... used \`params.params\``.
+   - **Cause 1 (JSON Errors)**: Translation files (`.json`) contain syntax errors like trailing characters or missing commas. The API route fails when it cannot parse these files.
+   - **Fix 1**: Manually inspect and clean the JSON files to ensure they are syntactically valid.
+   - **Cause 2 (Next.js 15)**: A change in Next.js 15 requires a different syntax for accessing dynamic parameters in API routes.
+   - **Fix 2**: Update the `POST` function signature in the dynamic API route (`app/api/locales/add/[...params]/route.ts`) to use nested destructuring: `export async function POST(request: Request, { params: { params } }: { params: { params: [string, string] } })`. This correctly extracts the `params` array.
 1. **Missing Translations**:
    - Check that the key exists in both language files
    - Verify the namespace is correctly specified
@@ -132,32 +153,324 @@ The i18n translation feature has been successfully implemented with the followin
    - Check the fallback language configuration
 
 ### Next Steps 📝
-1. Create French translations for all new pages:
-   - companiesPage.json
-   - analyticsOverviewPage.json
-   - performanceAnalyticsPage.json
-   - revenueAnalyticsPage.json
-   - conversionAnalyticsPage.json
-   - adminUsersPage.json
-   - adminBillingPage.json
-   - adminSecurityPage.json
-   - adminCompliancePage.json
-   - adminAntiSpamPage.json
-   - adminTeamPage.json
-   - leadResponse/queuePage.json
-   - leadResponse/analyticsPage.json
+1. **Extend Search Page Translations**:
+   - Add translations for company card details
+   - Implement translations for advanced filter options
+   - Add tooltips and helper text translations
 
-2. Testing and Verification:
-   - Test all pages with both English and French translations
-   - Verify all translation keys are working correctly
-   - Test language switching functionality
-   - Ensure proper loading of translation files
-   - Test pluralization and interpolation features
+2. **Testing and Verification**:
+   - Test search functionality with both languages
+   - Verify all dynamic content translations
+   - Test filter system in French
+   - Validate error messages in both languages
 
-3. Documentation:
-   - Document the new i18n setup and usage patterns
-   - Create guidelines for adding new translations
-   - Update any existing documentation to reflect the new system
+3. **Documentation**:
+   - Add search-specific translation patterns
+   - Document filter system translation approach
+   - Add examples for dynamic content handling
+
+---
+
+# Internationalization (i18n) Guide
+
+This document outlines the process for adding and managing translations in this project using `i18next`.
+
+## 1. Project Structure
+
+- **`src/i18n/config.ts`**: The main configuration file for i18next. It defines supported languages, namespaces, and backend settings.
+- **`public/locales/{lng}/{ns}.json`**: The directory containing all translation files. Each language has its own folder (`en`, `fr`, etc.), which contains JSON files for each namespace.
+- **`src/app/i18n.ts`**: The server-side setup for i18next, used for server components.
+
+## 2. Namespaces
+
+Namespaces are used to organize translations into logical groups, typically by page or feature. This helps in managing translations and loading them only when needed.
+
+**Current Namespaces:**
+- `common`: Shared translations used across the application (e.g., navigation, buttons).
+- `reviews`: Translations for the reviews feature.
+- `searchPage`: Translations for the search page.
+- `statisticsPage`: Translations for the statistics page.
+- `analyticsDashboard`: Translations for the main analytics dashboard.
+- ...and others as defined in `src/i18n/config.ts`.
+
+When adding translations for a new feature, consider creating a new namespace to keep the files organized.
+
+## 3. Adding New Translations
+
+Follow these steps to add a new translation:
+
+1.  **Identify Hardcoded Text**: Find any text in the UI that needs to be translated.
+
+2.  **Add Keys to Translation Files**:
+    -   Add a new key to the appropriate English namespace file (e.g., `public/locales/en/common.json`).
+    -   Add the same key with the French translation to the corresponding French file (e.g., `public/locales/fr/common.json`).
+
+    *Example:*
+    ```json
+    // public/locales/en/common.json
+    {
+      "buttons": {
+        "save": "Save"
+      }
+    }
+
+    // public/locales/fr/common.json
+    {
+      "buttons": {
+        "save": "Enregistrer"
+      }
+    }
+    ```
+
+3.  **Use the `useTranslation` Hook**: In your component, import and use the `useTranslation` hook, specifying the namespace(s) you need.
+
+    ```javascript
+    import { useTranslation } from 'react-i18next';
+
+    const { t } = useTranslation('common');
+    ```
+
+4.  **Translate the Text**: Use the `t()` function to access your translation key.
+
+    ```javascript
+    <button>{t('buttons.save')}</button>
+    ```
+
+## 4. Pluralization
+
+i18next can automatically handle plural forms based on a `count` variable.
+
+-   **`_one`**: For a count of 1.
+-   **`_other`**: For all other counts (including 0).
+
+*Example:*
+```json
+// common.json
+"showingResults_one": "Showing 1 result",
+"showingResults_other": "Showing {{count}} results"
+```
+
+```javascript
+// In your component
+t('showingResults', { count: filteredCompanies.length });
+```
+
+## 5. Interpolation
+
+To include dynamic values in your translations, use double curly braces `{{variable}}`.
+
+*Example:*
+```json
+// common.json
+"welcomeMessage": "Welcome, {{username}}!"
+```
+
+```javascript
+// In your component
+t('welcomeMessage', { username: 'Alex' });
+```
+
+## 6. Missing Key Helper
+
+During development (`NODE_ENV=development`), the application is configured to automatically add missing translation keys to your backend via a `POST` request to `/locales/add/{lng}/{ns}`. This is helpful for quickly adding new keys, but you should always verify and commit the changes to the JSON files.
+
+# i18n Translation Implementation Guide
+
+## Recent Updates (June 2025)
+- Added comprehensive search page translations
+- Implemented namespace-specific translation handling
+- Updated translation process documentation
+- Added detailed step-by-step implementation guide
+
+## Implementation Process
+
+### 1. Setup Translation Files
+1. Create language-specific JSON files in `/public/locales/{lang}/{namespace}.json`
+2. Add translations with nested structure for organization
+3. Include both languages (English and French) for each key
+
+Example structure:
+```json
+{
+  "companySearch": {
+    "title": "Company Search",
+    "filters": {
+      "allIndustries": "All Industries",
+      "location": "Location"
+    }
+  }
+}
+```
+
+### 2. Configure i18n
+1. Add namespace to `src/i18n/config.ts`:
+```typescript
+ns: [
+  'common',
+  'searchPage',
+  // other namespaces...
+]
+```
+
+2. Set up language detection and fallbacks:
+```typescript
+supportedLngs: ['en', 'fr'],
+fallbackLng: 'en',
+```
+
+### 3. Implement in Components
+1. Import and initialize:
+```typescript
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation(['searchPage', 'common']);
+```
+
+2. Use translations with namespace:
+```typescript
+{t('companySearch.title', { ns: 'searchPage' })}
+```
+
+3. Handle dynamic content:
+```typescript
+{loading 
+  ? t('searching', { ns: 'searchPage' }) 
+  : `${count} ${t('results.found', { ns: 'searchPage' })}`
+}
+```
+
+### 4. Best Practices
+- Use namespace parameter for clarity: `{ ns: 'searchPage' }`
+- Group related translations in nested objects
+- Provide fallback text: `t('key', 'Fallback text')`
+- Use variables for dynamic content: `t('welcome', { name })`
+
+### 5. Testing Process
+1. Test language switching
+2. Verify all translations appear
+3. Check dynamic content
+4. Test fallback behavior
+5. Verify nested translations
+
+## Implementation Examples
+
+### Search Page Implementation
+Here's a real-world example from our search page implementation:
+
+1. **Translation File Structure**
+```json
+// public/locales/en/searchPage.json
+{
+  "companySearch": {
+    "title": "Company Search",
+    "filters": {
+      "allIndustries": "All Industries",
+      "location": "Location",
+      "confidenceScore": "Minimum Confidence"
+    }
+  },
+  "results": {
+    "found": "results found",
+    "noResults": {
+      "title": "No Results Found",
+      "suggestion": "Try adjusting your filters or search terms for a better match."
+    }
+  }
+}
+```
+
+2. **Component Implementation**
+```typescript
+function SearchContent() {
+  const { t } = useTranslation(['searchPage', 'common']);
+  
+  return (
+    <div>
+      <h1>{t('companySearch.title', { ns: 'searchPage' })}</h1>
+      {loading 
+        ? t('searching', { ns: 'searchPage' }) 
+        : `${count} ${t('results.found', { ns: 'searchPage' })}`
+      }
+    </div>
+  );
+}
+```
+
+3. **Dynamic Content**
+```typescript
+// Filter states with translations
+const [filters, setFilters] = useState({
+  industry: t('filters.allIndustries'),
+  location: "",
+  employeeCount: "All Sizes",
+  confidenceScore: 70
+});
+
+// Clear filters with translation
+const handleClearFilters = () => {
+  setFilters({
+    industry: t('filters.allIndustries'),
+    location: "",
+    employeeCount: "All Sizes",
+    confidenceScore: 70
+  });
+};
+```
+
+### Best Practices from Search Implementation
+1. **Namespace Organization**
+   - Keep search-related translations in dedicated namespace
+   - Use nested structure for related items (filters, results, etc.)
+   - Include fallback text in t() calls
+
+2. **Dynamic Content Handling**
+   - Use template literals for combining translations with variables
+   - Handle loading states with appropriate translations
+   - Provide translations for error states
+
+3. **State Management**
+   - Initialize state with translations
+   - Update translations when language changes
+   - Handle filter resets with proper translations
+
+## Directory Structure
+```
+public/
+  locales/
+    en/
+      common.json
+      searchPage.json
+      [other namespaces].json
+    fr/
+      common.json
+      searchPage.json
+      [other namespaces].json
+src/
+  i18n/
+    config.ts
+    config.client.js
+```
+
+## Common Issues & Solutions
+1. **Missing Translation**
+   - Verify key exists in both language files
+   - Check namespace is correctly specified
+   - Confirm namespace is included in useTranslation call
+
+2. **Translation Not Updating**
+   - Verify language switching is working
+   - Check browser localStorage for 'i18nextLng'
+   - Clear cache and reload
+
+3. **Dynamic Content Issues**
+   - Use proper interpolation syntax: {{variable}}
+   - Pass variables in t() call options
+   - Check for nested key access
+
+## Notes for Developers
+- Always use namespace parameter for clarity
+- Keep translation files organized and structured
+- Test both languages when adding new features
+- Use TypeScript for better type checking of translation keys
 
 ### In Progress 🚧
 - Creating French translations for new pages

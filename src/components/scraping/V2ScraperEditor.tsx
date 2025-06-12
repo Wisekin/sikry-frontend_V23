@@ -1,3 +1,6 @@
+"use client"
+
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -7,29 +10,30 @@ import { Zap, Play, Save } from "lucide-react"
 import { Text } from "@/components/core/typography/Text"
 
 export function V2ScraperEditor() {
+  const { t } = useTranslation('scrapingPage')
   return (
     <Card className="shadow-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Zap className="w-5 h-5" />
-          V2 Scraper Editor
+          <CardTitle>{t('v2ScraperEditor.title')}</CardTitle>
         </CardTitle>
-        <CardDescription>AI-powered scraper configuration with natural language instructions</CardDescription>
+        <CardDescription>{t('v2ScraperEditor.description')} with natural language instructions</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="text-caption font-medium mb-2 block">Scraper Name</label>
+            <label className="text-caption font-medium mb-2 block">{t('v2ScraperEditor.scraperName')}</label>
             <Input placeholder="Enter scraper name..." />
           </div>
           <div>
-            <label className="text-caption font-medium mb-2 block">Target URL Pattern</label>
+            <label className="text-caption font-medium mb-2 block">{t('v2ScraperEditor.targetUrlPattern')}</label>
             <Input placeholder="https://example.com/*" />
           </div>
         </div>
 
         <div>
-          <label className="text-caption font-medium mb-2 block">AI Instructions</label>
+          <label className="text-caption font-medium mb-2 block">{t('v2ScraperEditor.aiInstructions')}</label>
           <Textarea placeholder="Describe what data you want to extract in natural language..." className="min-h-32" />
           <Text size="sm" className="text-secondary mt-2">
             Example: "Extract the company name, email addresses, phone numbers, and social media links from the contact

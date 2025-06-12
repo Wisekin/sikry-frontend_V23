@@ -11,6 +11,7 @@ import { SmartSearchBar } from "@/components/smart-search-bar"
 import { CompanyCard } from "@/components/company-card"
 import { MapPin, Filter, Download, Grid, Map, List, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 
 interface Company {
   id: string
@@ -34,6 +35,7 @@ function SearchResultsContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get("q") || ""
   const sources = searchParams.get("sources")?.split(",") || []
+  const { t } = useTranslation('common')
 
   const [companies, setCompanies] = useState<Company[]>([])
   const [loading, setLoading] = useState(true)
@@ -44,6 +46,27 @@ function SearchResultsContent() {
     employeeCount: "All Sizes",
     confidenceScore: 0,
   })
+
+  const clearFilters = () => {
+    setFilters({
+      industry: "All Industries",
+      location_text: "",
+      employeeCount: "All Sizes",
+      confidenceScore: 0,
+    })
+  }
+
+  const handleFilterChange = (field: string, value: string | number) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleSortChange = (value: string) => {
+    // TODO: Implement sorting logic
+    console.log('Sorting by:', value)
+  }
 
   // Mock data for demonstration
   const mockCompanies: Company[] = [
@@ -139,175 +162,171 @@ function SearchResultsContent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-slate-800 border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between mb-4">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-700 to-green-600 rounded-lg flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-white" />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">{t('search.mainTitle')}</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="md:col-span-1">
+          <Card className="p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="font-semibold">{t('search.filters.title')}</h2>
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                {t('search.filters.clear')}
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder={t('search.filters.locationPlaceholder')}
+                  value={filters.location_text}
+                  onChange={(e) => handleFilterChange('location_text', e.target.value)}
+                  className="w-full pl-9"
+                />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-emerald-600 bg-clip-text text-transparent">
-                S-I-K-R-Y
-              </span>
-            </Link>
-            <Button variant="outline" onClick={handleExport}>
-              <Download className="w-4 h-4 mr-2" />
-              Export Results
-            </Button>
-          </div>
-          <SmartSearchBar placeholder="Refine your search..." showSuggestions={true} className="max-w-2xl" />
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Filters Sidebar */}
-          <div className="lg:w-64 space-y-6">
-            <Card className="p-4">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <Filter className="w-4 h-4" />
-                Filters
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Industry</label>
-                  <Select
-                    value={filters.industry}
-                    onValueChange={(value) => setFilters((prev) => ({ ...prev, industry: value }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue>{filters.industry}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="All Industries">All Industries</SelectItem>
-                      <SelectItem value="Software Development">Software Development</SelectItem>
-                      <SelectItem value="Marketing & Advertising">Marketing & Advertising</SelectItem>
-                      <SelectItem value="Financial Technology">Financial Technology</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Location</label>
-                  <Input
-                    placeholder="Enter location..."
-                    value={filters.location_text}
-                    onChange={(e) => setFilters((prev) => ({ ...prev, location_text: e.target.value }))}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Company Size</label>
-                  <Select
-                    value={filters.employeeCount}
-                    onValueChange={(value) => setFilters((prev) => ({ ...prev, employeeCount: value }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue>{filters.employeeCount}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="All Sizes">All Sizes</SelectItem>
-                      <SelectItem value="1-10">1-10 employees</SelectItem>
-                      <SelectItem value="10-25">10-25 employees</SelectItem>
-                      <SelectItem value="25-50">25-50 employees</SelectItem>
-                      <SelectItem value="50-100">50-100 employees</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Min. Confidence Score</label>
-                  <Select
-                    value={filters.confidenceScore.toString()}
-                    onValueChange={(value) =>
-                      setFilters((prev) => ({ ...prev, confidenceScore: Number.parseInt(value) }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue>{filters.confidenceScore === 0 ? "Any Score" : `${filters.confidenceScore}%+`}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0">Any Score</SelectItem>
-                      <SelectItem value="70">70%+</SelectItem>
-                      <SelectItem value="80">80%+</SelectItem>
-                      <SelectItem value="90">90%+</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </Card>
-          </div>
-
-          {/* Results */}
-          <div className="flex-1">
-            <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-2xl font-bold">Search Results</h1>
-                <p className="text-muted-foreground">
-                  {loading ? "Searching..." : `Found ${filteredCompanies.length} companies for "${query}"`}
-                </p>
+                <label className="text-sm font-medium mb-2 block">{t('search.filters.industryLabel')}</label>
+                <Select
+                  value={filters.industry}
+                  onValueChange={(value) => setFilters((prev) => ({ ...prev, industry: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue>{filters.industry}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All Industries">{t('search.filters.allIndustries')}</SelectItem>
+                    <SelectItem value="Software Development">{t('search.filters.softwareDev')}</SelectItem>
+                    <SelectItem value="Marketing & Advertising">{t('search.filters.marketing')}</SelectItem>
+                    <SelectItem value="Financial Technology">{t('search.filters.fintech')}</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
-              <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as "grid" | "list" | "map")}>
-                <TabsList>
-                  <TabsTrigger value="grid">
-                    <Grid className="w-4 h-4" />
-                  </TabsTrigger>
-                  <TabsTrigger value="list">
-                    <List className="w-4 h-4" />
-                  </TabsTrigger>
-                  <TabsTrigger value="map">
-                    <Map className="w-4 h-4" />
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <div>
+                <label className="text-sm font-medium mb-2 block">{t('search.filters.sizeLabel')}</label>
+                <Select
+                  value={filters.employeeCount}
+                  onValueChange={(value) => setFilters((prev) => ({ ...prev, employeeCount: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue>{filters.employeeCount}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All Sizes">{t('search.filters.allSizes')}</SelectItem>
+                    <SelectItem value="1-10">{t('search.filters.size1to10')}</SelectItem>
+                    <SelectItem value="10-25">{t('search.filters.size10to25')}</SelectItem>
+                    <SelectItem value="25-50">{t('search.filters.size25to50')}</SelectItem>
+                    <SelectItem value="50-100">{t('search.filters.size50to100')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">{t('search.filters.minConfidenceLabel')}</label>
+                <Select
+                  value={String(filters.confidenceScore)}
+                  onValueChange={(value) => setFilters((prev) => ({ ...prev, confidenceScore: Number(value) }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue>{filters.confidenceScore === 0 ? t('search.filters.anyScore') : `${filters.confidenceScore}%`}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">{t('search.filters.anyScore')}</SelectItem>
+                    <SelectItem value="70">70%</SelectItem>
+                    <SelectItem value="80">80%</SelectItem>
+                    <SelectItem value="90">90%</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <div className="md:col-span-3">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                title={t('search.views.grid')}
+              >
+                <Grid className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                title={t('search.views.list')}
+              >
+                <List className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'map' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('map')}
+                title={t('search.views.map')}
+              >
+                <Map className="w-4 h-4" />
+              </Button>
             </div>
 
-            {loading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-green-700" />
-                <span className="ml-2 text-lg">Searching across multiple sources...</span>
-              </div>
-            ) : (
-              <Tabs value={viewMode} className="w-full">
-                <TabsContent value="grid">
-                  <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredCompanies.map((company) => (
-                      <CompanyCard key={company.id} company={company} />
-                    ))}
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="list">
-                  <div className="space-y-4">
-                    {filteredCompanies.map((company) => (
-                      <CompanyCard key={company.id} company={company} layout="list" />
-                    ))}
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="map">
-                  <div className="bg-white dark:bg-slate-800 rounded-lg p-8 text-center">
-                    <Map className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Map View Coming Soon</h3>
-                    <p className="text-muted-foreground">
-                      Interactive map visualization will be available in the next update.
-                    </p>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            )}
-
-            {!loading && filteredCompanies.length === 0 && (
-              <div className="text-center py-12">
-                <h3 className="text-lg font-semibold mb-2">No companies found</h3>
-                <p className="text-muted-foreground mb-4">Try adjusting your search query or filters.</p>
-                <Button variant="outline">Clear Filters</Button>
-              </div>
-            )}
+            <Select
+              defaultValue="relevance"
+              onValueChange={(value) => handleSortChange(value)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={t('search.sort.relevance')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="relevance">{t('search.sort.relevance')}</SelectItem>
+                <SelectItem value="nameAsc">{t('search.sort.nameAsc')}</SelectItem>
+                <SelectItem value="nameDesc">{t('search.sort.nameDesc')}</SelectItem>
+                <SelectItem value="dateAsc">{t('search.sort.dateAsc')}</SelectItem>
+                <SelectItem value="dateDesc">{t('search.sort.dateDesc')}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <Loader2 className="w-8 h-8 animate-spin" />
+            </div>
+          ) : companies.length === 0 ? (
+            <div className="text-center py-12">
+              <h3 className="text-lg font-semibold mb-2">{t('search.noResults.title')}</h3>
+              <p className="text-muted-foreground">{t('search.noResults.description')}</p>
+            </div>
+          ) : (
+            <Tabs value={viewMode} className="w-full">
+              <TabsContent value="grid">
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {filteredCompanies.map((company) => (
+                    <CompanyCard key={company.id} company={company} />
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="list">
+                <div className="space-y-4">
+                  {filteredCompanies.map((company) => (
+                    <CompanyCard key={company.id} company={company} layout="list" />
+                  ))}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="map">
+                <div className="bg-white dark:bg-slate-800 rounded-lg p-8 text-center">
+                  <Map className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Map View Coming Soon</h3>
+                  <p className="text-muted-foreground">
+                    Interactive map visualization will be available in the next update.
+                  </p>
+                </div>
+              </TabsContent>
+            </Tabs>
+          )}
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LoadingSkeleton } from "@/components/core/loading/LoadingSkeleton";
 import { useTranslation } from "react-i18next";
+import { createMockApiResponse } from "@/utils/mockApiUtils";
 import {
   ChartPieIcon,
   ExclamationTriangleIcon,
@@ -18,7 +19,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
-// Data Interfaces (should match API response)
+// Data Interfaces
 interface GapSummaryStats {
   totalGapsIdentified: number;
   averageSeverity: 'High' | 'Medium' | 'Low';
@@ -44,28 +45,33 @@ interface GapAnalysisResultsData {
   summaryStats: GapSummaryStats;
   detailedResults: DetailedGapResult[];
   severityDistributionChartData: ChartDataPoint[];
-  areaDistributionChartData: ChartDataPoint[]; // Added this to match API
+  areaDistributionChartData: ChartDataPoint[];
 }
 
-const severityColors: { [key: string]: string } = {
-  High: "#EF4444", // red-500
-  Medium: "#F97316", // orange-500
-  Low: "#EAB308", // yellow-500
+const severityColors = {
+  High: '#ef4444',
+  Medium: '#f97316',
+  Low: '#eab308'
 };
 
-const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name, value }: any) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+  const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize="12px">
-      {`${name}: ${(percent * 100).toFixed(0)}%`}
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? 'start' : 'end'}
+      dominantBaseline="central"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
-
 
 export default function GapAnalysisResultsPage() {
   const { t } = useTranslation();
@@ -77,12 +83,54 @@ export default function GapAnalysisResultsPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/gap-analysis/results');
-      if (!response.ok) {
-        throw new Error(t('gapAnalysis.resultsPage.error.fetchFailed', { status: response.statusText }));
-      }
-      const data = await response.json();
-      setResults(data);
+      // Mock data for development
+      const mockData: GapAnalysisResultsData = {
+        summaryStats: {
+          totalGapsIdentified: 5,
+          averageSeverity: 'Medium',
+          keyAreasForImprovement: ['Technology Infrastructure', 'Process Automation', 'Team Training'],
+          overallReadinessScore: 65
+        },
+        detailedResults: [
+          {
+            id: 'gap-1',
+            area: 'Technology Infrastructure',
+            gapDescription: 'Current technology stack needs modernization',
+            severity: 'High',
+            recommendations: ['Implement cloud infrastructure', 'Upgrade core systems'],
+            responsibleTeam: 'IT Department'
+          },
+          {
+            id: 'gap-2',
+            area: 'Process Automation',
+            gapDescription: 'Manual processes need automation',
+            severity: 'Medium',
+            recommendations: ['Identify automation opportunities', 'Implement workflow automation'],
+            responsibleTeam: 'Operations Team'
+          },
+          {
+            id: 'gap-3',
+            area: 'Team Training',
+            gapDescription: 'Skill gaps identified in key areas',
+            severity: 'Low',
+            recommendations: ['Develop training programs', 'Enhance team capabilities'],
+            responsibleTeam: 'HR Department'
+          }
+        ],
+        severityDistributionChartData: [
+          { name: 'High', value: 1 },
+          { name: 'Medium', value: 2 },
+          { name: 'Low', value: 2 }
+        ],
+        areaDistributionChartData: [
+          { name: 'Technology', value: 2 },
+          { name: 'Process', value: 2 },
+          { name: 'People', value: 1 }
+        ]
+      };
+
+      const result = await createMockApiResponse(mockData);
+      setResults(result);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
