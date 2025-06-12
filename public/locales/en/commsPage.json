@@ -99,5 +99,9 @@
     "call": "Call",
     "linkedin": "LinkedIn",
     "other": "Other"
-  }
+  },
+  "tabs.pending": "tabs.pending",
+  "tabs.delivered": "tabs.delivered",
+  "tabs.all": "tabs.all",
+  "tabs.opened": "tabs.opened"
 }

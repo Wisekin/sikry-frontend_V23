@@ -27,5 +27,7 @@
     "title": "Explorer l'intelligence de marché",
     "description": "Obtenez des informations plus approfondies sur les tendances du marché et les stratégies des concurrents.",
     "button": "Explorer Market Intel"
-  }
+  },
+  "newScraper": "newScraper"
+}
 }

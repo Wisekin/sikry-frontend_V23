@@ -351,15 +351,15 @@ function SearchContent() {
             <CardContent className="p-4 space-y-6">
               {/* Industry */}
               <div>
-                <h3 className="text-sm font-semibold mb-2 flex items-center text-gray-700"><Briefcase className="w-4 h-4 mr-2" /> {t('industry.title', 'Industry')}</h3>
+                <h3 className="text-sm font-semibold mb-2 flex items-center text-gray-700"><Briefcase className="w-4 h-4 mr-2" /> {t('industry.title', 'Secteur d\'activité')}</h3>
                 <Select value={filters.industry} onValueChange={value => setFilters(prev => ({ ...prev, industry: value }))}>
-                  <SelectTrigger className="w-full bg-gray-50 border-gray-200"><SelectValue placeholder={t('industry.select', 'Select industry')} /></SelectTrigger>
+                  <SelectTrigger className="w-full bg-gray-50 border-gray-200"><SelectValue placeholder={t('industry.select', 'Sélectionner un secteur')} /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="All Industries">{t('industry.all', 'All Industries')}</SelectItem>
-                    <SelectItem value="Luxury Goods & Jewelry">Luxury Goods & Jewelry</SelectItem>
-                    <SelectItem value="Marketing & Advertising">Marketing & Advertising</SelectItem>
-                    <SelectItem value="Financial Technology">Financial Technology</SelectItem>
-                    <SelectItem value="Data & Analytics">Data & Analytics</SelectItem>
+                    <SelectItem value="All Industries">{t('industry.all', 'Tous les secteurs')}</SelectItem>
+                    <SelectItem value="Luxury Goods & Jewelry">{t('industry.luxuryGoods', 'Articles de luxe & Joaillerie')}</SelectItem>
+                    <SelectItem value="Marketing & Advertising">{t('industry.marketing', 'Marketing & Publicité')}</SelectItem>
+                    <SelectItem value="Financial Technology">{t('industry.fintech', 'Technologie Financière')}</SelectItem>
+                    <SelectItem value="Data & Analytics">{t('industry.dataAnalytics', 'Données & Analyse')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -388,17 +388,17 @@ function SearchContent() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
             <Tabs value={viewMode} onValueChange={value => setViewMode(value as "grid" | "list" | "map")}>
               <TabsList className="bg-white shadow-sm border">
-                <TabsTrigger value="grid"><Grid className="w-4 h-4 mr-1" /> {t('gridView', 'Grid')}</TabsTrigger>
-                <TabsTrigger value="list"><List className="w-4 h-4 mr-1" /> {t('listView', 'List')}</TabsTrigger>
-                <TabsTrigger value="map"><MapIcon className="w-4 h-4 mr-1" /> {t('mapView', 'Map')}</TabsTrigger>
+                <TabsTrigger value="grid"><Grid className="w-4 h-4 mr-1" /> {t('gridView')}</TabsTrigger>
+                <TabsTrigger value="list"><List className="w-4 h-4 mr-1" /> {t('listView')}</TabsTrigger>
+                <TabsTrigger value="map"><MapIcon className="w-4 h-4 mr-1" /> {t('mapView')}</TabsTrigger>
               </TabsList>
             </Tabs>
             <Select>
-              <SelectTrigger className="w-full md:w-[200px] bg-white shadow-sm border"><SelectValue placeholder={t('sortPlaceholder', 'Sort by Relevance')} /></SelectTrigger>
+              <SelectTrigger className="w-full md:w-[200px] bg-white shadow-sm border"><SelectValue placeholder={t('sortPlaceholder')} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="relevance">{t('sortRelevance', 'Sort by Relevance')}</SelectItem>
-                <SelectItem value="confidence">{t('sortConfidence', 'Sort by Confidence')}</SelectItem>
-                <SelectItem value="newest">{t('sortNewest', 'Sort by Newest')}</SelectItem>
+                <SelectItem value="relevance">{t('sortRelevance')}</SelectItem>
+                <SelectItem value="confidence">{t('sortConfidence')}</SelectItem>
+                <SelectItem value="newest">{t('sortNewest')}</SelectItem>
               </SelectContent>
             </Select>
           </div>

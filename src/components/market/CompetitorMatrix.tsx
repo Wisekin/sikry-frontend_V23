@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -5,43 +6,44 @@ import { BarChart3, Download } from "lucide-react"
 import { Text } from "@/components/core/typography/Text"
 
 export function CompetitorMatrix() {
+  const { t } = useTranslation('marketIntelPage');
   const competitors = [
     {
-      name: "CompetitorA",
+      name: t('competitorMatrix.competitors.competitorA.name'),
       marketShare: 25,
       growth: 12,
-      funding: "$50M",
-      employees: "200-500",
+      funding: t('competitorMatrix.competitors.competitorA.funding'),
+      employees: t('competitorMatrix.competitors.competitorA.employees'),
       score: 85,
-      threat: "High",
+      threat: t('competitorMatrix.threatLevels.high'),
     },
     {
-      name: "CompetitorB",
+      name: t('competitorMatrix.competitors.competitorB.name'),
       marketShare: 18,
       growth: 8,
-      funding: "$25M",
-      employees: "100-200",
+      funding: t('competitorMatrix.competitors.competitorB.funding'),
+      employees: t('competitorMatrix.competitors.competitorB.employees'),
       score: 72,
-      threat: "Medium",
+      threat: t('competitorMatrix.threatLevels.medium'),
     },
     {
-      name: "CompetitorC",
+      name: t('competitorMatrix.competitors.competitorC.name'),
       marketShare: 15,
       growth: 15,
-      funding: "$75M",
-      employees: "500+",
+      funding: t('competitorMatrix.competitors.competitorC.funding'),
+      employees: t('competitorMatrix.competitors.competitorC.employees'),
       score: 78,
-      threat: "High",
+      threat: t('competitorMatrix.threatLevels.high'),
     },
   ]
 
   const getThreatColor = (threat: string) => {
     switch (threat) {
-      case "High":
+      case t('competitorMatrix.threatLevels.high'):
         return "bg-red-50 text-red-700 border-red-200"
-      case "Medium":
+      case t('competitorMatrix.threatLevels.medium'):
         return "bg-yellow-50 text-yellow-700 border-yellow-200"
-      case "Low":
+      case t('competitorMatrix.threatLevels.low'):
         return "bg-emerald-50 text-emerald-700 border-emerald-200"
       default:
         return "bg-muted text-secondary"
@@ -55,13 +57,13 @@ export function CompetitorMatrix() {
           <div>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
-              Competitor Analysis
+              {t('competitorMatrix.title')}
             </CardTitle>
-            <CardDescription>Market positioning and competitive landscape</CardDescription>
+            <CardDescription>{t('competitorMatrix.description')}</CardDescription>
           </div>
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
-            Export
+            {t('competitorMatrix.export')}
           </Button>
         </div>
       </CardHeader>
@@ -70,13 +72,13 @@ export function CompetitorMatrix() {
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2 text-caption font-medium">Company</th>
-                <th className="text-left py-2 text-caption font-medium">Market Share</th>
-                <th className="text-left py-2 text-caption font-medium">Growth</th>
-                <th className="text-left py-2 text-caption font-medium">Funding</th>
-                <th className="text-left py-2 text-caption font-medium">Employees</th>
-                <th className="text-left py-2 text-caption font-medium">Score</th>
-                <th className="text-left py-2 text-caption font-medium">Threat Level</th>
+                <th className="text-left py-2 text-caption font-medium">{t('competitorMatrix.tableHeaders.company')}</th>
+                <th className="text-left py-2 text-caption font-medium">{t('competitorMatrix.tableHeaders.marketShare')}</th>
+                <th className="text-left py-2 text-caption font-medium">{t('competitorMatrix.tableHeaders.growth')}</th>
+                <th className="text-left py-2 text-caption font-medium">{t('competitorMatrix.tableHeaders.funding')}</th>
+                <th className="text-left py-2 text-caption font-medium">{t('competitorMatrix.tableHeaders.employees')}</th>
+                <th className="text-left py-2 text-caption font-medium">{t('competitorMatrix.tableHeaders.score')}</th>
+                <th className="text-left py-2 text-caption font-medium">{t('competitorMatrix.tableHeaders.threatLevel')}</th>
               </tr>
             </thead>
             <tbody>

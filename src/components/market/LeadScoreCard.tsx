@@ -1,30 +1,44 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Target, ArrowUpIcon as ArrowTrendingUpIcon } from "lucide-react"
-import { Text } from "@/components/core/typography/Text"
+import { useTranslation } from 'react-i18next';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Target, ArrowUp as ArrowTrendingUpIcon } from "lucide-react";
+import { Text } from "@/components/core/typography/Text";
+
+interface LeadScore {
+  company: string;
+  score: number;
+  trend: 'up' | 'down' | 'stable';
+  factors: string[];
+}
 
 export function LeadScoreCard() {
-  const leadScores = [
+  const { t } = useTranslation('marketIntelPage');
+  
+  // Get leads data from translations
+  const leadsData = t('leadScoringCard.leads', { returnObjects: true }) as Array<{
+    company: string;
+    factors: string[];
+  }>;
+  
+  // Map to LeadScore array with scores and trends
+  const leadScores: LeadScore[] = [
     {
-      company: "TechFlow Solutions",
+      ...leadsData[0],
       score: 95,
-      trend: "up",
-      factors: ["High engagement", "Perfect fit", "Budget confirmed"],
+      trend: 'up' as const,
     },
     {
-      company: "Alpine Marketing",
+      ...leadsData[1],
       score: 78,
-      trend: "stable",
-      factors: ["Good fit", "Active interest", "Timeline unclear"],
+      trend: 'stable' as const,
     },
     {
-      company: "SwissFintech",
+      ...leadsData[2],
       score: 85,
-      trend: "up",
-      factors: ["Strong potential", "Decision maker engaged", "Competitor evaluation"],
+      trend: 'up' as const,
     },
-  ]
+  ];
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-600"
@@ -48,9 +62,9 @@ export function LeadScoreCard() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="w-5 h-5" />
-          Lead Scoring
+          {t('leadScoringCard.title')}
         </CardTitle>
-        <CardDescription>AI-powered lead qualification and prioritization</CardDescription>
+        <CardDescription>{t('leadScoringCard.description')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {leadScores.map((lead, index) => (

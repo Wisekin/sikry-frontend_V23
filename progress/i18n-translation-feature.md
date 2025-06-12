@@ -492,3 +492,145 @@ src/
 - ⏳ French translations in progress
 - ⏳ Comprehensive testing of all translations
 - ⏳ Documentation updates
+
+# i18n Translation Feature Implementation
+
+## Overview
+This document outlines the implementation of internationalization (i18n) in our application, focusing on the translation of various pages and components.
+
+## Translation Files Structure
+Translations are organized by feature in the `public/locales` directory:
+```
+public/locales/
+├── en/
+│   ├── common.json
+│   ├── scrapersPage.json
+│   ├── marketIntelPage.json
+│   ├── collectionTrendsPage.json
+│   ├── geographicDistributionPage.json
+│   ├── sectorDistributionPage.json
+│   └── sourceComparisonPage.json
+└── fr/
+    ├── common.json
+    ├── scrapersPage.json
+    ├── marketIntelPage.json
+    ├── collectionTrendsPage.json
+    ├── geographicDistributionPage.json
+    ├── sectorDistributionPage.json
+    └── sourceComparisonPage.json
+```
+
+## Translation Process
+To add translations for a new page or component, follow these steps:
+
+1. **Create Translation Files**
+   - Create JSON files for each supported language in `public/locales/{lang}/`
+   - Name the file according to the feature/page (e.g., `scrapersPage.json`)
+   - Structure the translations in a logical hierarchy
+
+2. **Update i18n Configuration**
+   - Add the new namespace to the i18n configuration in `i18n.ts`
+   - Example:
+     ```typescript
+     {
+       defaultNS: 'common',
+       ns: ['common', 'scrapersPage', 'marketIntelPage', ...],
+     }
+     ```
+
+3. **Implement Translations in Components**
+   - Import the `useTranslation` hook:
+     ```typescript
+     import { useTranslation } from 'react-i18next';
+     ```
+   - Initialize the hook with required namespaces:
+     ```typescript
+     const { t } = useTranslation(['pageNamespace', 'common']);
+     ```
+   - Replace hardcoded strings with translation keys:
+     ```typescript
+     // Before
+     <h1>Page Title</h1>
+     
+     // After
+     <h1>{t('title')}</h1>
+     ```
+
+4. **Handle Dynamic Content**
+   - Use interpolation for dynamic values:
+     ```typescript
+     t('metrics.value', { count: 42 })
+     ```
+   - Use pluralization when needed:
+     ```typescript
+     t('items', { count: 5 }) // Will use the plural form
+     ```
+
+5. **Testing Translations**
+   - Test the component in both languages
+   - Verify all strings are properly translated
+   - Check dynamic content and pluralization
+   - Ensure proper fallback behavior
+
+## Best Practices
+1. **Organization**
+   - Keep translations organized by feature/page
+   - Use consistent naming conventions
+   - Maintain a clear hierarchy in translation files
+
+2. **Keys**
+   - Use descriptive, hierarchical keys
+   - Follow a consistent pattern (e.g., `section.subsection.key`)
+   - Avoid duplicate keys across namespaces
+
+3. **Content**
+   - Keep translations concise and clear
+   - Consider cultural differences
+   - Maintain consistent terminology
+
+4. **Maintenance**
+   - Regularly review and update translations
+   - Document any special translation requirements
+   - Keep translation files in sync with code changes
+
+## Example Translation File Structure
+```json
+{
+  "title": "Page Title",
+  "subtitle": "Page description",
+  "metrics": {
+    "total": {
+      "title": "Total Items",
+      "value": "{{count}} items"
+    }
+  },
+  "filters": {
+    "label": "Filter by",
+    "options": {
+      "all": "All",
+      "active": "Active"
+    }
+  }
+}
+```
+
+## Common Issues and Solutions
+1. **Missing Translations**
+   - Check if the namespace is properly configured
+   - Verify the translation key exists in the file
+   - Ensure the language file is properly loaded
+
+2. **Dynamic Content Not Updating**
+   - Verify interpolation syntax
+   - Check if the value is being passed correctly
+   - Ensure the translation key supports interpolation
+
+3. **Pluralization Issues**
+   - Check if the language supports the required plural forms
+   - Verify the pluralization syntax
+   - Test with different count values
+
+## Resources
+- [i18next Documentation](https://www.i18next.com/)
+- [React-i18next Documentation](https://react.i18next.com/)
+- [Language Codes Reference](https://www.loc.gov/standards/iso639-2/php/code_list.php)

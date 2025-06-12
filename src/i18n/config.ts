@@ -59,6 +59,7 @@ i18n
       'gapAnalysisPage',
       'analyticsDashboard',
       'scrapingPage',
+      'scrapersPage',
     ],
     defaultNS: 'common',
     backend: {

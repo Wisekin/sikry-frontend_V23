@@ -94,5 +94,8 @@
   "search.filters.fintech": "search.filters.fintech",
   "search.filters.marketing": "search.filters.marketing",
   "search.filters.label": "search.filters.label",
-  "nav.admin.users": "nav.admin.users"
+  "nav.admin.users": "nav.admin.users",
+  "loading": "loading",
+  "nav.secondary.addCompany": "nav.secondary.addCompany"
+}mpanies"
 }

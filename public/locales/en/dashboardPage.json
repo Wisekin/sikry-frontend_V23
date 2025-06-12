@@ -27,5 +27,8 @@
     "title": "Explore Market Intelligence",
     "description": "Gain deeper insights into market trends and competitor strategies.",
     "button": "Explore Market Intel"
-  }
+  },
+  "newScraper": "newScraper",
+  "newCampaign": "newCampaign",
+  "newMessage": "newMessage"
 }
